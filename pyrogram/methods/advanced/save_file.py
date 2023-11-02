@@ -171,9 +171,7 @@ class SaveFile:
 
                 if not chunk:
                     if not is_big and not is_missing_part:
-                        md5_sum = "".join(
-                            [hex(i)[2:].zfill(2) for i in md5_sum.digest()]
-                        )
+                        md5_sum = "".join([hex(i)[2:].zfill(2) for i in md5_sum.digest()])
                     break
 
                 if is_big:
@@ -181,11 +179,13 @@ class SaveFile:
                         file_id=file_id,
                         file_part=file_part,
                         file_total_parts=file_total_parts,
-                        bytes=chunk,
+                        bytes=chunk
                     )
                 else:
                     rpc = raw.functions.upload.SaveFilePart(
-                        file_id=file_id, file_part=file_part, bytes=chunk
+                        file_id=file_id,
+                        file_part=file_part,
+                        bytes=chunk
                     )
 
                 await queue.put(rpc)
