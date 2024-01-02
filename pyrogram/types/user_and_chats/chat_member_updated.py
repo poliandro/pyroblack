@@ -49,7 +49,10 @@ class ChatMemberUpdated(Object, Update):
             Chat invite link, which was used by the user to join the chat; for joining by invite link events only.
 
         via_join_request (``bool``, *optional*):
-            True, if the user joined the chat after sending a join request and being approved by an administrator.
+            True, if the user joined the chat after sending a direct join request and being approved by an administrator
+
+        via_chat_folder_invite_link (``bool``, *optional*):
+            True, if the user joined the chat via a chat folder invite link
     """
 
     def __init__(
@@ -63,6 +66,7 @@ class ChatMemberUpdated(Object, Update):
         new_chat_member: "types.ChatMember",
         invite_link: "types.ChatInviteLink" = None,
         via_join_request: bool = None,
+        via_chat_folder_invite_link: bool = False
     ):
         super().__init__(client)
 
@@ -73,6 +77,7 @@ class ChatMemberUpdated(Object, Update):
         self.new_chat_member = new_chat_member
         self.invite_link = invite_link
         self.via_join_request = via_join_request
+        self.via_chat_folder_invite_link = via_chat_folder_invite_link
 
     @staticmethod
     def _parse(
@@ -114,5 +119,6 @@ class ChatMemberUpdated(Object, Update):
             new_chat_member=new_chat_member,
             invite_link=invite_link,
             via_join_request=via_join_request,
-            client=client,
+            via_chat_folder_invite_link=getattr(update, "via_chatlist", False),
+            client=client
         )
