@@ -274,6 +274,8 @@ def pyrogram_api():
             reopen_forum_topic
             reopen_general_topic
             unhide_general_topic
+            join_folder
+            leave_folder
         """,
         users="""
         Users
