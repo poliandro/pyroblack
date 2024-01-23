@@ -3479,7 +3479,7 @@ class Message(Object, Update):
                 If you set a timer, the video note will self-destruct in *ttl_seconds*
                 seconds after it was viewed.
 
-            reply_markup (:obj:`~pyrofork.types.InlineKeyboardMarkup` | :obj:`~pyrofork.types.ReplyKeyboardMarkup` | :obj:`~pyrofork.types.ReplyKeyboardRemove` | :obj:`~pyrofork.types.ForceReply`, *optional*):
+            reply_markup (:obj:`~pyrogram.types.InlineKeyboardMarkup` | :obj:`~pyrogram.types.ReplyKeyboardMarkup` | :obj:`~pyrogram.types.ReplyKeyboardRemove` | :obj:`~pyrogram.types.ForceReply`, *optional*):
                 Additional interface options. An object for an inline keyboard, custom reply keyboard,
                 instructions to remove reply keyboard or to force a reply from the user.
 
