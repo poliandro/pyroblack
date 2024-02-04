@@ -448,6 +448,7 @@ media_spoiler = create(media_spoiler_filter)
 
 # region private_filter
 async def private_filter(_, __, m: Message):
+    m = m.message if isinstance(m, CallbackQuery) else m
     return bool(m.chat and m.chat.type in {enums.ChatType.PRIVATE, enums.ChatType.BOT})
 
 
@@ -459,9 +460,8 @@ private = create(private_filter)
 
 # region group_filter
 async def group_filter(_, __, m: Message):
-    return bool(
-        m.chat and m.chat.type in {enums.ChatType.GROUP, enums.ChatType.SUPERGROUP}
-    )
+    m = m.message if isinstance(m, CallbackQuery) else m
+    return bool(m.chat and m.chat.type in {enums.ChatType.GROUP, enums.ChatType.SUPERGROUP})
 
 
 group = create(group_filter)
@@ -472,6 +472,7 @@ group = create(group_filter)
 
 # region channel_filter
 async def channel_filter(_, __, m: Message):
+    m = m.message if isinstance(m, CallbackQuery) else m
     return bool(m.chat and m.chat.type == enums.ChatType.CHANNEL)
 
 
