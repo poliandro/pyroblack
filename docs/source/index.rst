@@ -24,6 +24,10 @@ Welcome to Pyrofork
         <a href="https://t.me/MayuriChan_Chat">
             Support Chat
         </a>
+        •
+        <a href="https://t.me/OpenFileZ">
+            OpenFiles channel
+        </a>
     </p>
 
 .. code-block:: python
