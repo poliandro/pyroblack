@@ -37,8 +37,8 @@ class SendGame:
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
             "types.ReplyKeyboardRemove",
-            "types.ForceReply"
-        ] = None
+            "types.ForceReply",
+        ] = None,
     ) -> "types.Message":
         """Send a game.
 
@@ -84,7 +84,7 @@ class SendGame:
             client=self,
             chat_id=chat_id,
             reply_to_message_id=reply_to_message_id,
-            message_thread_id=message_thread_id
+            message_thread_id=message_thread_id,
         )
 
         r = await self.invoke(
@@ -92,8 +92,7 @@ class SendGame:
                 peer=await self.resolve_peer(chat_id),
                 media=raw.types.InputMediaGame(
                     id=raw.types.InputGameShortName(
-                        bot_id=raw.types.InputUserSelf(),
-                        short_name=game_short_name
+                        bot_id=raw.types.InputUserSelf(), short_name=game_short_name
                     ),
                 ),
                 message="",
@@ -101,14 +100,17 @@ class SendGame:
                 reply_to=reply_to,
                 random_id=self.rnd_id(),
                 noforwards=protect_content,
-                reply_markup=await reply_markup.write(self) if reply_markup else None
+                reply_markup=await reply_markup.write(self) if reply_markup else None,
             )
         )
 
         for i in r.updates:
-            if isinstance(i, (raw.types.UpdateNewMessage, raw.types.UpdateNewChannelMessage)):
+            if isinstance(
+                i, (raw.types.UpdateNewMessage, raw.types.UpdateNewChannelMessage)
+            ):
                 return await types.Message._parse(
-                    self, i.message,
+                    self,
+                    i.message,
                     {i.id: i for i in r.users},
-                    {i.id: i for i in r.chats}
+                    {i.id: i for i in r.chats},
                 )

@@ -123,6 +123,6 @@ class Chats(
     GetSendAsChats,
     SetSendAsChat,
     SetChatProtectedContent,
-    UpdateColor
+    UpdateColor,
 ):
     pass

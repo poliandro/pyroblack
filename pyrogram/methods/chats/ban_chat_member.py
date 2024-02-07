@@ -29,7 +29,7 @@ class BanChatMember:
         self: "pyrogram.Client",
         chat_id: Union[int, str],
         user_id: Union[int, str],
-        until_date: datetime = utils.zero_datetime()
+        until_date: datetime = utils.zero_datetime(),
     ) -> Union["types.Message", bool]:
         """Ban a user from a group, a supergroup or a channel.
         In the case of supergroups and channels, the user will not be able to return to the group on their own using
@@ -92,23 +92,25 @@ class BanChatMember:
                         send_inline=True,
                         embed_links=True,
                         manage_topics=True,
-                    )
+                    ),
                 )
             )
         else:
             r = await self.invoke(
                 raw.functions.messages.DeleteChatUser(
-                    chat_id=abs(chat_id),
-                    user_id=user_peer
+                    chat_id=abs(chat_id), user_id=user_peer
                 )
             )
 
         for i in r.updates:
-            if isinstance(i, (raw.types.UpdateNewMessage, raw.types.UpdateNewChannelMessage)):
+            if isinstance(
+                i, (raw.types.UpdateNewMessage, raw.types.UpdateNewChannelMessage)
+            ):
                 return await types.Message._parse(
-                    self, i.message,
+                    self,
+                    i.message,
                     {i.id: i for i in r.users},
-                    {i.id: i for i in r.chats}
+                    {i.id: i for i in r.chats},
                 )
         else:
             return True

@@ -72,19 +72,25 @@ class ChosenInlineResult(Object, Update):
         self.inline_message_id = inline_message_id
 
     @staticmethod
-    def _parse(client, chosen_inline_result: raw.types.UpdateBotInlineSend, users) -> "ChosenInlineResult":
+    def _parse(
+        client, chosen_inline_result: raw.types.UpdateBotInlineSend, users
+    ) -> "ChosenInlineResult":
         inline_message_id = None
 
         if isinstance(chosen_inline_result.msg_id, raw.types.InputBotInlineMessageID):
-            inline_message_id = b64encode(
-                pack(
-                    "<iqq",
-                    chosen_inline_result.msg_id.dc_id,
-                    chosen_inline_result.msg_id.id,
-                    chosen_inline_result.msg_id.access_hash
-                ),
-                b"-_"
-            ).decode().rstrip("=")
+            inline_message_id = (
+                b64encode(
+                    pack(
+                        "<iqq",
+                        chosen_inline_result.msg_id.dc_id,
+                        chosen_inline_result.msg_id.id,
+                        chosen_inline_result.msg_id.access_hash,
+                    ),
+                    b"-_",
+                )
+                .decode()
+                .rstrip("=")
+            )
 
         return ChosenInlineResult(
             result_id=str(chosen_inline_result.id),
@@ -93,7 +99,9 @@ class ChosenInlineResult(Object, Update):
             location=types.Location(
                 longitude=chosen_inline_result.geo.long,
                 latitude=chosen_inline_result.geo.lat,
-                client=client
-            ) if chosen_inline_result.geo else None,
-            inline_message_id=inline_message_id
+                client=client,
+            )
+            if chosen_inline_result.geo
+            else None,
+            inline_message_id=inline_message_id,
         )

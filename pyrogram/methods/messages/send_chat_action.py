@@ -28,7 +28,7 @@ class SendChatAction:
         self: "pyrogram.Client",
         chat_id: Union[int, str],
         action: "enums.ChatAction",
-        message_thread_id: int = None
+        message_thread_id: int = None,
     ) -> bool:
         """Tell the other party that something is happening on your side.
 
@@ -83,6 +83,6 @@ class SendChatAction:
             raw.functions.messages.SetTyping(
                 peer=await self.resolve_peer(chat_id),
                 action=action,
-                top_msg_id=message_thread_id
+                top_msg_id=message_thread_id,
             )
         )

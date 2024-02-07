@@ -56,9 +56,7 @@ class InvertFilter(Filter):
             x = await self.base(client, update)
         else:
             x = await client.loop.run_in_executor(
-                client.executor,
-                self.base,
-                client, update
+                client.executor, self.base, client, update
             )
 
         return not x
@@ -74,9 +72,7 @@ class AndFilter(Filter):
             x = await self.base(client, update)
         else:
             x = await client.loop.run_in_executor(
-                client.executor,
-                self.base,
-                client, update
+                client.executor, self.base, client, update
             )
 
         # short circuit
@@ -87,9 +83,7 @@ class AndFilter(Filter):
             y = await self.other(client, update)
         else:
             y = await client.loop.run_in_executor(
-                client.executor,
-                self.other,
-                client, update
+                client.executor, self.other, client, update
             )
 
         return x and y
@@ -105,9 +99,7 @@ class OrFilter(Filter):
             x = await self.base(client, update)
         else:
             x = await client.loop.run_in_executor(
-                client.executor,
-                self.base,
-                client, update
+                client.executor, self.base, client, update
             )
 
         # short circuit
@@ -118,9 +110,7 @@ class OrFilter(Filter):
             y = await self.other(client, update)
         else:
             y = await client.loop.run_in_executor(
-                client.executor,
-                self.other,
-                client, update
+                client.executor, self.other, client, update
             )
 
         return x or y
@@ -137,10 +127,10 @@ def create(func: Callable, name: str = None, **kwargs) -> Filter:
     Parameters:
         func (``Callable``):
             A function that accepts three positional arguments *(filter, client, update)* and returns a boolean: True if the
-            update should be handled, False otherwise. 
-            The *filter* argument refers to the filter itself and can be used to access keyword arguments (read below). 
+            update should be handled, False otherwise.
+            The *filter* argument refers to the filter itself and can be used to access keyword arguments (read below).
             The *client* argument refers to the :obj:`~pyrogram.Client` that received the update.
-            The *update* argument type will vary depending on which `Handler <handlers>`_ is coming from. 
+            The *update* argument type will vary depending on which `Handler <handlers>`_ is coming from.
             For example, in a :obj:`~pyrogram.handlers.MessageHandler` the *update* argument will be a :obj:`~pyrogram.types.Message`; in a :obj:`~pyrogram.handlers.CallbackQueryHandler` the *update* will be a :obj:`~pyrogram.types.CallbackQuery`.
             Your function body can then access the incoming update attributes and decide whether to allow it or not.
 
@@ -155,7 +145,7 @@ def create(func: Callable, name: str = None, **kwargs) -> Filter:
     return type(
         name or func.__name__ or CUSTOM_FILTER_NAME,
         (Filter,),
-        {"__call__": func, **kwargs}
+        {"__call__": func, **kwargs},
     )()
 
 
@@ -469,7 +459,9 @@ private = create(private_filter)
 
 # region group_filter
 async def group_filter(_, __, m: Message):
-    return bool(m.chat and m.chat.type in {enums.ChatType.GROUP, enums.ChatType.SUPERGROUP})
+    return bool(
+        m.chat and m.chat.type in {enums.ChatType.GROUP, enums.ChatType.SUPERGROUP}
+    )
 
 
 group = create(group_filter)
@@ -767,6 +759,7 @@ linked_channel = create(linked_channel_filter)
 async def forum_topic_closed_filter(_, __, m: Message):
     return bool(m.forum_topic_closed)
 
+
 forum_topic_closed = create(forum_topic_closed_filter)
 """Filter service message for closed forum topics"""
 
@@ -777,6 +770,7 @@ forum_topic_closed = create(forum_topic_closed_filter)
 async def forum_topic_created_filter(_, __, m: Message):
     return bool(m.forum_topic_created)
 
+
 forum_topic_created = create(forum_topic_created_filter)
 """Filter service message for created forum topics"""
 
@@ -786,6 +780,7 @@ forum_topic_created = create(forum_topic_created_filter)
 # region forum_topic_edited_filter
 async def forum_topic_edited_filter(_, __, m: Message):
     return bool(m.forum_topic_edited)
+
 
 forum_topic_edited = create(forum_topic_edited_filter)
 """Filter service message for edited forum topics"""
@@ -798,6 +793,7 @@ forum_topic_edited = create(forum_topic_edited_filter)
 async def forum_topic_reopened_filter(_, __, m: Message):
     return bool(m.forum_topic_reopened)
 
+
 forum_topic_reopened = create(forum_topic_reopened_filter)
 """Filter service message for reopened forum topics"""
 
@@ -807,6 +803,7 @@ forum_topic_reopened = create(forum_topic_reopened_filter)
 # region general_topic_hidden_filter
 async def general_topic_hidden_filter(_, __, m: Message):
     return bool(m.general_topic_hidden)
+
 
 general_forum_topic_hidden = create(general_topic_hidden_filter)
 
@@ -819,6 +816,7 @@ general_forum_topic_hidden = create(general_topic_hidden_filter)
 async def general_topic_unhidden_filter(_, __, m: Message):
     return bool(m.general_topic_unhidden)
 
+
 general_forum_topic_unhidden = create(general_topic_unhidden_filter)
 """Filter service message for unhidden general forum topics"""
 
@@ -826,7 +824,11 @@ general_forum_topic_unhidden = create(general_topic_unhidden_filter)
 # endregion
 
 # region command_filter
-def command(commands: Union[str, List[str]], prefixes: Union[str, List[str]] = "/", case_sensitive: bool = False):
+def command(
+    commands: Union[str, List[str]],
+    prefixes: Union[str, List[str]] = "/",
+    case_sensitive: bool = False,
+):
     """Filter commands, i.e.: text messages starting with "/" or any other custom prefix.
 
     Parameters:
@@ -859,15 +861,23 @@ def command(commands: Union[str, List[str]], prefixes: Union[str, List[str]] = "
             if not text.startswith(prefix):
                 continue
 
-            without_prefix = text[len(prefix):]
+            without_prefix = text[len(prefix) :]
 
             for cmd in flt.commands:
-                if not re.match(rf"^(?:{cmd}(?:@?{username})?)(?:\s|$)", without_prefix,
-                                flags=re.IGNORECASE if not flt.case_sensitive else 0):
+                if not re.match(
+                    rf"^(?:{cmd}(?:@?{username})?)(?:\s|$)",
+                    without_prefix,
+                    flags=re.IGNORECASE if not flt.case_sensitive else 0,
+                ):
                     continue
 
-                without_command = re.sub(rf"{cmd}(?:@?{username})?\s?", "", without_prefix, count=1,
-                                         flags=re.IGNORECASE if not flt.case_sensitive else 0)
+                without_command = re.sub(
+                    rf"{cmd}(?:@?{username})?\s?",
+                    "",
+                    without_prefix,
+                    count=1,
+                    flags=re.IGNORECASE if not flt.case_sensitive else 0,
+                )
 
                 # match.groups are 1-indexed, group(1) is the quote, group(2) is the text
                 # between the quotes, group(3) is unquoted, whitespace-split text
@@ -894,11 +904,12 @@ def command(commands: Union[str, List[str]], prefixes: Union[str, List[str]] = "
         "CommandFilter",
         commands=commands,
         prefixes=prefixes,
-        case_sensitive=case_sensitive
+        case_sensitive=case_sensitive,
     )
 
 
 # endregion
+
 
 def regex(pattern: Union[str, Pattern], flags: int = 0):
     """Filter updates that match a given regular expression pattern.
@@ -938,7 +949,7 @@ def regex(pattern: Union[str, Pattern], flags: int = 0):
     return create(
         func,
         "RegexFilter",
-        p=pattern if isinstance(pattern, Pattern) else re.compile(pattern, flags)
+        p=pattern if isinstance(pattern, Pattern) else re.compile(pattern, flags),
     )
 
 
@@ -960,18 +971,23 @@ class user(Filter, set):
         users = [] if users is None else users if isinstance(users, list) else [users]
 
         super().__init__(
-            "me" if u in ["me", "self"]
-            else u.lower().strip("@") if isinstance(u, str)
-            else u for u in users
+            "me"
+            if u in ["me", "self"]
+            else u.lower().strip("@")
+            if isinstance(u, str)
+            else u
+            for u in users
         )
 
     async def __call__(self, _, message: Message):
-        return (message.from_user
-                and (message.from_user.id in self
-                     or (message.from_user.username
-                         and message.from_user.username.lower() in self)
-                     or ("me" in self
-                         and message.from_user.is_self)))
+        return message.from_user and (
+            message.from_user.id in self
+            or (
+                message.from_user.username
+                and message.from_user.username.lower() in self
+            )
+            or ("me" in self and message.from_user.is_self)
+        )
 
 
 # noinspection PyPep8Naming
@@ -992,38 +1008,43 @@ class chat(Filter, set):
         chats = [] if chats is None else chats if isinstance(chats, list) else [chats]
 
         super().__init__(
-            "me" if c in ["me", "self"]
-            else c.lower().strip("@") if isinstance(c, str)
-            else c for c in chats
+            "me"
+            if c in ["me", "self"]
+            else c.lower().strip("@")
+            if isinstance(c, str)
+            else c
+            for c in chats
         )
 
     async def __call__(self, _, message: Union[Message, Story]):
         if isinstance(message, Story):
             return (
-                    message.sender_chat
-                    and (
-                        message.sender_chat.id in self
-                        or (
-                            message.sender_chat.username
-                            and message.sender_chat.username.lower() in self
-                        )
-                    )
-                ) or (
-                    message.from_user
-                    and (
-                        message.from_user.id in self
-                        or (
-                            message.from_user.username
-                            and message.from_user.username.lower() in self
-                        )
+                message.sender_chat
+                and (
+                    message.sender_chat.id in self
+                    or (
+                        message.sender_chat.username
+                        and message.sender_chat.username.lower() in self
                     )
                 )
+            ) or (
+                message.from_user
+                and (
+                    message.from_user.id in self
+                    or (
+                        message.from_user.username
+                        and message.from_user.username.lower() in self
+                    )
+                )
+            )
         else:
-            return (message.chat
-                    and (message.chat.id in self
-                         or (message.chat.username
-                             and message.chat.username.lower() in self)
-                         or ("me" in self
-                             and message.from_user
-                             and message.from_user.is_self
-                             and not message.outgoing)))
+            return message.chat and (
+                message.chat.id in self
+                or (message.chat.username and message.chat.username.lower() in self)
+                or (
+                    "me" in self
+                    and message.from_user
+                    and message.from_user.is_self
+                    and not message.outgoing
+                )
+            )

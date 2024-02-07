@@ -75,5 +75,5 @@ class Dialog(Object):
             unread_mentions_count=dialog.unread_mentions_count,
             unread_mark=dialog.unread_mark,
             is_pinned=dialog.pinned,
-            client=client
+            client=client,
         )

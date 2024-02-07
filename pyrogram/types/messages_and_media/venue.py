@@ -70,5 +70,5 @@ class Venue(Object):
             address=venue.address,
             foursquare_id=venue.venue_id or None,
             foursquare_type=venue.venue_type,
-            client=client
+            client=client,
         )

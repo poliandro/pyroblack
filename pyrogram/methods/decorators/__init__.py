@@ -49,6 +49,6 @@ class Decorators(
     OnChatJoinRequest,
     OnStory,
     OnMessageReactionUpdated,
-    OnMessageReactionCountUpdated
+    OnMessageReactionCountUpdated,
 ):
     pass

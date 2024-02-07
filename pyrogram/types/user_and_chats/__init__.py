@@ -88,5 +88,5 @@ __all__ = [
     "ChatPrivileges",
     "ChatJoiner",
     "EmojiStatus",
-    "ChatReactions"
+    "ChatReactions",
 ]

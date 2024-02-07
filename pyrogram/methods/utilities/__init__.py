@@ -36,6 +36,6 @@ class Utilities(
     RunSync,
     Start,
     Stop,
-    StopTransmission
+    StopTransmission,
 ):
     pass

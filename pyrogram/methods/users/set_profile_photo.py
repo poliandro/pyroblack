@@ -68,8 +68,7 @@ class SetProfilePhoto:
         return bool(
             await self.invoke(
                 raw.functions.photos.UploadProfilePhoto(
-                    file=await self.save_file(photo),
-                    video=await self.save_file(video)
+                    file=await self.save_file(photo), video=await self.save_file(video)
                 )
             )
         )

@@ -30,6 +30,7 @@ class Storage(ABC):
         name (``str``):
             The name of the session.
     """
+
     OLD_SESSION_STRING_FORMAT = ">B?256sI?"
     OLD_SESSION_STRING_FORMAT_64 = ">B?256sQ?"
     SESSION_STRING_SIZE = 351
@@ -190,7 +191,7 @@ class Storage(ABC):
             await self.test_mode(),
             await self.auth_key(),
             await self.user_id(),
-            await self.is_bot()
+            await self.is_bot(),
         )
 
         return base64.urlsafe_b64encode(packed).decode().rstrip("=")
