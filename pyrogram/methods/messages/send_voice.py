@@ -188,7 +188,7 @@ class SendVoice:
                         voice, progress=progress, progress_args=progress_args
                     )
                     media = raw.types.InputMediaUploadedDocument(
-                        mime_type=self.guess_mime_type(voice) or "audio/mpeg",
+                        mime_type=self.guess_mime_type(voice) or "audio/ogg",
                         file=file,
                         attributes=[
                             raw.types.DocumentAttributeAudio(
@@ -205,7 +205,7 @@ class SendVoice:
                     voice, progress=progress, progress_args=progress_args
                 )
                 media = raw.types.InputMediaUploadedDocument(
-                    mime_type=self.guess_mime_type(voice.name) or "audio/mpeg",
+                    mime_type=self.guess_mime_type(voice.name) or "audio/ogg",
                     file=file,
                     attributes=[
                         raw.types.DocumentAttributeAudio(voice=True, duration=duration)
