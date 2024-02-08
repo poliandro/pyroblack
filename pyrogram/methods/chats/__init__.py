@@ -64,6 +64,7 @@ from .set_chat_title import SetChatTitle
 from .set_chat_username import SetChatUsername
 from .set_send_as_chat import SetSendAsChat
 from .set_slow_mode import SetSlowMode
+from .toggle_join_to_send import ToggleJoinToSend
 from .unarchive_chats import UnarchiveChats
 from .unban_chat_member import UnbanChatMember
 from .unpin_all_chat_messages import UnpinAllChatMessages
@@ -115,6 +116,7 @@ class Chats(
     GetNearbyChats,
     SetAdministratorTitle,
     SetSlowMode,
+    ToggleJoinToSend,
     DeleteUserHistory,
     UnpinAllChatMessages,
     MarkChatUnread,
