@@ -309,7 +309,10 @@ class Session:
                     ),
                     False,
                 )
-            except (OSError, RPCError):
+            except OSError:
+                self.loop.create_task(self.restart())
+                break
+            except RPCError:
                 pass
 
         log.info("PingTask stopped")
