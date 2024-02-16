@@ -26,14 +26,13 @@ import struct
 from concurrent.futures.thread import ThreadPoolExecutor
 from datetime import datetime, timezone
 from getpass import getpass
-from typing import Union, List, Dict, Optional, Any, Callable, TypeVar
 from types import SimpleNamespace
+from typing import Union, List, Dict, Optional, Any, Callable, TypeVar
 
 import pyrogram
 from pyrogram import raw, enums
 from pyrogram import types
 from pyrogram.file_id import FileId, FileType, PHOTO_TYPES, DOCUMENT_TYPES
-
 
 PyromodConfig = SimpleNamespace(
     timeout_handler=None,
@@ -221,13 +220,15 @@ def parse_deleted_messages(client, update) -> List["types.Message"]:
         parsed_messages.append(
             types.Message(
                 id=message,
-                chat=types.Chat(
-                    id=get_channel_id(channel_id),
-                    type=enums.ChatType.CHANNEL,
-                    client=client,
-                )
-                if channel_id is not None
-                else None,
+                chat=(
+                    types.Chat(
+                        id=get_channel_id(channel_id),
+                        type=enums.ChatType.CHANNEL,
+                        client=client,
+                    )
+                    if channel_id is not None
+                    else None
+                ),
                 client=client,
             )
         )
@@ -318,6 +319,32 @@ def get_peer_type(peer_id: int) -> str:
         return "user"
 
     raise ValueError(f"Peer id invalid: {peer_id}")
+
+
+def get_reply_to(
+    reply_to_message_id: Optional[int] = None,
+    message_thread_id: Optional[int] = None,
+    reply_to_peer: Optional[raw.base.InputPeer] = None,
+    quote_text: Optional[str] = None,
+    quote_entities: Optional[List[raw.base.MessageEntity]] = None,
+    quote_offset: Optional[int] = None,
+    reply_to_story_id: Optional[int] = None,
+) -> Optional[Union[raw.types.InputReplyToMessage, raw.types.InputReplyToStory]]:
+    """Get InputReply for reply_to argument"""
+    if all((reply_to_peer, reply_to_story_id)):
+        return raw.types.InputReplyToStory(peer=reply_to_peer, story_id=reply_to_story_id)  # type: ignore[arg-type]
+
+    if any((reply_to_message_id, message_thread_id)):
+        return raw.types.InputReplyToMessage(
+            reply_to_msg_id=reply_to_message_id or message_thread_id,  # type: ignore[arg-type]
+            top_msg_id=message_thread_id if reply_to_message_id else None,
+            reply_to_peer_id=reply_to_peer,
+            quote_text=quote_text,
+            quote_entities=quote_entities,
+            quote_offset=quote_offset,
+        )
+
+    return None
 
 
 def get_channel_id(peer_id: int) -> int:

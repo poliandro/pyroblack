@@ -236,7 +236,9 @@ class SendAudio:
                 else:
                     media = utils.get_input_media_from_file_id(audio, FileType.AUDIO)
             else:
-                mime_type = self.guess_mime_type(file_name or audio.name) or "audio/mpeg"
+                mime_type = (
+                    self.guess_mime_type(file_name or audio.name) or "audio/mpeg"
+                )
                 if mime_type == "audio/ogg":
                     mime_type = "audio/opus"
                 thumb = await self.save_file(thumb)
@@ -268,12 +270,12 @@ class SendAudio:
                             random_id=self.rnd_id(),
                             schedule_date=utils.datetime_to_timestamp(schedule_date),
                             noforwards=protect_content,
-                            reply_markup=await reply_markup.write(self)
-                            if reply_markup
-                            else None,
+                            reply_markup=(
+                                await reply_markup.write(self) if reply_markup else None
+                            ),
                             **await utils.parse_text_entities(
                                 self, caption, parse_mode, caption_entities
-                            )
+                            ),
                         )
                     )
                 except FilePartMissing as e:
