@@ -33,19 +33,13 @@ class Vector(bytes, TLObject):
     @staticmethod
     def read_bare(b: BytesIO, size: int) -> Union[int, Any]:
         if size == 4:
-            # cek
             e = int.from_bytes(b.read(4), "little")
-            # bak
             b.seek(-4, 1)
-            # cond
-            if e in [
-                BoolFalse.ID,
-                BoolTrue.ID,
-            ]:
+
+            if e in {BoolFalse.ID, BoolTrue.ID}:
                 return Bool.read(b)
-            # not
-            else:
-                return Int.read(b)
+
+            return Int.read(b)
 
         if size == 8:
             return Long.read(b)
@@ -60,7 +54,9 @@ class Vector(bytes, TLObject):
         data.seek(-left, 1)
 
         return List(
-            t.read(data) if t else Vector.read_bare(data, size) for _ in range(count)
+            t.read(data) if t
+            else Vector.read_bare(data, size)
+            for _ in range(count)
         )
 
     def __new__(cls, value: list, t: Any = None) -> bytes:  # type: ignore
