@@ -21,10 +21,7 @@ from pyrogram import raw
 
 
 class CheckUsername:
-    async def check_username(
-        self: "pyrogram.Client",
-        username: str
-    ) -> bool:
+    async def check_username(self: "pyrogram.Client", username: str) -> bool:
         """Check if a username is available.
 
         .. include:: /_includes/usable-by/users.rst
@@ -43,9 +40,5 @@ class CheckUsername:
         """
 
         return bool(
-            await self.invoke(
-                raw.functions.account.CheckUsername(
-                    username=username
-                )
-            )
+            await self.invoke(raw.functions.account.CheckUsername(username=username))
         )
