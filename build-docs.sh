@@ -3,23 +3,7 @@ export DOCS_KEY
 VENV="$(pwd)"/venv
 export VENV
 
-if [[ "$(echo "$GITHUB_REF" | cut -d '/' -f "1 2")" == "refs/tags" ]]; then
-    branch="main"
-elif [[ "$GITHUB_REF" == "refs/heads/staging" ]]; then
-    branch="staging"
-else
-    b="$(echo "$GITHUB_REF" | cut -d '/' -f '3 4')"
-    if [[ $(echo "$b" | cut -d '/' -f 1 ) == "dev" ]]; then
-        b="$(echo "$b" | cut -d '/' -f 2)"
-        if [[ "$b" =~ ^[0-9]\.[0-9]\.x ]]; then
-            branch="$b"
-        else
-            exit 0
-        fi
-    else
-        exit 0
-    fi
-fi
+branch="main"
 
 make clean
 make clean-docs
@@ -29,7 +13,7 @@ make api
 cd compiler/docs || exit 1 && "$VENV"/bin/python compiler.py
 cd  ../.. || exit 1
 "$VENV"/bin/sphinx-build -b html "docs/source" "docs/build/html" -j auto
-git clone https://wulan17:"$DOCS_KEY"@github.com/Mayuri-Chan/pyrofork-docs.git
+git clone https://eyMarv:"$DOCS_KEY"@github.com/eyMarv/pyrofork-docs.git
 cd pyrofork-docs || exit 1
 mkdir -p "$branch"
 cd "$branch" || exit 1
