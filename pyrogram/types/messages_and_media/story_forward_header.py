@@ -16,6 +16,8 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
+from pyrogram.errors.exceptions.bad_request_400 import PeerIdInvalid
+
 import pyrogram
 from pyrogram import raw, types, utils
 from ..object import Object
@@ -49,7 +51,7 @@ class StoryForwardHeader(Object):
         sender_name: str = None,
         chat: "types.Chat" = None,
         story_id: int = None,
-        is_modified: bool = None
+        is_modified: bool = None,
     ):
         super().__init__()
 
@@ -65,14 +67,17 @@ class StoryForwardHeader(Object):
         user = None
         chat = None
         if fwd_header.from_peer is not None:
-            if isinstance(fwd_header.from_peer, raw.types.PeerChannel):
-                chat = await client.get_chat(
-                    utils.get_channel_id(fwd_header.from_peer.channel_id)
-                )
-            elif isinstance(fwd_header.from_peer, raw.types.InputPeerSelf):
-                user = client.me
-            else:
-                user = await client.get_users(fwd_header.from_peer.user_id)
+            try:
+                if isinstance(fwd_header.from_peer, raw.types.PeerChannel):
+                    chat = await client.get_chat(
+                        utils.get_channel_id(fwd_header.from_peer.channel_id)
+                    )
+                elif isinstance(fwd_header.from_peer, raw.types.InputPeerSelf):
+                    user = client.me
+                else:
+                    user = await client.get_users(fwd_header.from_peer.user_id)
+            except PeerIdInvalid:
+                pass
 
         return StoryForwardHeader(
             user=user,

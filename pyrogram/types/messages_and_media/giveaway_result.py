@@ -16,12 +16,14 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-import pyrogram
-
 from datetime import datetime
+from typing import List, Union
+
+from pyrogram.errors.exceptions.bad_request_400 import PeerIdInvalid
+
+import pyrogram
 from pyrogram import raw, types, utils
 from ..object import Object
-from typing import List, Union
 
 
 class GiveawayResult(Object):
@@ -114,7 +116,10 @@ class GiveawayResult(Object):
             expired_date = utils.timestamp_to_datetime(giveaway_result.until_date)
             winners = []
             for winner in giveaway_result.winners:
-                winners.append(await client.get_users(winner))
+                try:
+                    winners.append(await client.get_users(winner))
+                except PeerIdInvalid:
+                    pass
 
         return GiveawayResult(
             chat=chat,

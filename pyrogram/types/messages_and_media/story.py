@@ -16,11 +16,13 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-import pyrogram
-
 from datetime import datetime
-from pyrogram import enums, raw, types, utils
 from typing import BinaryIO, Callable, List, Optional, Union
+
+from pyrogram.errors.exceptions.bad_request_400 import PeerIdInvalid
+
+import pyrogram
+from pyrogram import enums, raw, types, utils
 from ..object import Object
 from ..update import Update
 
@@ -229,20 +231,23 @@ class Story(Object, Update):
                         media_type = None
             else:
                 media_type = None
-        if isinstance(peer, raw.types.PeerChannel) or isinstance(
-            peer, raw.types.InputPeerChannel
-        ):
-            chat_id = utils.get_channel_id(peer.channel_id)
-            chat = await client.invoke(
-                raw.functions.channels.GetChannels(
-                    id=[await client.resolve_peer(chat_id)]
+        try:
+            if isinstance(peer, raw.types.PeerChannel) or isinstance(
+                peer, raw.types.InputPeerChannel
+            ):
+                chat_id = utils.get_channel_id(peer.channel_id)
+                chat = await client.invoke(
+                    raw.functions.channels.GetChannels(
+                        id=[await client.resolve_peer(chat_id)]
+                    )
                 )
-            )
-            sender_chat = types.Chat._parse_chat(client, chat.chats[0])
-        elif isinstance(peer, raw.types.InputPeerSelf):
-            from_user = client.me
-        else:
-            from_user = await client.get_users(peer.user_id)
+                sender_chat = types.Chat._parse_chat(client, chat.chats[0])
+            elif isinstance(peer, raw.types.InputPeerSelf):
+                from_user = client.me
+            else:
+                from_user = await client.get_users(peer.user_id)
+        except PeerIdInvalid:
+            pass
 
         for priv in stories.privacy:
             if isinstance(priv, raw.types.PrivacyValueAllowAll):

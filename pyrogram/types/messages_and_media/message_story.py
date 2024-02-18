@@ -16,8 +16,9 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-import pyrogram
+from pyrogram.errors.exceptions.bad_request_400 import PeerIdInvalid
 
+import pyrogram
 from pyrogram import raw, types, utils
 from ..object import Object
 
@@ -57,19 +58,22 @@ class MessageStory(Object):
         sender_chat = None
         user_id = None
         chat_id = None
-        if isinstance(message_story.peer, raw.types.PeerChannel):
-            chat_id = utils.get_channel_id(message_story.peer.channel_id)
-            chat = await client.invoke(
-                raw.functions.channels.GetChannels(
-                    id=[await client.resolve_peer(chat_id)]
+        try:
+            if isinstance(message_story.peer, raw.types.PeerChannel):
+                chat_id = utils.get_channel_id(message_story.peer.channel_id)
+                chat = await client.invoke(
+                    raw.functions.channels.GetChannels(
+                        id=[await client.resolve_peer(chat_id)]
+                    )
                 )
-            )
-            sender_chat = types.Chat._parse_chat(client, chat.chats[0])
-        else:
-            user_id = message_story.peer.user_id
-            from_user = await client.get_users(user_id)
-        if not client.me.is_bot:
-            return await client.get_stories(user_id or chat_id, message_story.id)
+                sender_chat = types.Chat._parse_chat(client, chat.chats[0])
+            else:
+                user_id = message_story.peer.user_id
+                from_user = await client.get_users(user_id)
+            if not client.me.is_bot:
+                return await client.get_stories(user_id or chat_id, message_story.id)
+        except PeerIdInvalid:
+            pass
         return MessageStory(
             from_user=from_user, sender_chat=sender_chat, story_id=message_story.id
         )

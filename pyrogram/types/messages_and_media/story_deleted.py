@@ -16,10 +16,12 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-import pyrogram
-
-from pyrogram import raw, types
 from typing import Union
+
+from pyrogram.errors.exceptions.bad_request_400 import PeerIdInvalid
+
+import pyrogram
+from pyrogram import raw, types
 from ..object import Object
 from ..update import Update
 
@@ -59,12 +61,15 @@ class StoryDeleted(Object, Update):
     ) -> "StoryDeleted":
         from_user = None
         sender_chat = None
-        if isinstance(peer, raw.types.PeerChannel):
-            sender_chat = await client.get_chat(peer.channel_id)
-        elif isinstance(peer, raw.types.InputPeerSelf):
-            from_user = client.me
-        else:
-            from_user = await client.get_users(peer.user_id)
+        try:
+            if isinstance(peer, raw.types.PeerChannel):
+                sender_chat = await client.get_chat(peer.channel_id)
+            elif isinstance(peer, raw.types.InputPeerSelf):
+                from_user = client.me
+            else:
+                from_user = await client.get_users(peer.user_id)
+        except PeerIdInvalid:
+            pass
 
         return StoryDeleted(
             id=stories.id, from_user=from_user, sender_chat=sender_chat, client=client

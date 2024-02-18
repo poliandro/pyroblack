@@ -123,7 +123,7 @@ async def parse_messages(
         }
 
         message_reply_to_story = {
-            i.id: {"user_id": i.reply_to.user_id, "story_id": i.reply_to.story_id}
+            i.id: {"user_id": i.reply_to.peer.user_id, "story_id": i.reply_to.story_id}
             for i in messages.messages
             if not isinstance(i, raw.types.MessageEmpty)
             and i.reply_to
