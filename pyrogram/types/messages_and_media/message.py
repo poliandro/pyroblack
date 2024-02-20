@@ -365,6 +365,21 @@ class Message(Object, Update):
         web_app_data (:obj:`~pyrogram.types.WebAppData`, *optional*):
             Service message: web app data sent to the bot.
 
+        gift_code (:obj:`~pyrogram.types.GiftCode`, *optional*):
+            Service message: gift code information.
+
+        requested_chats (:obj:`~pyrogram.types.RequestedChats`, *optional*):
+            Service message: requested chats information.
+
+        giveaway_launched (``bool``, *optional*):
+            Service message: giveaway launched.
+
+        chat_ttl_period (``int``, *optional*):
+            Service message: chat TTL period changed.
+
+        boosts_applied (``int``, *optional*):
+            Service message: how many boosts were applied.
+
         reply_markup (:obj:`~pyrogram.types.InlineKeyboardMarkup` | :obj:`~pyrogram.types.ReplyKeyboardMarkup` | :obj:`~pyrogram.types.ReplyKeyboardRemove` | :obj:`~pyrogram.types.ForceReply`, *optional*):
             Additional interface options. An object for an inline keyboard, custom reply keyboard,
             instructions to remove reply keyboard or to force a reply from the user.
@@ -477,6 +492,11 @@ class Message(Object, Update):
         video_chat_ended: "types.VideoChatEnded" = None,
         video_chat_members_invited: "types.VideoChatMembersInvited" = None,
         web_app_data: "types.WebAppData" = None,
+        gift_code: "types.GiftCode" = None,
+        requested_chats: "types.RequestedChats" = None,
+        giveaway_launched: bool = None,
+        chat_ttl_period: int = None,
+        boosts_applied: int = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
@@ -578,6 +598,8 @@ class Message(Object, Update):
         self.video_chat_members_invited = video_chat_members_invited
         self.web_app_data = web_app_data
         self.reactions = reactions
+        self.chat_ttl_period = chat_ttl_period
+        self.boosts_applied = boosts_applied
 
     async def wait_for_click(
         self,
@@ -680,7 +702,11 @@ class Message(Object, Update):
             video_chat_members_invited = None
             web_app_data = None
             giveaway_launched = None
-            giveaway_result = None
+            gift_code = None
+                        giveaway_result = None
+            requested_chats = None
+            chat_ttl_period = None
+            boosts_applied = None
 
             service_type = None
 
@@ -779,6 +805,21 @@ class Message(Object, Update):
                 web_app_data = types.WebAppData._parse(action)
                 service_type = enums.MessageServiceType.WEB_APP_DATA
             elif isinstance(action, raw.types.MessageActionGiveawayLaunch):
+                giveaway_launched = True
+                service_type = enums.MessageServiceType.GIVEAWAY_LAUNCH
+            elif isinstance(action, raw.types.MessageActionGiftCode):
+                gift_code = types.GiftCode._parse(client, action, chats)
+                service_type = enums.MessageServiceType.GIFT_CODE
+            elif isinstance(action, raw.types.MessageActionRequestedPeer):
+                requested_chats = types.RequestedChats._parse(client, action)
+                service_type = enums.MessageServiceType.REQUESTED_CHAT
+            elif isinstance(action, raw.types.MessageActionSetMessagesTTL):
+                chat_ttl_period = action.period
+                service_type = enums.MessageServiceType.CHAT_TTL_CHANGED
+            elif isinstance(action, raw.types.MessageActionBoostApply):
+                boosts_applied = action.boosts
+                service_type = enums.MessageServiceType.BOOST_APPLY
+
                 giveaway_launched = types.GiveawayLaunched()
                 service_type = enums.MessageServiceType.GIVEAWAY_LAUNCHED
             elif isinstance(action, raw.types.MessageActionGiveawayResults):
@@ -842,6 +883,10 @@ class Message(Object, Update):
                 web_app_data=web_app_data,
                 giveaway_launched=giveaway_launched,
                 giveaway_result=giveaway_result,
+                gift_code=gift_code,
+                requested_chats=requested_chats,
+                chat_ttl_period=chat_ttl_period,
+                boosts_applied=boosts_applied,
                 client=client,
                 # TODO: supergroup_chat_created
             )
