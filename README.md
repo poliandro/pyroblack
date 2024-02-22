@@ -59,7 +59,7 @@ If you'd like to support Pyrofork, you can consider:
 ### Installing
 
 ``` bash
-pip3 install pyrofork
+pip3 install git+https://github.com/eyMarv/pyrofork.git
 ```
 
 ### Resources
