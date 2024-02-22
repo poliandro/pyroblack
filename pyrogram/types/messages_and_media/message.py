@@ -1196,7 +1196,7 @@ class Message(Object, Update):
                         )
                 else:
                     parsed_message.reply_to_story_id = message.reply_to.story_id
-                    parsed_message.reply_to_story_user_id = message.reply_to.user_id
+                    parsed_message.reply_to_story_user_id = message.reply_to.peer.user_id
 
                 if replies:
                     if parsed_message.reply_to_message_id:
