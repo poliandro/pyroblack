@@ -24,6 +24,8 @@ import os
 from hashlib import sha1
 from io import BytesIO
 
+from pyrogram.raw.all import layer
+
 import pyrogram
 from pyrogram import raw
 from pyrogram.connection import Connection
@@ -37,7 +39,6 @@ from pyrogram.errors import (
     BadMsgNotification,
     SecurityCheckMismatch,
 )
-from pyrogram.raw.all import layer
 from pyrogram.raw.core import TLObject, MsgContainer, Int, FutureSalts
 from .internals import MsgId, MsgFactory
 
@@ -126,22 +127,41 @@ class Session:
                 )
 
                 if not self.is_cdn:
-                    await self.send(
-                        raw.functions.InvokeWithLayer(
-                            layer=layer,
-                            query=raw.functions.InitConnection(
-                                api_id=await self.client.storage.api_id(),
-                                app_version=self.client.app_version,
-                                device_model=self.client.device_model,
-                                system_version=self.client.system_version,
-                                system_lang_code=self.client.lang_code,
-                                lang_code=self.client.lang_code,
-                                lang_pack=self.client.lang_pack,
-                                query=raw.functions.help.GetConfig(),
+                    if self.client.init_params is not None:
+                        await self.send(
+                            raw.functions.InvokeWithLayer(
+                                layer=layer,
+                                query=raw.functions.InitConnection(
+                                    api_id=await self.client.storage.api_id(),
+                                    app_version=self.client.app_version,
+                                    device_model=self.client.device_model,
+                                    system_version=self.client.system_version,
+                                    system_lang_code=self.client.lang_code,
+                                    lang_code=self.client.lang_code,
+                                    lang_pack=self.client.lang_pack,
+                                    query=raw.functions.help.GetConfig(),
+                                    params=self.client.init_params,
+                                ),
                             ),
-                        ),
-                        timeout=self.START_TIMEOUT,
-                    )
+                            timeout=self.START_TIMEOUT,
+                        )
+                    else:
+                        await self.send(
+                            raw.functions.InvokeWithLayer(
+                                layer=layer,
+                                query=raw.functions.InitConnection(
+                                    api_id=await self.client.storage.api_id(),
+                                    app_version=self.client.app_version,
+                                    device_model=self.client.device_model,
+                                    system_version=self.client.system_version,
+                                    system_lang_code=self.client.lang_code,
+                                    lang_code=self.client.lang_code,
+                                    lang_pack=self.client.lang_pack,
+                                    query=raw.functions.help.GetConfig(),
+                                ),
+                            ),
+                            timeout=self.START_TIMEOUT,
+                        )
 
                 self.ping_task = self.loop.create_task(self.ping_worker())
 

@@ -63,7 +63,6 @@ from pyrogram.types import User, TermsOfService
 from pyrogram.utils import ainput
 from .dispatcher import Dispatcher
 from .file_id import FileId, FileType, ThumbnailSource
-from .filters import Filter
 from .mime_types import mime_types
 from .parser import Parser
 from .session.internals import MsgId
@@ -202,6 +201,10 @@ class Client(Methods):
             Set the maximum amount of concurrent transmissions (uploads & downloads).
             A value that is too high may result in network related issues.
             Defaults to 1.
+
+        init_params (``raw.types.JsonObject``, *optional*):
+            Internal parameter.
+            Defaults to None.
     """
 
     APP_VERSION = f"Pyrogram {__version__}"
@@ -258,6 +261,7 @@ class Client(Methods):
         sleep_threshold: int = Session.SLEEP_THRESHOLD,
         hide_password: bool = False,
         max_concurrent_transmissions: int = MAX_CONCURRENT_TRANSMISSIONS,
+        init_params: raw.types.JsonObject = None,
     ):
         super().__init__()
 
@@ -289,6 +293,7 @@ class Client(Methods):
         self.sleep_threshold = sleep_threshold
         self.hide_password = hide_password
         self.max_concurrent_transmissions = max_concurrent_transmissions
+        self.init_params = init_params
 
         self.executor = ThreadPoolExecutor(self.workers, thread_name_prefix="Handler")
 
@@ -573,9 +578,7 @@ class Client(Methods):
                 username = (
                     peer.username.lower()
                     if peer.username
-                    else peer.usernames[0].username.lower()
-                    if peer.usernames
-                    else None
+                    else peer.usernames[0].username.lower() if peer.usernames else None
                 )
                 if peer.usernames is not None and len(peer.usernames) > 1:
                     for uname in peer.usernames:
@@ -592,9 +595,7 @@ class Client(Methods):
                 username = (
                     peer.username.lower()
                     if peer.username
-                    else peer.usernames[0].username.lower()
-                    if peer.usernames
-                    else None
+                    else peer.usernames[0].username.lower() if peer.usernames else None
                 )
                 if peer.usernames is not None and len(peer.usernames) > 1:
                     for uname in peer.usernames:
@@ -1031,9 +1032,11 @@ class Client(Methods):
             session = Session(
                 self,
                 dc_id,
-                await Auth(self, dc_id, await self.storage.test_mode()).create()
-                if dc_id != await self.storage.dc_id()
-                else await self.storage.auth_key(),
+                (
+                    await Auth(self, dc_id, await self.storage.test_mode()).create()
+                    if dc_id != await self.storage.dc_id()
+                    else await self.storage.auth_key()
+                ),
                 await self.storage.test_mode(),
                 is_media=True,
             )
@@ -1071,9 +1074,11 @@ class Client(Methods):
                         if progress:
                             func = functools.partial(
                                 progress,
-                                min(offset_bytes, file_size)
-                                if file_size != 0
-                                else offset_bytes,
+                                (
+                                    min(offset_bytes, file_size)
+                                    if file_size != 0
+                                    else offset_bytes
+                                ),
                                 file_size,
                                 *progress_args,
                             )
@@ -1166,9 +1171,11 @@ class Client(Methods):
                             if progress:
                                 func = functools.partial(
                                     progress,
-                                    min(offset_bytes, file_size)
-                                    if file_size != 0
-                                    else offset_bytes,
+                                    (
+                                        min(offset_bytes, file_size)
+                                        if file_size != 0
+                                        else offset_bytes
+                                    ),
                                     file_size,
                                     *progress_args,
                                 )
