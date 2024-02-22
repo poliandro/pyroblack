@@ -807,20 +807,26 @@ class Message(Object, Update):
                 new_chat_title=new_chat_title,
                 new_chat_photo=new_chat_photo,
                 delete_chat_photo=delete_chat_photo,
-                migrate_to_chat_id=utils.get_channel_id(migrate_to_chat_id)
-                if migrate_to_chat_id
-                else None,
-                migrate_from_chat_id=-migrate_from_chat_id
-                if migrate_from_chat_id
-                else None,
+                migrate_to_chat_id=(
+                    utils.get_channel_id(migrate_to_chat_id)
+                    if migrate_to_chat_id
+                    else None
+                ),
+                migrate_from_chat_id=(
+                    -migrate_from_chat_id if migrate_from_chat_id else None
+                ),
                 group_chat_created=group_chat_created,
                 channel_chat_created=channel_chat_created,
-                chat_shared=chat_shared
-                if chat_shared is not None and len(chat_shared) > 0
-                else None,
-                user_shared=user_shared
-                if user_shared is not None and len(user_shared) > 0
-                else None,
+                chat_shared=(
+                    chat_shared
+                    if chat_shared is not None and len(chat_shared) > 0
+                    else None
+                ),
+                user_shared=(
+                    user_shared
+                    if user_shared is not None and len(user_shared) > 0
+                    else None
+                ),
                 is_topic_message=is_topic_message,
                 forum_topic_created=forum_topic_created,
                 forum_topic_closed=forum_topic_closed,
@@ -835,7 +841,7 @@ class Message(Object, Update):
                 web_app_data=web_app_data,
                 giveaway_launched=giveaway_launched,
                 giveaway_result=giveaway_result,
-                client=client
+                client=client,
                 # TODO: supergroup_chat_created
             )
 
@@ -870,9 +876,9 @@ class Message(Object, Update):
                     except MessageIdsEmpty:
                         pass
 
-            client.message_cache[
-                (parsed_message.chat.id, parsed_message.id)
-            ] = parsed_message
+            client.message_cache[(parsed_message.chat.id, parsed_message.id)] = (
+                parsed_message
+            )
 
             if message.reply_to:
                 if message.reply_to.forum_topic:
@@ -1196,7 +1202,9 @@ class Message(Object, Update):
                         )
                 else:
                     parsed_message.reply_to_story_id = message.reply_to.story_id
-                    parsed_message.reply_to_story_user_id = message.reply_to.peer.user_id
+                    parsed_message.reply_to_story_user_id = (
+                        message.reply_to.peer.user_id
+                    )
 
                 if replies:
                     if parsed_message.reply_to_message_id:
@@ -1250,9 +1258,9 @@ class Message(Object, Update):
                             parsed_message.reply_to_story = reply_to_story
 
             if not parsed_message.poll:  # Do not cache poll messages
-                client.message_cache[
-                    (parsed_message.chat.id, parsed_message.id)
-                ] = parsed_message
+                client.message_cache[(parsed_message.chat.id, parsed_message.id)] = (
+                    parsed_message
+                )
 
             return parsed_message
 
@@ -4213,9 +4221,9 @@ class Message(Object, Update):
                 quote_entities=quote_entities,
                 schedule_date=schedule_date,
                 protect_content=protect_content,
-                reply_markup=self.reply_markup
-                if reply_markup is object
-                else reply_markup,
+                reply_markup=(
+                    self.reply_markup if reply_markup is object else reply_markup
+                ),
             )
         elif self.media:
             send_media = partial(
@@ -4227,9 +4235,9 @@ class Message(Object, Update):
                 schedule_date=schedule_date,
                 has_spoiler=has_spoiler,
                 protect_content=protect_content,
-                reply_markup=self.reply_markup
-                if reply_markup is object
-                else reply_markup,
+                reply_markup=(
+                    self.reply_markup if reply_markup is object else reply_markup
+                ),
             )
 
             if self.photo:
@@ -4313,9 +4321,9 @@ class Message(Object, Update):
                     quote_entities=quote_entities,
                     schedule_date=schedule_date,
                     protect_content=protect_content,
-                    reply_markup=self.reply_markup
-                    if reply_markup is object
-                    else reply_markup,
+                    reply_markup=(
+                        self.reply_markup if reply_markup is object else reply_markup
+                    ),
                 )
             else:
                 raise ValueError("Unknown media type")
