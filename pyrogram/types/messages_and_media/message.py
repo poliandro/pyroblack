@@ -1208,11 +1208,11 @@ class Message(Object, Update):
 
                 if replies:
                     if parsed_message.reply_to_message_id:
-                        #is_cross_chat = getattr(
+                        # is_cross_chat = getattr(
                         #    message.reply_to, "reply_to_peer_id", None
-                        #) and getattr(
+                        # ) and getattr(
                         #    message.reply_to.reply_to_peer_id, "channel_id", None
-                        #)
+                        # )
                         is_cross_chat = False
                         if is_cross_chat:
                             key = (
