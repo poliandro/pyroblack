@@ -49,7 +49,7 @@ class Contact(Object):
         first_name: str,
         last_name: str = None,
         user_id: int = None,
-        vcard: str = None
+        vcard: str = None,
     ):
         super().__init__(client)
 

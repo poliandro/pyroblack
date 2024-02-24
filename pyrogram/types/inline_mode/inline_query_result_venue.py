@@ -120,15 +120,19 @@ class InlineQueryResultVenue(InlineQueryResult):
                     provider=(
                         "foursquare"
                         if self.foursquare_id or self.foursquare_type
-                        else "google"
-                        if self.google_place_id or self.google_place_type
-                        else ""
+                        else (
+                            "google"
+                            if self.google_place_id or self.google_place_type
+                            else ""
+                        )
                     ),
                     venue_id=self.foursquare_id or self.google_place_id or "",
                     venue_type=self.foursquare_type or self.google_place_type or "",
-                    reply_markup=await self.reply_markup.write(client)
-                    if self.reply_markup
-                    else None,
+                    reply_markup=(
+                        await self.reply_markup.write(client)
+                        if self.reply_markup
+                        else None
+                    ),
                 )
             ),
         )

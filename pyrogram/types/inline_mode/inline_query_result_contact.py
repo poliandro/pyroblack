@@ -97,21 +97,25 @@ class InlineQueryResultContact(InlineQueryResult):
                     first_name=self.first_name,
                     last_name=self.last_name,
                     vcard=self.vcard,
-                    reply_markup=await self.reply_markup.write(client)
-                    if self.reply_markup
-                    else None,
+                    reply_markup=(
+                        await self.reply_markup.write(client)
+                        if self.reply_markup
+                        else None
+                    ),
                 )
             ),
-            thumb=raw.types.InputWebDocument(
-                url=self.thumb_url,
-                size=0,
-                mime_type="image/jpg",
-                attributes=[
-                    raw.types.DocumentAttributeImageSize(
-                        w=self.thumb_width, h=self.thumb_height
-                    )
-                ],
-            )
-            if self.thumb_url
-            else None,
+            thumb=(
+                raw.types.InputWebDocument(
+                    url=self.thumb_url,
+                    size=0,
+                    mime_type="image/jpg",
+                    attributes=[
+                        raw.types.DocumentAttributeImageSize(
+                            w=self.thumb_width, h=self.thumb_height
+                        )
+                    ],
+                )
+                if self.thumb_url
+                else None
+            ),
         )

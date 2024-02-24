@@ -160,6 +160,7 @@ all = create(all_filter)
 
 # endregion
 
+
 # region me_filter
 async def me_filter(_, __, m: Message):
     return bool(m.from_user and m.from_user.is_self or getattr(m, "outgoing", False))
@@ -170,6 +171,7 @@ me = create(me_filter)
 
 
 # endregion
+
 
 # region bot_filter
 async def bot_filter(_, __, m: Message):
@@ -182,6 +184,7 @@ bot = create(bot_filter)
 
 # endregion
 
+
 # region incoming_filter
 async def incoming_filter(_, __, m: Message):
     return not m.outgoing
@@ -192,6 +195,7 @@ incoming = create(incoming_filter)
 
 
 # endregion
+
 
 # region outgoing_filter
 async def outgoing_filter(_, __, m: Message):
@@ -204,6 +208,7 @@ outgoing = create(outgoing_filter)
 
 # endregion
 
+
 # region text_filter
 async def text_filter(_, __, m: Message):
     return bool(m.text)
@@ -214,6 +219,7 @@ text = create(text_filter)
 
 
 # endregion
+
 
 # region reply_filter
 async def reply_filter(_, __, m: Message):
@@ -226,6 +232,7 @@ reply = create(reply_filter)
 
 # endregion
 
+
 # region reaction_filter
 async def reaction_filter(_, __, m: Message):
     return bool(m.edit_hide)
@@ -235,6 +242,7 @@ react = create(reaction_filter)
 """Filter reactions."""
 
 # endregion
+
 
 # region forwarded_filter
 async def forwarded_filter(_, __, m: Message):
@@ -246,6 +254,7 @@ forwarded = create(forwarded_filter)
 
 
 # endregion
+
 
 # region caption_filter
 async def caption_filter(_, __, m: Message):
@@ -270,6 +279,7 @@ audio = create(audio_filter)
 
 # endregion
 
+
 # region document_filter
 async def document_filter(_, __, m: Message):
     return bool(m.document)
@@ -280,6 +290,7 @@ document = create(document_filter)
 
 
 # endregion
+
 
 # region photo_filter
 async def photo_filter(_, __, m: Message):
@@ -292,6 +303,7 @@ photo = create(photo_filter)
 
 # endregion
 
+
 # region sticker_filter
 async def sticker_filter(_, __, m: Message):
     return bool(m.sticker)
@@ -302,6 +314,7 @@ sticker = create(sticker_filter)
 
 
 # endregion
+
 
 # region animation_filter
 async def animation_filter(_, __, m: Message):
@@ -314,6 +327,7 @@ animation = create(animation_filter)
 
 # endregion
 
+
 # region game_filter
 async def game_filter(_, __, m: Message):
     return bool(m.game)
@@ -324,6 +338,7 @@ game = create(game_filter)
 
 
 # endregion
+
 
 # region video_filter
 async def video_filter(_, __, m: Message):
@@ -336,6 +351,7 @@ video = create(video_filter)
 
 # endregion
 
+
 # region media_group_filter
 async def media_group_filter(_, __, m: Message):
     return bool(m.media_group_id)
@@ -346,6 +362,7 @@ media_group = create(media_group_filter)
 
 
 # endregion
+
 
 # region voice_filter
 async def voice_filter(_, __, m: Message):
@@ -358,6 +375,7 @@ voice = create(voice_filter)
 
 # endregion
 
+
 # region video_note_filter
 async def video_note_filter(_, __, m: Message):
     return bool(m.video_note)
@@ -368,6 +386,7 @@ video_note = create(video_note_filter)
 
 
 # endregion
+
 
 # region contact_filter
 async def contact_filter(_, __, m: Message):
@@ -380,6 +399,7 @@ contact = create(contact_filter)
 
 # endregion
 
+
 # region location_filter
 async def location_filter(_, __, m: Message):
     return bool(m.location)
@@ -390,6 +410,7 @@ location = create(location_filter)
 
 
 # endregion
+
 
 # region venue_filter
 async def venue_filter(_, __, m: Message):
@@ -402,6 +423,7 @@ venue = create(venue_filter)
 
 # endregion
 
+
 # region web_page_filter
 async def web_page_filter(_, __, m: Message):
     return bool(m.web_page)
@@ -412,6 +434,7 @@ web_page = create(web_page_filter)
 
 
 # endregion
+
 
 # region poll_filter
 async def poll_filter(_, __, m: Message):
@@ -424,6 +447,7 @@ poll = create(poll_filter)
 
 # endregion
 
+
 # region dice_filter
 async def dice_filter(_, __, m: Message):
     return bool(m.dice)
@@ -435,6 +459,7 @@ dice = create(dice_filter)
 
 # endregion
 
+
 # region media_spoiler
 async def media_spoiler_filter(_, __, m: Message):
     return bool(m.has_media_spoiler)
@@ -445,6 +470,7 @@ media_spoiler = create(media_spoiler_filter)
 
 
 # endregion
+
 
 # region private_filter
 async def private_filter(_, __, m: Message):
@@ -458,10 +484,13 @@ private = create(private_filter)
 
 # endregion
 
+
 # region group_filter
 async def group_filter(_, __, m: Message):
     m = m.message if isinstance(m, CallbackQuery) else m
-    return bool(m.chat and m.chat.type in {enums.ChatType.GROUP, enums.ChatType.SUPERGROUP})
+    return bool(
+        m.chat and m.chat.type in {enums.ChatType.GROUP, enums.ChatType.SUPERGROUP}
+    )
 
 
 group = create(group_filter)
@@ -469,6 +498,7 @@ group = create(group_filter)
 
 
 # endregion
+
 
 # region channel_filter
 async def channel_filter(_, __, m: Message):
@@ -482,6 +512,7 @@ channel = create(channel_filter)
 
 # endregion
 
+
 # region new_chat_members_filter
 async def new_chat_members_filter(_, __, m: Message):
     return bool(m.new_chat_members)
@@ -492,6 +523,7 @@ new_chat_members = create(new_chat_members_filter)
 
 
 # endregion
+
 
 # region left_chat_member_filter
 async def left_chat_member_filter(_, __, m: Message):
@@ -504,6 +536,7 @@ left_chat_member = create(left_chat_member_filter)
 
 # endregion
 
+
 # region new_chat_title_filter
 async def new_chat_title_filter(_, __, m: Message):
     return bool(m.new_chat_title)
@@ -514,6 +547,7 @@ new_chat_title = create(new_chat_title_filter)
 
 
 # endregion
+
 
 # region new_chat_photo_filter
 async def new_chat_photo_filter(_, __, m: Message):
@@ -526,6 +560,7 @@ new_chat_photo = create(new_chat_photo_filter)
 
 # endregion
 
+
 # region delete_chat_photo_filter
 async def delete_chat_photo_filter(_, __, m: Message):
     return bool(m.delete_chat_photo)
@@ -536,6 +571,7 @@ delete_chat_photo = create(delete_chat_photo_filter)
 
 
 # endregion
+
 
 # region group_chat_created_filter
 async def group_chat_created_filter(_, __, m: Message):
@@ -548,6 +584,7 @@ group_chat_created = create(group_chat_created_filter)
 
 # endregion
 
+
 # region supergroup_chat_created_filter
 async def supergroup_chat_created_filter(_, __, m: Message):
     return bool(m.supergroup_chat_created)
@@ -558,6 +595,7 @@ supergroup_chat_created = create(supergroup_chat_created_filter)
 
 
 # endregion
+
 
 # region channel_chat_created_filter
 async def channel_chat_created_filter(_, __, m: Message):
@@ -570,6 +608,7 @@ channel_chat_created = create(channel_chat_created_filter)
 
 # endregion
 
+
 # region migrate_to_chat_id_filter
 async def migrate_to_chat_id_filter(_, __, m: Message):
     return bool(m.migrate_to_chat_id)
@@ -580,6 +619,7 @@ migrate_to_chat_id = create(migrate_to_chat_id_filter)
 
 
 # endregion
+
 
 # region migrate_from_chat_id_filter
 async def migrate_from_chat_id_filter(_, __, m: Message):
@@ -592,6 +632,7 @@ migrate_from_chat_id = create(migrate_from_chat_id_filter)
 
 # endregion
 
+
 # region pinned_message_filter
 async def pinned_message_filter(_, __, m: Message):
     return bool(m.pinned_message)
@@ -602,6 +643,7 @@ pinned_message = create(pinned_message_filter)
 
 
 # endregion
+
 
 # region game_high_score_filter
 async def game_high_score_filter(_, __, m: Message):
@@ -614,6 +656,7 @@ game_high_score = create(game_high_score_filter)
 
 # endregion
 
+
 # region reply_keyboard_filter
 async def reply_keyboard_filter(_, __, m: Message):
     return isinstance(m.reply_markup, ReplyKeyboardMarkup)
@@ -624,6 +667,7 @@ reply_keyboard = create(reply_keyboard_filter)
 
 
 # endregion
+
 
 # region inline_keyboard_filter
 async def inline_keyboard_filter(_, __, m: Message):
@@ -636,6 +680,7 @@ inline_keyboard = create(inline_keyboard_filter)
 
 # endregion
 
+
 # region mentioned_filter
 async def mentioned_filter(_, __, m: Message):
     return bool(m.mentioned)
@@ -646,6 +691,7 @@ mentioned = create(mentioned_filter)
 
 
 # endregion
+
 
 # region via_bot_filter
 async def via_bot_filter(_, __, m: Message):
@@ -658,6 +704,7 @@ via_bot = create(via_bot_filter)
 
 # endregion
 
+
 # region video_chat_started_filter
 async def video_chat_started_filter(_, __, m: Message):
     return bool(m.video_chat_started)
@@ -668,6 +715,7 @@ video_chat_started = create(video_chat_started_filter)
 
 
 # endregion
+
 
 # region video_chat_ended_filter
 async def video_chat_ended_filter(_, __, m: Message):
@@ -680,6 +728,7 @@ video_chat_ended = create(video_chat_ended_filter)
 
 # endregion
 
+
 # region video_chat_members_invited_filter
 async def video_chat_members_invited_filter(_, __, m: Message):
     return bool(m.video_chat_members_invited)
@@ -690,6 +739,7 @@ video_chat_members_invited = create(video_chat_members_invited_filter)
 
 
 # endregion
+
 
 # region service_filter
 async def service_filter(_, __, m: Message):
@@ -708,6 +758,7 @@ A service message contains any of the following fields set: *left_chat_member*,
 
 # endregion
 
+
 # region media_filter
 async def media_filter(_, __, m: Message):
     return bool(m.media)
@@ -723,6 +774,7 @@ A media message contains any of the following fields set: *audio*, *document*, *
 
 # endregion
 
+
 # region scheduled_filter
 async def scheduled_filter(_, __, m: Message):
     return bool(m.scheduled)
@@ -733,6 +785,7 @@ scheduled = create(scheduled_filter)
 
 
 # endregion
+
 
 # region from_scheduled_filter
 async def from_scheduled_filter(_, __, m: Message):
@@ -745,6 +798,7 @@ from_scheduled = create(from_scheduled_filter)
 
 # endregion
 
+
 # region linked_channel_filter
 async def linked_channel_filter(_, __, m: Message):
     return bool(m.forward_from_chat and not m.from_user)
@@ -755,6 +809,7 @@ linked_channel = create(linked_channel_filter)
 
 
 # endregion
+
 
 # region forum_topic_closed_filter
 async def forum_topic_closed_filter(_, __, m: Message):
@@ -767,6 +822,7 @@ forum_topic_closed = create(forum_topic_closed_filter)
 
 # endregion
 
+
 # region forum_topic_created_filter
 async def forum_topic_created_filter(_, __, m: Message):
     return bool(m.forum_topic_created)
@@ -777,6 +833,7 @@ forum_topic_created = create(forum_topic_created_filter)
 
 
 # endregion
+
 
 # region forum_topic_edited_filter
 async def forum_topic_edited_filter(_, __, m: Message):
@@ -801,6 +858,7 @@ forum_topic_reopened = create(forum_topic_reopened_filter)
 
 # endregion
 
+
 # region general_topic_hidden_filter
 async def general_topic_hidden_filter(_, __, m: Message):
     return bool(m.general_topic_hidden)
@@ -813,6 +871,7 @@ general_forum_topic_hidden = create(general_topic_hidden_filter)
 
 # endregion
 
+
 # region general_topic_unhidden_filter
 async def general_topic_unhidden_filter(_, __, m: Message):
     return bool(m.general_topic_unhidden)
@@ -823,6 +882,7 @@ general_forum_topic_unhidden = create(general_topic_unhidden_filter)
 
 
 # endregion
+
 
 # region command_filter
 def command(
@@ -972,11 +1032,11 @@ class user(Filter, set):
         users = [] if users is None else users if isinstance(users, list) else [users]
 
         super().__init__(
-            "me"
-            if u in ["me", "self"]
-            else u.lower().strip("@")
-            if isinstance(u, str)
-            else u
+            (
+                "me"
+                if u in ["me", "self"]
+                else u.lower().strip("@") if isinstance(u, str) else u
+            )
             for u in users
         )
 
@@ -1009,11 +1069,11 @@ class chat(Filter, set):
         chats = [] if chats is None else chats if isinstance(chats, list) else [chats]
 
         super().__init__(
-            "me"
-            if c in ["me", "self"]
-            else c.lower().strip("@")
-            if isinstance(c, str)
-            else c
+            (
+                "me"
+                if c in ["me", "self"]
+                else c.lower().strip("@") if isinstance(c, str) else c
+            )
             for c in chats
         )
 

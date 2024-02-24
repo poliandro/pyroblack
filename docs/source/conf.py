@@ -1,21 +1,22 @@
-#  Pyrofork - Telegram MTProto API Client Library for Python
+#  pyroblack - Telegram MTProto API Client Library for Python
 #  Copyright (C) 2017-present Dan <https://github.com/delivrance>
 #  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#  Copyright (C) 2024-present eyMarv <https://github.com/eyMarv>
 #
-#  This file is part of Pyrofork.
+#  This file is part of pyroblack.
 #
-#  Pyrofork is free software: you can redistribute it and/or modify
+#  pyroblack is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Lesser General Public License as published
 #  by the Free Software Foundation, either version 3 of the License, or
 #  (at your option) any later version.
 #
-#  Pyrofork is distributed in the hope that it will be useful,
+#  pyroblack is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU Lesser General Public License for more details.
 #
 #  You should have received a copy of the GNU Lesser General Public License
-#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+#  along with pyroblack.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
 import sys
@@ -29,9 +30,9 @@ from pygments.styles.friendly import FriendlyStyle
 
 FriendlyStyle.background_color = "#f3f2f1"
 
-project = "Pyrofork"
-copyright = f"2023-present, eyMarv + Mayuri-Chan"
-author = "eyMarv + Mayuri-Chan"
+project = "pyroblack"
+copyright = f"2023-present, eyMarv"
+author = "eyMarv"
 
 version = ".".join(__version__.split(".")[:-1]) + " [" + str(layer) + "]"
 extensions = [
@@ -40,12 +41,10 @@ extensions = [
     "sphinx.ext.autosummary",
     "sphinx.ext.intersphinx",
     "sphinx_copybutton",
-    "sphinx_immaterial"
+    "sphinx_immaterial",
 ]
 
-intersphinx_mapping = {
-    "python": ("https://docs.python.org/3", None)
-}
+intersphinx_mapping = {"python": ("https://docs.python.org/3", None)}
 
 master_doc = "index"
 source_suffix = ".rst"
@@ -67,7 +66,7 @@ copybutton_prompt_text = "$ "
 
 suppress_warnings = ["image.not_readable"]
 
-html_title = f"Pyrofork Documentation v{__version__}"
+html_title = f"pyroblack Documentation v{__version__}"
 html_theme = "sphinx_immaterial"
 html_static_path = [os.path.abspath("static")]
 print("ABSOLUTE PATH", os.path.abspath("static"))
@@ -95,9 +94,9 @@ html_theme_options = {
         "repo": "fontawesome/brands/github",
         "edit": "material/file-edit-outline",
     },
-    "site_url": "https://eyMarv.github.io/pyrofork-docs/",
-    "repo_url": "https://github.com/eyMarv/pyrofork/",
-    "repo_name": "pyrofork",
+    "site_url": "https://eyMarv.github.io/pyroblack-docs/",
+    "repo_url": "https://github.com/eyMarv/pyroblack/",
+    "repo_name": "pyroblack",
     "globaltoc_collapse": True,
     "features": [
         "navigation.expand",
@@ -110,12 +109,7 @@ html_theme_options = {
         "content.tabs.link",
         "announce.dismiss",
     ],
-    "palette": [
-        {
-            "media": "(prefers-color-scheme: dark)",
-            "scheme": "slate"
-        }
-    ],
+    "palette": [{"media": "(prefers-color-scheme: dark)", "scheme": "slate"}],
     "toc_title_is_page_title": True,
     "version_dropdown": True,
     "version_info": [
@@ -124,11 +118,11 @@ html_theme_options = {
     ],
 }
 
-html_logo = html_static_path[0] + "/img/pyrofork.png"
+html_logo = html_static_path[0] + "/img/pyroblack.png"
 html_favicon = html_static_path[0] + "/img/favicon.ico"
 
 latex_engine = "xelatex"
-latex_logo = os.path.abspath("static/img/pyrofork.png")
+latex_logo = os.path.abspath(html_static_path[0] + "/img/pyroblack.png")
 
 latex_elements = {
     "pointsize": "12pt",
@@ -136,7 +130,7 @@ latex_elements = {
         \setmainfont{Open Sans}
         \setsansfont{Bitter}
         \setmonofont{Ubuntu Mono}
-        """
+        """,
 }
 
 html_css_files = [

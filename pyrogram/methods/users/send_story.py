@@ -1,20 +1,21 @@
-#  Pyrofork - Telegram MTProto API Client Library for Python
+#  pyroblack - Telegram MTProto API Client Library for Python
 #  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#  Copyright (C) 2024-present eyMarv <https://github.com/eyMarv>
 #
-#  This file is part of Pyrofork.
+#  This file is part of pyroblack.
 #
-#  Pyrofork is free software: you can redistribute it and/or modify
+#  pyroblack is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Lesser General Public License as published
 #  by the Free Software Foundation, either version 3 of the License, or
 #  (at your option) any later version.
 #
-#  Pyrofork is distributed in the hope that it will be useful,
+#  pyroblack is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU Lesser General Public License for more details.
 #
 #  You should have received a copy of the GNU Lesser General Public License
-#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+#  along with pyroblack.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
 import re
@@ -242,15 +243,19 @@ class SendStory:
                 entities=entities,
                 period=period,
                 fwd_from_id=forward_from_chat,
-                fwd_from_story=forward_from_story_id
-                if forward_from_chat_id is not None
-                else None,
-                fwd_modified=True
-                if forward_from_chat_id is not None and caption is not None
-                else False,
-                media_areas=[await media_area.write(self) for media_area in media_areas]
-                if media_areas is not None
-                else None,
+                fwd_from_story=(
+                    forward_from_story_id if forward_from_chat_id is not None else None
+                ),
+                fwd_modified=(
+                    True
+                    if forward_from_chat_id is not None and caption is not None
+                    else False
+                ),
+                media_areas=(
+                    [await media_area.write(self) for media_area in media_areas]
+                    if media_areas is not None
+                    else None
+                ),
             )
         )
         return await types.Story._parse(self, r.updates[0].story, r.updates[0].peer)

@@ -93,9 +93,11 @@ class GetMessages:
         ids, ids_type = (
             (message_ids, raw.types.InputMessageID)
             if message_ids
-            else (reply_to_message_ids, raw.types.InputMessageReplyTo)
-            if reply_to_message_ids
-            else (None, None)
+            else (
+                (reply_to_message_ids, raw.types.InputMessageReplyTo)
+                if reply_to_message_ids
+                else (None, None)
+            )
         )
 
         if ids is None:

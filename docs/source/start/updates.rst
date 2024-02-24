@@ -1,8 +1,8 @@
 Handling Updates
 ================
 
-:doc:`Invoking API methods <invoking>` sequentially is one way to use Pyrofork. This page deals with Telegram updates
-and how to handle new incoming messages or other events in Pyrofork.
+:doc:`Invoking API methods <invoking>` sequentially is one way to use pyroblack. This page deals with Telegram updates
+and how to handle new incoming messages or other events in pyroblack.
 
 .. contents:: Contents
     :backlinks: none

@@ -1,4 +1,4 @@
-name: Pyrogram
+name: pyroblack
 
 on: [push, pull_request]
 

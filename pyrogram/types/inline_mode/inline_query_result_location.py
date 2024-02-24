@@ -115,9 +115,11 @@ class InlineQueryResultLocation(InlineQueryResult):
                     heading=self.heading,
                     period=self.live_period,
                     proximity_notification_radius=self.proximity_alert_radius,
-                    reply_markup=await self.reply_markup.write(client)
-                    if self.reply_markup
-                    else None,
+                    reply_markup=(
+                        await self.reply_markup.write(client)
+                        if self.reply_markup
+                        else None
+                    ),
                 )
             ),
         )

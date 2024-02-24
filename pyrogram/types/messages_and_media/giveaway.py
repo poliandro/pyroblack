@@ -1,29 +1,30 @@
-#  Pyrofork - Telegram MTProto API Client Library for Python
+#  pyroblack - Telegram MTProto API Client Library for Python
 #  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#  Copyright (C) 2024-present eyMarv <https://github.com/eyMarv>
 #
-#  This file is part of Pyrofork.
+#  This file is part of pyroblack.
 #
-#  Pyrofork is free software: you can redistribute it and/or modify
+#  pyroblack is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Lesser General Public License as published
 #  by the Free Software Foundation, either version 3 of the License, or
 #  (at your option) any later version.
 #
-#  Pyrofork is distributed in the hope that it will be useful,
+#  pyroblack is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU Lesser General Public License for more details.
 #
 #  You should have received a copy of the GNU Lesser General Public License
-#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+#  along with pyroblack.  If not, see <http://www.gnu.org/licenses/>.
 
 import asyncio
-import pyrogram
-
 from datetime import datetime
+from typing import List
+
+import pyrogram
 from pyrogram import raw, types, utils
 from pyrogram.errors import FloodWait
 from ..object import Object
-from typing import List
 
 
 class Giveaway(Object):
@@ -62,7 +63,7 @@ class Giveaway(Object):
         expire_date: datetime,
         new_subscribers: bool,
         allowed_countries: List[str] = None,
-        private_channel_ids: List[int] = None
+        private_channel_ids: List[int] = None,
     ):
         super().__init__(client)
 
@@ -100,9 +101,9 @@ class Giveaway(Object):
             months=giveaway.months,
             expire_date=utils.timestamp_to_datetime(giveaway.until_date),
             new_subscribers=giveaway.only_new_subscribers,
-            allowed_countries=giveaway.countries_iso2
-            if len(giveaway.countries_iso2) > 0
-            else None,
+            allowed_countries=(
+                giveaway.countries_iso2 if len(giveaway.countries_iso2) > 0 else None
+            ),
             private_channel_ids=private_ids if len(private_ids) > 0 else None,
             client=client,
         )

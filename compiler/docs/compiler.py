@@ -1,21 +1,22 @@
-#  Pyrofork - Telegram MTProto API Client Library for Python
+#  pyroblack - Telegram MTProto API Client Library for Python
 #  Copyright (C) 2017-present Dan <https://github.com/delivrance>
 #  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#  Copyright (C) 2024-present eyMarv <https://github.com/eyMarv>
 #
-#  This file is part of Pyrofork.
+#  This file is part of pyroblack.
 #
-#  Pyrofork is free software: you can redistribute it and/or modify
+#  pyroblack is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Lesser General Public License as published
 #  by the Free Software Foundation, either version 3 of the License, or
 #  (at your option) any later version.
 #
-#  Pyrofork is distributed in the hope that it will be useful,
+#  pyroblack is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU Lesser General Public License for more details.
 #
 #  You should have received a copy of the GNU Lesser General Public License
-#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+#  along with pyroblack.  If not, see <http://www.gnu.org/licenses/>.
 
 import ast
 import os
@@ -61,7 +62,9 @@ def generate(source_path, base):
                 else:
                     continue
 
-                full_path = os.path.basename(path) + "/" + snek(name).replace("_", "-") + ".rst"
+                full_path = (
+                    os.path.basename(path) + "/" + snek(name).replace("_", "-") + ".rst"
+                )
 
                 if level:
                     full_path = base + "/" + full_path
@@ -72,7 +75,9 @@ def generate(source_path, base):
 
                 full_name = f"{(namespace + '.') if namespace else ''}{name}"
 
-                os.makedirs(os.path.dirname(DESTINATION + "/" + full_path), exist_ok=True)
+                os.makedirs(
+                    os.path.dirname(DESTINATION + "/" + full_path), exist_ok=True
+                )
 
                 with open(DESTINATION + "/" + full_path, "w", encoding="utf-8") as f:
                     f.write(
@@ -81,7 +86,7 @@ def generate(source_path, base):
                             title_markup="=" * len(full_name),
                             full_class_path="pyrogram.raw.{}".format(
                                 ".".join(full_path.split("/")[:-1]) + "." + name
-                            )
+                            ),
                         )
                     )
 
@@ -120,7 +125,7 @@ def generate(source_path, base):
                     title=k.title(),
                     title_markup="=" * len(k),
                     module=module,
-                    entities="\n    ".join(entities)
+                    entities="\n    ".join(entities),
                 )
             )
 
@@ -380,7 +385,7 @@ def pyrogram_api():
             invoke
             resolve_peer
             save_file
-        """
+        """,
     )
 
     root = PYROGRAM_API_DEST + "/methods"
@@ -590,7 +595,7 @@ def pyrogram_api():
         Authorization
             SentCode
             TermsOfService
-        """
+        """,
     )
 
     root = PYROGRAM_API_DEST + "/types"
@@ -733,7 +738,7 @@ def pyrogram_api():
         ChatJoinRequest
             ChatJoinRequest.approve
             ChatJoinRequest.decline
-        """
+        """,
     )
 
     root = PYROGRAM_API_DEST + "/bound-methods"
@@ -750,10 +755,21 @@ def pyrogram_api():
         for k, v in categories.items():
             name, *bound_methods = get_title_list(v)
 
-            fmt_keys.update({"{}_hlist".format(k): "\n    ".join("- :meth:`~{}`".format(bm) for bm in bound_methods)})
+            fmt_keys.update(
+                {
+                    "{}_hlist".format(k): "\n    ".join(
+                        "- :meth:`~{}`".format(bm) for bm in bound_methods
+                    )
+                }
+            )
 
             fmt_keys.update(
-                {"{}_toctree".format(k): "\n    ".join("{} <{}>".format(bm.split(".")[1], bm) for bm in bound_methods)})
+                {
+                    "{}_toctree".format(k): "\n    ".join(
+                        "{} <{}>".format(bm.split(".")[1], bm) for bm in bound_methods
+                    )
+                }
+            )
 
             # noinspection PyShadowingBuiltins
             for bm in bound_methods:

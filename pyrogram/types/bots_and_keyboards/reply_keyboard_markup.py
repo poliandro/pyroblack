@@ -100,9 +100,11 @@ class ReplyKeyboardMarkup(Object):
             rows=[
                 raw.types.KeyboardButtonRow(
                     buttons=[
-                        types.KeyboardButton(j).write()
-                        if isinstance(j, str)
-                        else j.write()
+                        (
+                            types.KeyboardButton(j).write()
+                            if isinstance(j, str)
+                            else j.write()
+                        )
                         for j in i
                     ]
                 )

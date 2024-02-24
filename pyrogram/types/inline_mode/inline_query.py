@@ -64,7 +64,7 @@ class InlineQuery(Object, Update):
         offset: str,
         chat_type: "enums.ChatType",
         location: "types.Location" = None,
-        matches: List[Match] = None
+        matches: List[Match] = None,
     ):
         super().__init__(client)
 
@@ -100,13 +100,15 @@ class InlineQuery(Object, Update):
             query=inline_query.query,
             offset=inline_query.offset,
             chat_type=chat_type,
-            location=types.Location(
-                longitude=inline_query.geo.long,
-                latitude=inline_query.geo.lat,
-                client=client,
-            )
-            if inline_query.geo
-            else None,
+            location=(
+                types.Location(
+                    longitude=inline_query.geo.long,
+                    latitude=inline_query.geo.lat,
+                    client=client,
+                )
+                if inline_query.geo
+                else None
+            ),
             client=client,
         )
 

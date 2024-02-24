@@ -1,21 +1,22 @@
-#  Pyrofork - Telegram MTProto API Client Library for Python
+#  pyroblack - Telegram MTProto API Client Library for Python
 #  Copyright (C) 2017-present Dan <https://github.com/delivrance>
 #  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#  Copyright (C) 2024-present eyMarv <https://github.com/eyMarv>
 #
-#  This file is part of Pyrofork.
+#  This file is part of pyroblack.
 #
-#  Pyrofork is free software: you can redistribute it and/or modify
+#  pyroblack is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Lesser General Public License as published
 #  by the Free Software Foundation, either version 3 of the License, or
 #  (at your option) any later version.
 #
-#  Pyrofork is distributed in the hope that it will be useful,
+#  pyroblack is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU Lesser General Public License for more details.
 #
 #  You should have received a copy of the GNU Lesser General Public License
-#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+#  along with pyroblack.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
 from typing import Union, List, Optional
@@ -124,7 +125,7 @@ class SendMessage:
                 await app.send_message("me", "Message sent with **Pyrogram**!")
 
                 # Disable web page previews
-                await app.send_message("me", "https://pyrofork.mayuri.my.id",
+                await app.send_message("me", "https://github.io/eyMarv/pyroblack-docs",
                     disable_web_page_preview=True)
 
                 # Reply to a message using its id
@@ -148,7 +149,7 @@ class SendMessage:
                     reply_markup=InlineKeyboardMarkup(
                         [
                             [InlineKeyboardButton("Data", callback_data="callback_data")],
-                            [InlineKeyboardButton("Docs", url="https://pyrofork.mayuri.my.id")]
+                            [InlineKeyboardButton("Docs", url="https://github.io/eyMarv/pyroblack-docs")]
                         ]))
         """
 
@@ -200,11 +201,14 @@ class SendMessage:
                 date=utils.timestamp_to_datetime(r.date),
                 outgoing=r.out,
                 reply_markup=reply_markup,
-                entities=[
-                    types.MessageEntity._parse(None, entity, {}) for entity in entities
-                ]
-                if entities
-                else None,
+                entities=(
+                    [
+                        types.MessageEntity._parse(None, entity, {})
+                        for entity in entities
+                    ]
+                    if entities
+                    else None
+                ),
                 client=self,
             )
 

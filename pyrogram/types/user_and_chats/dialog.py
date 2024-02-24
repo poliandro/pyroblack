@@ -55,7 +55,7 @@ class Dialog(Object):
         unread_messages_count: int,
         unread_mentions_count: int,
         unread_mark: bool,
-        is_pinned: bool
+        is_pinned: bool,
     ):
         super().__init__(client)
 

@@ -41,7 +41,7 @@ class EmojiStatus(Object):
         *,
         client: "pyrogram.Client" = None,
         custom_emoji_id: int,
-        until_date: Optional[datetime] = None
+        until_date: Optional[datetime] = None,
     ):
         super().__init__(client)
 

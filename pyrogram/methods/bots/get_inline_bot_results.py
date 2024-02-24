@@ -79,9 +79,11 @@ class GetInlineBotResults:
                     peer=raw.types.InputPeerSelf(),
                     query=query,
                     offset=offset,
-                    geo_point=raw.types.InputGeoPoint(lat=latitude, long=longitude)
-                    if (latitude is not None and longitude is not None)
-                    else None,
+                    geo_point=(
+                        raw.types.InputGeoPoint(lat=latitude, long=longitude)
+                        if (latitude is not None and longitude is not None)
+                        else None
+                    ),
                 )
             )
         except UnknownError as e:

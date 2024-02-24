@@ -83,7 +83,7 @@ class ChatInviteLink(Object):
         expire_date: datetime = None,
         member_limit: int = None,
         member_count: int = None,
-        pending_join_request_count: int = None
+        pending_join_request_count: int = None,
     ):
         super().__init__()
 

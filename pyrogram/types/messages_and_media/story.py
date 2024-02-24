@@ -1,20 +1,21 @@
-#  Pyrofork - Telegram MTProto API Client Library for Python
+#  pyroblack - Telegram MTProto API Client Library for Python
 #  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#  Copyright (C) 2024-present eyMarv <https://github.com/eyMarv>
 #
-#  This file is part of Pyrofork.
+#  This file is part of pyroblack.
 #
-#  Pyrofork is free software: you can redistribute it and/or modify
+#  pyroblack is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Lesser General Public License as published
 #  by the Free Software Foundation, either version 3 of the License, or
 #  (at your option) any later version.
 #
-#  Pyrofork is distributed in the hope that it will be useful,
+#  pyroblack is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU Lesser General Public License for more details.
 #
 #  You should have received a copy of the GNU Lesser General Public License
-#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+#  along with pyroblack.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
 from typing import BinaryIO, Callable, List, Optional, Union
@@ -136,7 +137,7 @@ class Story(Object, Update):
         forward_from: "types.StoryForwardHeader" = None,
         allowed_users: List[int] = None,
         denied_users: List[int] = None,
-        media_areas: List["types.MediaArea"] = None
+        media_areas: List["types.MediaArea"] = None,
         # allowed_chats: List[int] = None,
         # denied_chats: List[int] = None
     ):
@@ -1844,9 +1845,9 @@ class Story(Object, Update):
             caption_entities=caption_entities,
             parse_mode=parse_mode,
             period=period,
-            forward_from_chat_id=self.from_user.id
-            if self.from_user is not None
-            else self.sender_chat.id,
+            forward_from_chat_id=(
+                self.from_user.id if self.from_user is not None else self.sender_chat.id
+            ),
             forward_from_story_id=self.id,
         )
 

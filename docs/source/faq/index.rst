@@ -1,7 +1,7 @@
 Frequently Asked Questions
 ==========================
 
-This FAQ page provides answers to common questions about Pyrofork and, to some extent, Telegram in general.
+This FAQ page provides answers to common questions about pyroblack and, to some extent, Telegram in general.
 
 **Contents**
 

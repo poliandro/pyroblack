@@ -105,7 +105,7 @@ class WebPage(Object):
         embed_width: int = None,
         embed_height: int = None,
         duration: int = None,
-        author: str = None
+        author: str = None,
     ):
         super().__init__(client)
 

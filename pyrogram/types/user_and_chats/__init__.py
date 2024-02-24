@@ -1,21 +1,22 @@
-#  Pyrofork - Telegram MTProto API Client Library for Python
+#  pyroblack - Telegram MTProto API Client Library for Python
 #  Copyright (C) 2017-present Dan <https://github.com/delivrance>
 #  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#  Copyright (C) 2024-present eyMarv <https://github.com/eyMarv>
 #
-#  This file is part of Pyrofork.
+#  This file is part of pyroblack.
 #
-#  Pyrofork is free software: you can redistribute it and/or modify
+#  pyroblack is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Lesser General Public License as published
 #  by the Free Software Foundation, either version 3 of the License, or
 #  (at your option) any later version.
 #
-#  Pyrofork is distributed in the hope that it will be useful,
+#  pyroblack is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU Lesser General Public License for more details.
 #
 #  You should have received a copy of the GNU Lesser General Public License
-#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+#  along with pyroblack.  If not, see <http://www.gnu.org/licenses/>.
 
 from .chat import Chat
 from .chat_admin_with_invite_links import ChatAdminWithInviteLinks
@@ -35,19 +36,19 @@ from .chat_privileges import ChatPrivileges
 from .chat_reactions import ChatReactions
 from .dialog import Dialog
 from .emoji_status import EmojiStatus
+from .forum_topic import ForumTopic
+from .forum_topic_closed import ForumTopicClosed
+from .forum_topic_created import ForumTopicCreated
+from .forum_topic_edited import ForumTopicEdited
+from .forum_topic_reopened import ForumTopicReopened
+from .general_forum_topic_hidden import GeneralTopicHidden
+from .general_forum_topic_unhidden import GeneralTopicUnhidden
 from .invite_link_importer import InviteLinkImporter
+from .peer_channel import PeerChannel
+from .peer_user import PeerUser
 from .restriction import Restriction
 from .user import User
 from .username import Username
-from .forum_topic import ForumTopic
-from .forum_topic_created import ForumTopicCreated
-from .forum_topic_closed import ForumTopicClosed
-from .forum_topic_reopened import ForumTopicReopened
-from .forum_topic_edited import ForumTopicEdited
-from .general_forum_topic_hidden import GeneralTopicHidden
-from .general_forum_topic_unhidden import GeneralTopicUnhidden
-from .peer_channel import PeerChannel
-from .peer_user import PeerUser
 from .video_chat_ended import VideoChatEnded
 from .video_chat_members_invited import VideoChatMembersInvited
 from .video_chat_scheduled import VideoChatScheduled

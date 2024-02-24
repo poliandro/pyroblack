@@ -1,21 +1,22 @@
-#  Pyrofork - Telegram MTProto API Client Library for Python
+#  pyroblack - Telegram MTProto API Client Library for Python
 #  Copyright (C) 2017-present Dan <https://github.com/delivrance>
 #  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#  Copyright (C) 2024-present eyMarv <https://github.com/eyMarv>
 #
-#  This file is part of Pyrofork.
+#  This file is part of pyroblack.
 #
-#  Pyrofork is free software: you can redistribute it and/or modify
+#  pyroblack is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Lesser General Public License as published
 #  by the Free Software Foundation, either version 3 of the License, or
 #  (at your option) any later version.
 #
-#  Pyrofork is distributed in the hope that it will be useful,
+#  pyroblack is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU Lesser General Public License for more details.
 #
 #  You should have received a copy of the GNU Lesser General Public License
-#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+#  along with pyroblack.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
 import os
@@ -228,9 +229,11 @@ class SendMediaGroup:
                                     nosound_video=is_animation,
                                     attributes=[
                                         raw.types.DocumentAttributeVideo(
-                                            supports_streaming=True
-                                            if is_animation
-                                            else (i.supports_streaming or None),
+                                            supports_streaming=(
+                                                True
+                                                if is_animation
+                                                else (i.supports_streaming or None)
+                                            ),
                                             duration=i.duration,
                                             w=i.width,
                                             h=i.height,
@@ -238,9 +241,11 @@ class SendMediaGroup:
                                         raw.types.DocumentAttributeFilename(
                                             file_name=os.path.basename(i.media)
                                         ),
-                                        raw.types.DocumentAttributeAnimated()
-                                        if is_animation
-                                        else None,
+                                        (
+                                            raw.types.DocumentAttributeAnimated()
+                                            if is_animation
+                                            else None
+                                        ),
                                     ],
                                 ),
                             )

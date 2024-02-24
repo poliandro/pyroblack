@@ -52,7 +52,7 @@ class Venue(Object):
         title: str,
         address: str,
         foursquare_id: str = None,
-        foursquare_type: str = None
+        foursquare_type: str = None,
     ):
         super().__init__(client)
 

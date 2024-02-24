@@ -63,7 +63,7 @@ class Document(Object):
         mime_type: str = None,
         file_size: int = None,
         date: datetime = None,
-        thumbs: List["types.Thumbnail"] = None
+        thumbs: List["types.Thumbnail"] = None,
     ):
         super().__init__(client)
 

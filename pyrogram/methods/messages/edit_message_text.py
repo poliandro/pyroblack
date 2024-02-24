@@ -86,7 +86,7 @@ class EditMessageText:
                 id=message_id,
                 no_webpage=disable_web_page_preview or None,
                 reply_markup=await reply_markup.write(self) if reply_markup else None,
-                **await utils.parse_text_entities(self, text, parse_mode, entities)
+                **await utils.parse_text_entities(self, text, parse_mode, entities),
             )
         )
 

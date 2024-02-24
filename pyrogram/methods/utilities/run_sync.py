@@ -1,4 +1,5 @@
-"""PyroFork async utils"""
+"""pyroblack async utils"""
+
 # Copyright (C) 2020 - 2023  UserbotIndo Team, <https://github.com/userbotindo.git>
 # Copyright (C) 2022-present  Mayuri-Chan, <https://github.com/Mayuri-Chan.git>
 #

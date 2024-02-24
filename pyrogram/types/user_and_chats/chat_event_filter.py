@@ -84,7 +84,7 @@ class ChatEventFilter(Object):
         edited_messages: bool = False,
         pinned_messages: bool = False,
         leaving_members: bool = False,
-        video_chats: bool = False
+        video_chats: bool = False,
     ):
         super().__init__()
 

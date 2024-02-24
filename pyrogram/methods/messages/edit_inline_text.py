@@ -82,7 +82,7 @@ class EditInlineText:
                 id=unpacked,
                 no_webpage=disable_web_page_preview or None,
                 reply_markup=await reply_markup.write(self) if reply_markup else None,
-                **await self.parser.parse(text, parse_mode)
+                **await self.parser.parse(text, parse_mode),
             ),
             sleep_threshold=self.sleep_threshold,
         )

@@ -47,7 +47,7 @@ class WebPagePreview(Object):
         force_large_media: bool = None,
         force_small_media: bool = None,
         invert_media: bool = None,
-        is_safe: bool = None
+        is_safe: bool = None,
     ):
         super().__init__()
 

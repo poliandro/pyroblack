@@ -109,6 +109,6 @@ More handlers using different filters can also live together.
         print("This is the /help command")
 
 
-    @app.on_message(filters.chat("PyroforkChat"))
-    async def from_pyrogramchat(client, message):
-        print("New message in @PyroforkChat")
+    @app.on_message(filters.chat("OpenFileZ"))
+    async def from_openfiles(client, message):
+        print("New message in @OpenFileZ")

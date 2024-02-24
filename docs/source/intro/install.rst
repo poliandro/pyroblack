@@ -1,7 +1,7 @@
 Install Guide
 =============
 
-Being a modern Python framework, Pyrofork requires an up to date version of Python to be installed in your system.
+Being a modern Python framework, pyroblock requires an up to date version of Python to be installed in your system.
 We recommend using the latest versions of both Python 3 and pip.
 
 .. contents:: Contents
@@ -11,25 +11,25 @@ We recommend using the latest versions of both Python 3 and pip.
 
 -----
 
-Install Pyrofork
+Install pyroblack
 ----------------
 
--   The easiest way to install and upgrade Pyrofork to its latest stable version:
+-   The easiest way to install and upgrade pyroblack to its latest stable version:
 
     .. code-block:: text
 
-        $ pip3 install -U git+https://github.com/eyMarv/pyrofork.git
+        $ pip3 install -U pyroblack
 
 -   or, with :doc:`TgCrypto <../topics/speedups>` as extra requirement (recommended):
 
     .. code-block:: text
 
-        $ pip3 install -U git+https://github.com/eyMarv/pyrofork.git tgcrypto
+        $ pip3 install -U pyroblack tgcrypto
 
 Verifying
 ---------
 
-To verify that Pyrofork is correctly installed, open a Python shell and import it.
+To verify that pyroblack is correctly installed, open a Python shell and import it.
 If no error shows up you are good to go.
 
 .. parsed-literal::
@@ -38,4 +38,4 @@ If no error shows up you are good to go.
     >>> pyrogram.__version__
     'x.y.z'
 
-.. _`Github repo`: http://github.com/eyMarv/pyrofork
+.. _`Github repo`: http://github.com/eyMarv/pyroblack

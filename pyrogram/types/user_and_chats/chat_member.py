@@ -88,7 +88,7 @@ class ChatMember(Object):
         is_member: bool = None,
         can_be_edited: bool = None,
         permissions: "types.ChatPermissions" = None,
-        privileges: "types.ChatPrivileges" = None
+        privileges: "types.ChatPrivileges" = None,
     ):
         super().__init__(client)
 

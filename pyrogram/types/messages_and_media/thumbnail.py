@@ -59,7 +59,7 @@ class Thumbnail(Object):
         file_unique_id: str,
         width: int,
         height: int,
-        file_size: int
+        file_size: int,
     ):
         super().__init__(client)
 

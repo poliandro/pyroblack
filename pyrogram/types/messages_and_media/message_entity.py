@@ -63,7 +63,7 @@ class MessageEntity(Object):
         url: str = None,
         user: "types.User" = None,
         language: str = None,
-        custom_emoji_id: int = None
+        custom_emoji_id: int = None,
     ):
         super().__init__(client)
 

@@ -41,7 +41,7 @@ class PollOption(Object):
         client: "pyrogram.Client" = None,
         text: str,
         voter_count: int,
-        data: bytes
+        data: bytes,
     ):
         super().__init__(client)
 

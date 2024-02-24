@@ -61,7 +61,7 @@ class Voice(Object):
         waveform: bytes = None,
         mime_type: str = None,
         file_size: int = None,
-        date: datetime = None
+        date: datetime = None,
     ):
         super().__init__(client)
 

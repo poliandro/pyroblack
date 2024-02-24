@@ -58,7 +58,7 @@ class ChatPhoto(Object):
         small_file_id: str,
         small_photo_unique_id: str,
         big_file_id: str,
-        big_photo_unique_id: str
+        big_photo_unique_id: str,
     ):
         super().__init__(client)
 

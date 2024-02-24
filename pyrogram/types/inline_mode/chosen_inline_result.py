@@ -61,7 +61,7 @@ class ChosenInlineResult(Object, Update):
         from_user: "types.User",
         query: str,
         location: "types.Location" = None,
-        inline_message_id: str = None
+        inline_message_id: str = None,
     ):
         super().__init__(client)
 
@@ -96,12 +96,14 @@ class ChosenInlineResult(Object, Update):
             result_id=str(chosen_inline_result.id),
             from_user=types.User._parse(client, users[chosen_inline_result.user_id]),
             query=chosen_inline_result.query,
-            location=types.Location(
-                longitude=chosen_inline_result.geo.long,
-                latitude=chosen_inline_result.geo.lat,
-                client=client,
-            )
-            if chosen_inline_result.geo
-            else None,
+            location=(
+                types.Location(
+                    longitude=chosen_inline_result.geo.long,
+                    latitude=chosen_inline_result.geo.lat,
+                    client=client,
+                )
+                if chosen_inline_result.geo
+                else None
+            ),
             inline_message_id=inline_message_id,
         )

@@ -90,9 +90,11 @@ class EditInlineMedia:
         if is_uploaded_file:
             filename_attribute = [
                 raw.types.DocumentAttributeFilename(
-                    file_name=media.media.name
-                    if is_bytes_io
-                    else os.path.basename(media.media)
+                    file_name=(
+                        media.media.name
+                        if is_bytes_io
+                        else os.path.basename(media.media)
+                    )
                 )
             ]
         else:
@@ -246,10 +248,10 @@ class EditInlineMedia:
                     raw.functions.messages.EditInlineBotMessage(
                         id=unpacked,
                         media=actual_media,
-                        reply_markup=await reply_markup.write(self)
-                        if reply_markup
-                        else None,
-                        **await self.parser.parse(caption, parse_mode)
+                        reply_markup=(
+                            await reply_markup.write(self) if reply_markup else None
+                        ),
+                        **await self.parser.parse(caption, parse_mode),
                     ),
                     sleep_threshold=self.sleep_threshold,
                 )

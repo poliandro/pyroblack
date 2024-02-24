@@ -1,31 +1,32 @@
-#  Pyrofork - Telegram MTProto API Client Library for Python
+#  pyroblack - Telegram MTProto API Client Library for Python
 #  Copyright (C) 2017-present Dan <https://github.com/delivrance>
 #  Copyright (C) 2022-present Mayuri-Chan <https://github.com/Mayuri-Chan>
+#  Copyright (C) 2024-present eyMarv <https://github.com/eyMarv>
 #
-#  This file is part of Pyrofork.
+#  This file is part of pyroblack.
 #
-#  Pyrofork is free software: you can redistribute it and/or modify
+#  pyroblack is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Lesser General Public License as published
 #  by the Free Software Foundation, either version 3 of the License, or
 #  (at your option) any later version.
 #
-#  Pyrofork is distributed in the hope that it will be useful,
+#  pyroblack is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU Lesser General Public License for more details.
 #
 #  You should have received a copy of the GNU Lesser General Public License
-#  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
+#  along with pyroblack.  If not, see <http://www.gnu.org/licenses/>.
 
 from .add_chat_members import AddChatMembers
 from .archive_chats import ArchiveChats
 from .ban_chat_member import BanChatMember
+from .close_forum_topic import CloseForumTopic
+from .close_general_topic import CloseGeneralTopic
 from .create_channel import CreateChannel
 from .create_forum_topic import CreateForumTopic
 from .create_group import CreateGroup
 from .create_supergroup import CreateSupergroup
-from .close_forum_topic import CloseForumTopic
-from .close_general_topic import CloseGeneralTopic
 from .delete_channel import DeleteChannel
 from .delete_chat_photo import DeleteChatPhoto
 from .delete_forum_topic import DeleteForumTopic
@@ -33,10 +34,6 @@ from .delete_supergroup import DeleteSupergroup
 from .delete_user_history import DeleteUserHistory
 from .edit_forum_topic import EditForumTopic
 from .edit_general_topic import EditGeneralTopic
-from .reopen_forum_topic import ReopenForumTopic
-from .reopen_general_topic import ReopenGeneralTopic
-from .hide_general_topic import HideGeneralTopic
-from .unhide_general_topic import UnhideGeneralTopic
 from .get_chat import GetChat
 from .get_chat_event_log import GetChatEventLog
 from .get_chat_member import GetChatMember
@@ -49,11 +46,14 @@ from .get_forum_topics import GetForumTopics
 from .get_forum_topics_by_id import GetForumTopicsByID
 from .get_nearby_chats import GetNearbyChats
 from .get_send_as_chats import GetSendAsChats
+from .hide_general_topic import HideGeneralTopic
 from .join_chat import JoinChat
 from .leave_chat import LeaveChat
 from .mark_chat_unread import MarkChatUnread
 from .pin_chat_message import PinChatMessage
 from .promote_chat_member import PromoteChatMember
+from .reopen_forum_topic import ReopenForumTopic
+from .reopen_general_topic import ReopenGeneralTopic
 from .restrict_chat_member import RestrictChatMember
 from .set_administrator_title import SetAdministratorTitle
 from .set_chat_description import SetChatDescription
@@ -67,6 +67,7 @@ from .set_slow_mode import SetSlowMode
 from .toggle_join_to_send import ToggleJoinToSend
 from .unarchive_chats import UnarchiveChats
 from .unban_chat_member import UnbanChatMember
+from .unhide_general_topic import UnhideGeneralTopic
 from .unpin_all_chat_messages import UnpinAllChatMessages
 from .unpin_chat_message import UnpinChatMessage
 from .update_color import UpdateColor

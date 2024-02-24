@@ -90,7 +90,7 @@ class Sticker(Object):
         date: datetime = None,
         emoji: str = None,
         set_name: str = None,
-        thumbs: List["types.Thumbnail"] = None
+        thumbs: List["types.Thumbnail"] = None,
     ):
         super().__init__(client)
 
@@ -193,16 +193,12 @@ class Sticker(Object):
             width=(
                 image_size_attributes.w
                 if image_size_attributes
-                else video_attributes.w
-                if video_attributes
-                else 512
+                else video_attributes.w if video_attributes else 512
             ),
             height=(
                 image_size_attributes.h
                 if image_size_attributes
-                else video_attributes.h
-                if video_attributes
-                else 512
+                else video_attributes.h if video_attributes else 512
             ),
             is_animated=sticker.mime_type == "application/x-tgsticker",
             is_video=sticker.mime_type == "video/webm",

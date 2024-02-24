@@ -54,7 +54,7 @@ class ChatJoinRequest(Object, Update):
         from_user: "types.User",
         date: datetime,
         bio: str = None,
-        invite_link: "types.ChatInviteLink" = None
+        invite_link: "types.ChatInviteLink" = None,
     ):
         super().__init__(client)
 

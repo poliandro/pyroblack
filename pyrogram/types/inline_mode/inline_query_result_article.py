@@ -87,16 +87,18 @@ class InlineQueryResultArticle(InlineQueryResult):
             title=self.title,
             description=self.description,
             url=self.url,
-            thumb=raw.types.InputWebDocument(
-                url=self.thumb_url,
-                size=0,
-                mime_type="image/jpeg",
-                attributes=[
-                    raw.types.DocumentAttributeImageSize(
-                        w=self.thumb_width, h=self.thumb_height
-                    )
-                ],
-            )
-            if self.thumb_url
-            else None,
+            thumb=(
+                raw.types.InputWebDocument(
+                    url=self.thumb_url,
+                    size=0,
+                    mime_type="image/jpeg",
+                    attributes=[
+                        raw.types.DocumentAttributeImageSize(
+                            w=self.thumb_width, h=self.thumb_height
+                        )
+                    ],
+                )
+                if self.thumb_url
+                else None
+            ),
         )

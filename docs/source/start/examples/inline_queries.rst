@@ -22,15 +22,15 @@ It uses the @on_inline_query decorator to register an InlineQueryHandler.
                 InlineQueryResultArticle(
                     title="Installation",
                     input_message_content=InputTextMessageContent(
-                        "Here's how to install **Pyrofork**"
+                        "Here's how to install **pyroblack**"
                     ),
-                    url="https://eyMarv.github.io/pyrofork-docs/intro/install",
-                    description="How to install Pyrofork",
+                    url="https://eyMarv.github.io/pyroblack-docs/intro/install",
+                    description="How to install pyroblack",
                     reply_markup=InlineKeyboardMarkup(
                         [
                             [InlineKeyboardButton(
                                 "Open website",
-                                url="https://eyMarv.github.io/pyrofork-docs/intro/install"
+                                url="https://eyMarv.github.io/pyroblack-docs/intro/install"
                             )]
                         ]
                     )
@@ -38,15 +38,15 @@ It uses the @on_inline_query decorator to register an InlineQueryHandler.
                 InlineQueryResultArticle(
                     title="Usage",
                     input_message_content=InputTextMessageContent(
-                        "Here's how to use **Pyrofork**"
+                        "Here's how to use **pyroblack**"
                     ),
-                    url="https://eyMarv.github.io/pyrofork-docs/start/invoking",
-                    description="How to use Pyrofork",
+                    url="https://eyMarv.github.io/pyroblack-docs/start/invoking",
+                    description="How to use pyroblack",
                     reply_markup=InlineKeyboardMarkup(
                         [
                             [InlineKeyboardButton(
                                 "Open website",
-                                url="https://eyMarv.github.io/pyrofork-docs/start/invoking"
+                                url="https://eyMarv.github.io/pyroblack-docs/start/invoking"
                             )]
                         ]
                     )

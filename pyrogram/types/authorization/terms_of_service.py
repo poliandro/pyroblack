@@ -49,10 +49,12 @@ class TermsOfService(Object):
         return TermsOfService(
             id=terms_of_service.id.data,
             text=terms_of_service.text,
-            entities=[
-                types.MessageEntity._parse(None, entity, {})
-                for entity in terms_of_service.entities
-            ]
-            if terms_of_service.entities
-            else None,
+            entities=(
+                [
+                    types.MessageEntity._parse(None, entity, {})
+                    for entity in terms_of_service.entities
+                ]
+                if terms_of_service.entities
+                else None
+            ),
         )
