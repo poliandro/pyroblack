@@ -89,4 +89,4 @@ exclude = [
 
 [tool.hatch.build.targets.wheel]
 ignore-vcs = true
-packages = ["pyroblack"]
+packages = ["pyrogram"]
