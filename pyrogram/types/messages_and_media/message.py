@@ -347,7 +347,7 @@ class Message(Object, Update):
         general_topic_unhidden (:obj:`~pyrogram.types.GeneralTopicUnhidden`, *optional*):
             Service message: forum general topic unhidden
 
-        giveaway_launcheded (:obj:`~pyrogram.types.GiveawayLaunched`, *optional*):
+        giveaway_launched (:obj:`~pyrogram.types.GiveawayLaunched`, *optional*):
             Service message: giveaway launched.
 
         video_chat_scheduled (:obj:`~pyrogram.types.VideoChatScheduled`, *optional*):
