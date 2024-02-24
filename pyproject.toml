@@ -1,5 +1,5 @@
 [project]
-name = "pyrofork"
+name = "pyroblack"
 dynamic = ["version"]
 description = "Fork of pyrogram. Elegant, modern and asynchronous Telegram MTProto API framework in Python for users and bots"
 authors = [{ name = "eyMarv", email = "eyMarv07@gmail.com" }]
@@ -89,4 +89,4 @@ exclude = [
 
 [tool.hatch.build.targets.wheel]
 ignore-vcs = true
-packages = ["pyrogram"]
+packages = ["pyroblack"]
