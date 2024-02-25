@@ -102,6 +102,10 @@ class Client(Methods):
             Code of the language used on the client, in ISO 639-1 standard.
             Defaults to "en".
 
+        system_lang_code (``str``, *optional*):
+            Code of the language used on the system.
+            Defaults to "en-US".
+
         lang_pack (``str``, *optional*):
             Internal parameter.
             Defaults to "".
@@ -213,6 +217,7 @@ class Client(Methods):
     SYSTEM_VERSION = f"{platform.system()} {platform.release()}"
 
     LANG_CODE = "en"
+    SYSTEM_LANG_CODE = "en-US"
     LANG_PACK = ""
 
     PARENT_DIR = Path(sys.argv[0]).parent
@@ -240,6 +245,7 @@ class Client(Methods):
         device_model: str = DEVICE_MODEL,
         system_version: str = SYSTEM_VERSION,
         lang_code: str = LANG_CODE,
+        system_lang_code: str = SYSTEM_LANG_CODE,
         lang_pack: str = LANG_PACK,
         ipv6: bool = False,
         alt_port: bool = False,
@@ -273,6 +279,7 @@ class Client(Methods):
         self.device_model = device_model
         self.system_version = system_version
         self.lang_code = lang_code.lower()
+        self.system_lang_code = system_lang_code
         self.lang_pack = lang_pack.lower()
         self.ipv6 = ipv6
         self.alt_port = alt_port
