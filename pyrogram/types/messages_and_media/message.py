@@ -27,7 +27,7 @@ import pyrogram
 from pyrogram import raw, enums
 from pyrogram import types
 from pyrogram import utils
-from pyrogram.errors import MessageIdsEmpty, PeerIdInvalid
+from pyrogram.errors import MessageIdsEmpty, PeerIdInvalid, ChannelPrivate
 from pyrogram.parser import utils as parser_utils, Parser
 from ..object import Object
 from ..update import Update
@@ -1270,7 +1270,7 @@ class Message(Object, Update):
                         #    message.reply_to.reply_to_peer_id, "channel_id", None
                         # )
                         is_cross_chat = False
-                        if is_cross_chat:
+                        if is_cross_chat is True:
                             key = (
                                 utils.get_channel_id(
                                     message.reply_to.reply_to_peer_id.channel_id
@@ -1300,7 +1300,7 @@ class Message(Object, Update):
                                 and not reply_to_message.forum_topic_created
                             ):
                                 parsed_message.reply_to_message = reply_to_message
-                        except MessageIdsEmpty:
+                        except (MessageIdsEmpty, ChannelPrivate):
                             pass
                     elif parsed_message.reply_to_story_id:
                         try:
