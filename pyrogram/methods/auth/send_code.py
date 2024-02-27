@@ -105,8 +105,8 @@ class SendCode:
                             allow_firebase=allow_firebase,
                             logout_tokens=logout_tokens,
                             token=token,
-                            app_sandbox=app_sandbox
-                        )
+                            app_sandbox=app_sandbox,
+                        ),
                     )
                 )
             except (PhoneMigrate, NetworkMigrate) as e:

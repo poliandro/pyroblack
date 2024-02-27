@@ -507,7 +507,7 @@ class Message(Object, Update):
             "types.ForceReply",
         ] = None,
         reactions: List["types.Reaction"] = None,
-        raw: "raw.types.Message" = None
+        raw: "raw.types.Message" = None,
     ):
         super().__init__(client)
 
@@ -711,7 +711,7 @@ class Message(Object, Update):
             web_app_data = None
             giveaway_launched = None
             gift_code = None
-                        giveaway_result = None
+            giveaway_result = None
             requested_chats = None
             chat_ttl_period = None
             boosts_applied = None
@@ -896,7 +896,7 @@ class Message(Object, Update):
                 chat_ttl_period=chat_ttl_period,
                 boosts_applied=boosts_applied,
                 raw=message,
-                client=client
+                client=client,
                 # TODO: supergroup_chat_created
             )
 
@@ -1259,7 +1259,9 @@ class Message(Object, Update):
                 else:
                     parsed_message.reply_to_story_id = message.reply_to.story_id
                     parsed_message.reply_to_story_user_id = (
-                        message.reply_to.peer.getattr("user_id", message.reply_to.peer.getattr("channel_id", None))
+                        message.reply_to.peer.getattr(
+                            "user_id", message.reply_to.peer.getattr("channel_id", None)
+                        )
                     )
 
                 if replies:

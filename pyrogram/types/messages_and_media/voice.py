@@ -65,7 +65,7 @@ class Voice(Object):
         mime_type: str = None,
         file_size: int = None,
         date: datetime = None,
-        ttl_seconds: int = None
+        ttl_seconds: int = None,
     ):
         super().__init__(client)
 
@@ -83,7 +83,7 @@ class Voice(Object):
         client,
         voice: "raw.types.Document",
         attributes: "raw.types.DocumentAttributeAudio",
-            ttl_seconds: int = None,
+        ttl_seconds: int = None,
     ) -> "Voice":
         return Voice(
             file_id=FileId(

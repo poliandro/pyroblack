@@ -90,7 +90,7 @@ class VideoNote(Object):
         client,
         video_note: "raw.types.Document",
         video_attributes: "raw.types.DocumentAttributeVideo",
-        ttl_seconds: int = None
+        ttl_seconds: int = None,
     ) -> "VideoNote":
         return VideoNote(
             file_id=FileId(

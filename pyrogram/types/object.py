@@ -60,9 +60,7 @@ class Object:
         if isinstance(obj, datetime):
             return str(obj)
 
-        attributes_to_hide = [
-            "raw"
-        ]
+        attributes_to_hide = ["raw"]
 
         filtered_attributes = {
             attr: ("*" * 9 if attr == "phone_number" else getattr(obj, attr))
@@ -73,10 +71,7 @@ class Object:
             if getattr(obj, attr) is not None
         }
 
-        return {
-            "_": obj.__class__.__name__,
-            **filtered_attributes
-        }
+        return {"_": obj.__class__.__name__, **filtered_attributes}
 
     def __str__(self) -> str:
         return dumps(self, indent=4, default=Object.default, ensure_ascii=False)
