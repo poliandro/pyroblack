@@ -497,7 +497,6 @@ class Message(Object, Update):
         web_app_data: "types.WebAppData" = None,
         gift_code: "types.GiftCode" = None,
         requested_chats: "types.RequestedChats" = None,
-        giveaway_launched: bool = None,
         chat_ttl_period: int = None,
         boosts_applied: int = None,
         reply_markup: Union[
@@ -1423,7 +1422,7 @@ class Message(Object, Update):
             reply_to_message_id (``int``, *optional*):
                 If the message is a reply, ID of the original message.
 
-            reply_to_chat_id (``int`` | ``str``, *optional*):
+            reply_in_chat_id (``int`` | ``str``, *optional*):
                 Unique identifier for the origin chat.
                 for reply to message from another chat.
                 You can also use chat public link in form of *t.me/<username>* (str).
@@ -1586,7 +1585,7 @@ class Message(Object, Update):
             reply_to_message_id (``int``, *optional*):
                 If the message is a reply, ID of the original message.
 
-            reply_to_chat_id (``int`` | ``str``, *optional*):
+            reply_in_chat_id (``int`` | ``str``, *optional*):
                 Unique identifier for the origin chat.
                 for reply to message from another chat.
                 You can also use chat public link in form of *t.me/<username>* (str).
