@@ -37,7 +37,8 @@ class RequestedChats(Object):
     """
 
     def __init__(
-        self, *,
+        self,
+        *,
         client: "pyrogram.Client" = None,
         button_id: int,
         chats: List["types.Chat"],
@@ -48,7 +49,9 @@ class RequestedChats(Object):
         self.chats = chats
 
     @staticmethod
-    def _parse(client, action: "raw.types.MessageActionRequestedPeer") -> "RequestedChats":
+    def _parse(
+        client, action: "raw.types.MessageActionRequestedPeer"
+    ) -> "RequestedChats":
         _requested_chats = []
 
         for requested_peer in action.peers:
@@ -63,15 +66,11 @@ class RequestedChats(Object):
                 chat_type = enums.ChatType.CHANNEL
 
             _requested_chats.append(
-                types.Chat(
-                    id=chat_id,
-                    type=chat_type,
-                    client=client
-                )
+                types.Chat(id=chat_id, type=chat_type, client=client)
             )
 
         return RequestedChats(
             button_id=action.button_id,
             chats=types.List(_requested_chats),
-            client=client
+            client=client,
         )

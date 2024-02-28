@@ -43,13 +43,7 @@ class GiftCode(Object):
     """
 
     def __init__(
-        self,
-        *,
-        via_giveaway: bool,
-        unclaimed: bool,
-        boost_peer,
-        months: int,
-        slug: str
+        self, *, via_giveaway: bool, unclaimed: bool, boost_peer, months: int, slug: str
     ):
         super().__init__()
 
@@ -68,7 +62,7 @@ class GiftCode(Object):
             unclaimed=giftcode.unclaimed,
             boost_peer=types.Chat._parse_chat(client, peer) if peer else None,
             months=giftcode.months,
-            slug=giftcode.slug
+            slug=giftcode.slug,
         )
 
     @property
