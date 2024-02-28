@@ -503,6 +503,9 @@ async def get_reply_to(
             quote_entities=entities,
         )
     if reply_to_story_id:
-        user_id = await client.resolve_peer(chat_id)
-        reply_to = types.InputReplyToStory(user_id=user_id, story_id=reply_to_story_id)
+        peer = await client.resolve_peer(chat_id)
+        reply_to = types.InputReplyToStory(
+            peer=peer,
+            story_id=reply_to_story_id
+        )
     return reply_to

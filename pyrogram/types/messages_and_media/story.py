@@ -35,6 +35,9 @@ class Story(Object, Update):
         id (``int``):
             Unique story identifier.
 
+        chat (:obj:`~pyrogram.types.Chat`, *optional*):
+            Chat the story was sent in.
+
         from_user (:obj:`~pyrogram.types.User`, *optional*):
             Sender of the story.
 
@@ -118,6 +121,7 @@ class Story(Object, Update):
         *,
         client: "pyrogram.Client" = None,
         id: int,
+        chat: "types.Chat" = None,
         from_user: "types.User" = None,
         sender_chat: "types.Chat" = None,
         date: datetime,
@@ -148,6 +152,7 @@ class Story(Object, Update):
         super().__init__(client)
 
         self.id = id
+        self.chat = chat
         self.from_user = from_user
         self.sender_chat = sender_chat
         self.date = date
@@ -193,6 +198,7 @@ class Story(Object, Update):
         animation = None
         photo = None
         video = None
+        chat = None
         from_user = None
         sender_chat = None
         privacy = None
@@ -237,23 +243,22 @@ class Story(Object, Update):
                         media_type = None
             else:
                 media_type = None
-        try:
-            if isinstance(peer, raw.types.PeerChannel) or isinstance(
-                peer, raw.types.InputPeerChannel
-            ):
-                chat_id = utils.get_channel_id(peer.channel_id)
-                chat = await client.invoke(
-                    raw.functions.channels.GetChannels(
-                        id=[await client.resolve_peer(chat_id)]
-                    )
+        if isinstance(peer, raw.types.PeerChannel) or isinstance(peer, raw.types.InputPeerChannel):
+            chat_id = utils.get_channel_id(peer.channel_id)
+            chat = await client.invoke(
+                raw.functions.channels.GetChannels(
+                    id=[await client.resolve_peer(chat_id)]
                 )
-                sender_chat = types.Chat._parse_chat(client, chat.chats[0])
-            elif isinstance(peer, raw.types.InputPeerSelf):
-                from_user = client.me
+            )
+            if stories.from_id is not None:
+                from_user = await client.get_users(stories.from_id.user_id)
+                chat = types.Chat._parse_chat(client, chat.chats[0])
             else:
-                from_user = await client.get_users(peer.user_id)
-        except PeerIdInvalid:
-            pass
+                sender_chat = types.Chat._parse_chat(client, chat.chats[0])
+        elif isinstance(peer, raw.types.InputPeerSelf):
+            from_user = client.me
+        else:
+            from_user = await client.get_users(peer.user_id)
 
         for priv in stories.privacy:
             if isinstance(priv, raw.types.PrivacyValueAllowAll):
@@ -294,6 +299,7 @@ class Story(Object, Update):
 
         return Story(
             id=stories.id,
+            chat=chat,
             from_user=from_user,
             sender_chat=sender_chat,
             date=utils.timestamp_to_datetime(stories.date),
