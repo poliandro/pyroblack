@@ -73,6 +73,9 @@ class Ask:
                 Whether to alert the user if they click a button that doesn’t match the filters.
                 Default to True.
 
+            message_id (``int`` | ``str`` ):
+                The message ID to listen for.
+
             inline_message_id (``str``, *optional*):
                 The inline message ID to listen for.
 

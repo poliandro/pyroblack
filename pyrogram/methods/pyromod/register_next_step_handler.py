@@ -45,6 +45,9 @@ class RegisterNextStepHandler:
             callback (``Callable``):
                 The callback to call when the listener is fulfilled.
 
+            chat_id (``int`` | ``str`` | Iterable of ``int`` | Iterable of ``str``, *optional*):
+                The chat ID to listen for.
+
             user_id (``int`` | ``str`` | Iterable of ``int`` | Iterable of ``str``, *optional*):
                 The user ID to listen for.
 
@@ -54,9 +57,6 @@ class RegisterNextStepHandler:
             listener_type (:obj:`~pyrogram.enums.ListenerTypes`, *optional*):
                 The type of listener to listen for.
                 Default to Message.
-
-            timeout (``int``, *optional*):
-                The maximum amount of time to wait for a message.
 
             unallowed_click_alert (``bool``, *optional*):
                 Whether to alert the user if they click a button that doesn’t match the filters.

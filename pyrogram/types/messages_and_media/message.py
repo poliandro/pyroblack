@@ -618,7 +618,7 @@ class Message(Object, Update):
         """Waits for a callback query to be clicked on the message.
 
         Parameters:
-            user_id (``int`` | ``str`` | Iterable of ``int`` | Iterable of ``str``, *optional*):
+            from_user_id (``int`` | ``str`` | Iterable of ``int`` | Iterable of ``str``, *optional*):
                 The user ID to listen for.
 
             timeout (``int``, *optional*):
@@ -813,7 +813,7 @@ class Message(Object, Update):
                 service_type = enums.MessageServiceType.WEB_APP_DATA
             elif isinstance(action, raw.types.MessageActionGiveawayLaunch):
                 giveaway_launched = True
-                service_type = enums.MessageServiceType.GIVEAWAY_LAUNCH
+                service_type = enums.MessageServiceType.GIVEAWAY_LAUNCHED
             elif isinstance(action, raw.types.MessageActionGiftCode):
                 gift_code = types.GiftCode._parse(client, action, chats)
                 service_type = enums.MessageServiceType.GIFT_CODE
@@ -2414,6 +2414,11 @@ class Message(Object, Update):
                 Text to quote.
                 for reply_to_message only.
 
+            parse_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
+                By default, quote_text are parsed using both Markdown and HTML styles.
+                You can combine both syntaxes together.
+                For quote_text.
+
             quote_entities (List of :obj:`~pyrogram.types.MessageEntity`, *optional*):
                 List of special entities that appear in quote_text, which can be specified instead of *parse_mode*.
                 for reply_to_message only.
@@ -2442,6 +2447,8 @@ class Message(Object, Update):
             message_thread_id=message_thread_id,
             reply_to_message_id=reply_to_message_id,
             quote_text=quote_text,
+            quote_entities=quote_entities,
+            parse_mode=parse_mode,
         )
 
     async def reply_location(
@@ -2615,6 +2622,11 @@ class Message(Object, Update):
                 Text to quote.
                 for reply_to_message only.
 
+            parse_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
+                By default, quote_text are parsed using both Markdown and HTML styles.
+                You can combine both syntaxes together.
+                For quote_text.
+
             quote_entities (List of :obj:`~pyrogram.types.MessageEntity`, *optional*):
                 List of special entities that appear in quote_text, which can be specified instead of *parse_mode*.
                 for reply_to_message only.
@@ -2650,6 +2662,8 @@ class Message(Object, Update):
             reply_to_message_id=reply_to_message_id,
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
+            quote_entities=quote_entities,
+            parse_mode=parse_mode,
         )
 
     async def reply_photo(
@@ -3529,6 +3543,11 @@ class Message(Object, Update):
             quote_text (``str``, *optional*):
                 Text to quote.
                 for reply_to_message only.
+
+            parse_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
+                By default, quote_text are parsed using both Markdown and HTML styles.
+                You can combine both syntaxes together.
+                For quote_text.
 
             quote_entities (List of :obj:`~pyrogram.types.MessageEntity`, *optional*):
                 List of special entities that appear in quote_text, which can be specified instead of *parse_mode*.

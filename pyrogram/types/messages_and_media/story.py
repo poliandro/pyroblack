@@ -1510,9 +1510,6 @@ class Story(Object, Update):
                 await story.edit_caption("hello")
 
         Parameters:
-            story_id (``int``):
-                Unique identifier (int) of the target story.
-
             animation (``str`` | ``BinaryIO``, *optional*):
                 New story Animation.
                 Pass a file_id as string to send a animation that exists on the Telegram servers,

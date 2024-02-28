@@ -41,8 +41,9 @@ class SetBotInfo:
             For userbot you can only use this method if you are the owner of target bot.
 
         Parameters:
-            lang_code ``str``:
+            lang_code (``str``):
                 A two-letter ISO 639-1 language code.
+
             bot (``int`` | ``str``, *optional*) :
                 Unique identifier (int) or username (str) of the target bot.
 
