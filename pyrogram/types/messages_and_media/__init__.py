@@ -59,6 +59,7 @@ from .video import Video
 from .video_note import VideoNote
 from .voice import Voice
 from .web_app_data import WebAppData
+from .gift_code import GiftCode
 from .web_page import WebPage
 from .web_page_empty import WebPageEmpty
 from .web_page_preview import WebPagePreview
@@ -105,6 +106,7 @@ __all__ = [
     "StoryDeleted",
     "StorySkipped",
     "StoryViews",
+    "GiftCode",
     "StoryForwardHeader",
     "StoriesPrivacyRules",
     "ExportedStoryLink",

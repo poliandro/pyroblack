@@ -47,6 +47,7 @@ from .request_peer_type_chat import RequestPeerTypeChat
 from .request_peer_type_user import RequestPeerTypeUser
 from .sent_web_app_message import SentWebAppMessage
 from .web_app_info import WebAppInfo
+from .requested_chats import RequestedChats
 
 __all__ = [
     "CallbackGame",
@@ -61,6 +62,7 @@ __all__ = [
     "RequestPeerTypeChannel",
     "RequestPeerTypeChat",
     "RequestPeerTypeUser",
+    "RequestedChats",
     "LoginUrl",
     "BotCommand",
     "BotCommandScope",
