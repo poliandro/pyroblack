@@ -908,7 +908,7 @@ class Message(Object, Update):
                     )
 
                     parsed_message.service = enums.MessageServiceType.PINNED_MESSAGE
-                except MessageIdsEmpty:
+                except Exception:
                     pass
 
             if isinstance(action, raw.types.MessageActionGameScore):

@@ -107,5 +107,14 @@ class MessageServiceType(AutoName):
     GIVEAWAY_RESULT = auto()
     "Giveaway Result"
 
+    GIFT_CODE = auto()
+    "Gift code"
+
+    REQUESTED_CHAT = auto()
+    "Requested chat"
+
+    CHAT_TTL_CHANGED = auto()
+    "Chat TTL changed"
+
     BOOST_APPLY = auto()
     "Boost apply"
