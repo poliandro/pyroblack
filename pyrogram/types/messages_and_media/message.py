@@ -1263,11 +1263,17 @@ class Message(Object, Update):
                 else:
                     parsed_message.reply_to_story_id = message.reply_to.story_id
                     if isinstance(message.reply_to, raw.types.PeerUser):
-                        parsed_message.reply_to_story_user_id = message.reply_to.peer.user_id
+                        parsed_message.reply_to_story_user_id = (
+                            message.reply_to.peer.user_id
+                        )
                     elif isinstance(message.reply_to, raw.types.PeerChat):
-                        parsed_message.reply_to_story_chat_id = utils.get_channel_id(message.reply_to.peer.chat_id)
+                        parsed_message.reply_to_story_chat_id = utils.get_channel_id(
+                            message.reply_to.peer.chat_id
+                        )
                     else:
-                        parsed_message.reply_to_story_chat_id = utils.get_channel_id(message.reply_to.peer.channel_id)
+                        parsed_message.reply_to_story_chat_id = utils.get_channel_id(
+                            message.reply_to.peer.channel_id
+                        )
 
                 if replies:
                     if parsed_message.reply_to_message_id:
@@ -1312,8 +1318,9 @@ class Message(Object, Update):
                     elif parsed_message.reply_to_story_id:
                         try:
                             reply_to_story = await client.get_stories(
-                                parsed_message.reply_to_story_user_id or parsed_message.reply_to_story_chat_id,
-                                parsed_message.reply_to_story_id
+                                parsed_message.reply_to_story_user_id
+                                or parsed_message.reply_to_story_chat_id,
+                                parsed_message.reply_to_story_id,
                             )
                         except Exception:
                             pass

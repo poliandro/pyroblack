@@ -504,8 +504,5 @@ async def get_reply_to(
         )
     if reply_to_story_id:
         peer = await client.resolve_peer(chat_id)
-        reply_to = types.InputReplyToStory(
-            peer=peer,
-            story_id=reply_to_story_id
-        )
+        reply_to = types.InputReplyToStory(peer=peer, story_id=reply_to_story_id)
     return reply_to

@@ -243,7 +243,9 @@ class Story(Object, Update):
                         media_type = None
             else:
                 media_type = None
-        if isinstance(peer, raw.types.PeerChannel) or isinstance(peer, raw.types.InputPeerChannel):
+        if isinstance(peer, raw.types.PeerChannel) or isinstance(
+            peer, raw.types.InputPeerChannel
+        ):
             chat_id = utils.get_channel_id(peer.channel_id)
             chat = await client.invoke(
                 raw.functions.channels.GetChannels(

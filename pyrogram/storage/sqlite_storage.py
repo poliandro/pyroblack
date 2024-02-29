@@ -145,14 +145,9 @@ class SQLiteStorage(Storage):
     async def update_usernames(self, usernames: List[Tuple[int, str]]):
         await self.conn.executescript(UNAME_SCHEMA)
         for user in usernames:
-            await self.conn.execute(
-                "DELETE FROM usernames WHERE peer_id=?",
-                (user[0],)
-            )
+            await self.conn.execute("DELETE FROM usernames WHERE peer_id=?", (user[0],))
         await self.conn.executemany(
-            "REPLACE INTO usernames (peer_id, id)"
-            "VALUES (?, ?)",
-            usernames
+            "REPLACE INTO usernames (peer_id, id)" "VALUES (?, ?)", usernames
         )
 
     async def get_peer_by_id(self, peer_id: int):
@@ -178,7 +173,7 @@ class SQLiteStorage(Storage):
             r2 = self.conn.execute(
                 "SELECT peer_id, last_update_on FROM usernames WHERE id = ?"
                 "ORDER BY last_update_on DESC",
-                (username,)
+                (username,),
             )
             r2 = await r2.fetchone()
             if r2 is None:
@@ -188,7 +183,7 @@ class SQLiteStorage(Storage):
             r = await self.conn.execute(
                 "SELECT id, access_hash, type, last_update_on FROM peers WHERE id = ?"
                 "ORDER BY last_update_on DESC",
-                (r2[0],)
+                (r2[0],),
             )
             r = await r.fetchone()
             if r is None:
