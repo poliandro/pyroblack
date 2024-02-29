@@ -205,7 +205,7 @@ class Client(Methods):
         max_concurrent_transmissions (``bool``, *optional*):
             Set the maximum amount of concurrent transmissions (uploads & downloads).
             A value that is too high may result in network related issues.
-            Defaults to 1.
+            Defaults to 2.
 
         init_params (``raw.types.JsonObject``, *optional*):
             Internal parameter.
@@ -231,7 +231,7 @@ class Client(Methods):
     # Interval of seconds in which the updates watchdog will kick in
     UPDATES_WATCHDOG_INTERVAL = 10 * 60
 
-    MAX_CONCURRENT_TRANSMISSIONS = 1
+    MAX_CONCURRENT_TRANSMISSIONS = 2
 
     mimetypes = MimeTypes()
     mimetypes.readfp(StringIO(mime_types))
