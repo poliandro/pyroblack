@@ -122,7 +122,7 @@ html_logo = html_static_path[0] + "/img/pyroblack.png"
 html_favicon = html_static_path[0] + "/img/favicon.ico"
 
 latex_engine = "xelatex"
-latex_logo = os.path.abspath(html_static_path[0] + "/img/pyroblack.png")
+latex_logo = os.path.abspath("static/img/pyroblack.png")
 
 latex_elements = {
     "pointsize": "12pt",
