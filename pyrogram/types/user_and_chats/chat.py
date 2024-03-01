@@ -25,6 +25,7 @@ import pyrogram
 from pyrogram import raw, enums
 from pyrogram import types
 from pyrogram import utils
+from pyrogram.errors import MessageIdsEmpty
 from ..object import Object
 
 
@@ -438,9 +439,17 @@ class Chat(Object):
             parsed_chat.folder_id = getattr(full_user, "folder_id", None)
 
             if full_user.pinned_msg_id:
-                parsed_chat.pinned_message = await client.get_messages(
-                    parsed_chat.id, message_ids=full_user.pinned_msg_id
-                )
+                try:
+                    parsed_chat.pinned_message = await client.get_messages(
+                        chat_id=parsed_chat.id,
+                        message_ids=full_user.pinned_msg_id
+                    )
+                except MessageIdsEmpty:
+                    parsed_chat.pinned_message = types.Message(
+                        id=full_user.pinned_msg_id,
+                        empty=True,
+                        client=client
+                    )
 
             if getattr(full_user, "stories"):
                 peer_stories: raw.types.PeerStories = full_user.stories
@@ -526,7 +535,8 @@ class Chat(Object):
 
             if full_chat.pinned_msg_id:
                 parsed_chat.pinned_message = await client.get_messages(
-                    parsed_chat.id, message_ids=full_chat.pinned_msg_id
+                    chat_id=parsed_chat.id,
+                    message_ids=full_chat.pinned_msg_id
                 )
 
             if isinstance(full_chat.exported_invite, raw.types.ChatInviteExported):

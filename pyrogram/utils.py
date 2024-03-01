@@ -151,7 +151,7 @@ async def parse_messages(
             if is_all_within_chat:
                 # fast path: fetch all messages within the same chat
                 reply_messages = await client.get_messages(
-                    chat_id,
+                    chat_id=chat_id,
                     reply_to_message_ids=messages_with_replies.keys(),
                     replies=replies - 1,
                 )
