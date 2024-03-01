@@ -75,19 +75,6 @@ html_show_sourcelink = True
 html_show_copyright = False
 # Theme options are theme-specific and customize the look and feel of a theme
 # further. For a list of options available for each theme, see the documentation.
-html_theme_options = {
-    "navigation_with_keys": True,
-    "dark_css_variables": {
-        "admonition-title-font-size": "0.95rem",
-        "admonition-font-size": "0.92rem",
-    },
-    "light_css_variables": {
-        "admonition-title-font-size": "0.95rem",
-        "admonition-font-size": "0.92rem",
-    },
-    "light_logo": "hydrogram-light.png",
-    "dark_logo": "hydrogram-dark.png",
-}
 
 html_theme_options = {
     "icon": {

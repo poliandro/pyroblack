@@ -1,6 +1,6 @@
 <p align="center">
     <a href="https://github.com/eyMarv/pyroblack">
-        <img src="https://eyMarv.github.io/pyroblack-docs/_static/pyroblack.png" alt="pyroblack" width="128">
+        <img src="https://eyMarv.github.io/pyroblack-docs/main/_static/pyroblack.png" alt="pyroblack" width="128">
     </a>
     <br>
     <b>Telegram MTProto API Framework for Python</b>

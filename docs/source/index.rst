@@ -5,7 +5,7 @@ Welcome to pyroblack
 
     <div align="center">
         <a href="/">
-            <div class="pyroblack-logo-index"><img src="_static/pyroblack.png" alt="pyroblack"></div>
+            <div class="pyroblack-logo-index"><img src="_static/pyroblack.png" alt="pyroblack" width="128"></div>
         </a>
     </div>
 
