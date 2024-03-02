@@ -75,6 +75,8 @@ class MessageStory(Object):
                 return await client.get_stories(user_id or chat_id, message_story.id)
         except PeerIdInvalid:
             pass
+        except Exception:
+            pass
         return MessageStory(
             from_user=from_user, sender_chat=sender_chat, story_id=message_story.id
         )
