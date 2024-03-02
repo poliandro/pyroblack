@@ -118,8 +118,10 @@ class GiveawayResult(Object):
             winners = []
             for winner in giveaway_result.winners:
                 try:
-                    winners.append(await client.get_users(winner.id))
+                    winners.append(await client.get_users(winner))
                 except PeerIdInvalid:
+                    pass
+                except Exception:
                     pass
 
         return GiveawayResult(
