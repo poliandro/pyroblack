@@ -257,9 +257,13 @@ class Story(Object, Update):
                     from_user = await client.get_users(stories.from_id.user_id)
                     chat = types.Chat._parse_chat(client, chat.chats[0])
                 elif getattr(stories.from_id, "channel_id", None) is not None:
-                    sender_chat = types.Chat._parse_chat(client, stories.from_id.channel_id)
+                    sender_chat = types.Chat._parse_chat(
+                        client, stories.from_id.channel_id
+                    )
                 elif getattr(stories.from_id, "chat_id", None) is not None:
-                    sender_chat = types.Chat._parse_chat(client, stories.from_id.chat_id)
+                    sender_chat = types.Chat._parse_chat(
+                        client, stories.from_id.chat_id
+                    )
             else:
                 sender_chat = types.Chat._parse_chat(client, chat.chats[0])
         elif isinstance(peer, raw.types.InputPeerSelf):
