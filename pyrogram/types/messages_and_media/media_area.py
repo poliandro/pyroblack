@@ -40,4 +40,7 @@ class MediaArea(Object):
         client: "pyrogram.Client", media_area: "raw.base.MediaArea"
     ) -> "MediaArea":
         if isinstance(media_area, raw.types.MediaAreaChannelPost):
-            return await types.MediaAreaChannelPost._parse(client, media_area)
+            try:
+                return await types.MediaAreaChannelPost._parse(client, media_area)
+            except Exception:
+                return None
