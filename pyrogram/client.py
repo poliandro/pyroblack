@@ -205,11 +205,15 @@ class Client(Methods):
         max_concurrent_transmissions (``bool``, *optional*):
             Set the maximum amount of concurrent transmissions (uploads & downloads).
             A value that is too high may result in network related issues.
-            Defaults to 2.
+            Defaults to 3.
 
         init_params (``raw.types.JsonObject``, *optional*):
             Internal parameter.
             Defaults to None.
+
+        max_message_cache_size (``int``, *optional*):
+            Set the maximum size of the message cache.
+            Defaults to 10000.
     """
 
     APP_VERSION = f"pyroblack {__version__}"
@@ -231,7 +235,8 @@ class Client(Methods):
     # Interval of seconds in which the updates watchdog will kick in
     UPDATES_WATCHDOG_INTERVAL = 10 * 60
 
-    MAX_CONCURRENT_TRANSMISSIONS = 2
+    MAX_CONCURRENT_TRANSMISSIONS = 3
+    MAX_MESSAGE_CACHE_SIZE = 10000
 
     mimetypes = MimeTypes()
     mimetypes.readfp(StringIO(mime_types))
@@ -269,6 +274,7 @@ class Client(Methods):
         hide_password: bool = False,
         max_concurrent_transmissions: int = MAX_CONCURRENT_TRANSMISSIONS,
         init_params: raw.types.JsonObject = None,
+        max_message_cache_size: int = MAX_MESSAGE_CACHE_SIZE,
     ):
         super().__init__()
 
@@ -302,6 +308,7 @@ class Client(Methods):
         self.hide_password = hide_password
         self.max_concurrent_transmissions = max_concurrent_transmissions
         self.init_params = init_params
+        self.max_message_cache_size = max_message_cache_size
 
         self.executor = ThreadPoolExecutor(self.workers, thread_name_prefix="Handler")
 
@@ -347,7 +354,7 @@ class Client(Methods):
 
         self.me: Optional[User] = None
 
-        self.message_cache = Cache(10000)
+        self.message_cache = Cache(self.max_message_cache_size)
 
         # Sometimes, for some reason, the server will stop sending updates and will only respond to pings.
         # This watchdog will invoke updates.GetState in order to wake up the server and enable it sending updates again
