@@ -25,8 +25,11 @@ from pyrogram.filters import Filter
 class OnUserStatus:
     def on_user_status(self=None, filters=None, group: int = 0) -> Callable:
         """Decorator for handling user status updates.
+
         This does the same thing as :meth:`~pyrogram.Client.add_handler` using the
         :obj:`~pyrogram.handlers.UserStatusHandler`.
+
+        .. include:: /_includes/usable-by/users.rst
 
         Parameters:
             filters (:obj:`~pyrogram.filters`, *optional*):
