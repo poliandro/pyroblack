@@ -40,7 +40,7 @@ class BusinessMessage(Object):
             Period of inactivity after which the greeting message should be sent again.
 
         offline_only (``bool``, *optional*):
-            Dont send the away message if you've recently been online.
+            Don't send the away message if you've recently been online.
 
         recipients (List of :obj:`~pyrogram.types.User`, *optional*):
             Recipients of the message.
