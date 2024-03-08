@@ -208,7 +208,7 @@ class Client(Methods):
             Defaults to 3.
 
         init_params (``raw.types.JsonObject``, *optional*):
-            Internal parameter.
+            Additional initConnection parameters.
             Defaults to None.
 
         max_message_cache_size (``int``, *optional*):
