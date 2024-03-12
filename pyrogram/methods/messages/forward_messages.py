@@ -36,6 +36,7 @@ class ForwardMessages:
         disable_notification: bool = None,
         schedule_date: datetime = None,
         protect_content: bool = None,
+        drop_media_captions: bool = None,
         drop_author: bool = None,
     ) -> Union["types.Message", List["types.Message"]]:
         """Forward messages of any kind.
@@ -72,8 +73,11 @@ class ForwardMessages:
             protect_content (``bool``, *optional*):
                 Protects the contents of the sent message from forwarding and saving.
 
+            drop_media_captions (``bool``, *optional*):
+                If True, the original media captions will be removed.
+
             drop_author (``bool``, *optional*):
-                Forwards messages without quoting the original author
+                If True, the original author of the message will not be shown.
 
         Returns:
             :obj:`~pyrogram.types.Message` | List of :obj:`~pyrogram.types.Message`: In case *message_ids* was not
@@ -102,6 +106,7 @@ class ForwardMessages:
                 random_id=[self.rnd_id() for _ in message_ids],
                 schedule_date=utils.datetime_to_timestamp(schedule_date),
                 noforwards=protect_content,
+                drop_media_captions=drop_media_captions,
                 drop_author=drop_author,
             )
         )
