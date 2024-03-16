@@ -442,19 +442,18 @@ class Chat(Object):
             parsed_chat = Chat._parse_user_chat(client, users[full_user.id])
             parsed_chat.bio = full_user.about
             parsed_chat.folder_id = getattr(full_user, "folder_id", None)
-            parsed_chat.business_info = types.BusinessInfo._parse(client, full_user, users)
+            parsed_chat.business_info = types.BusinessInfo._parse(
+                client, full_user, users
+            )
 
             if full_user.pinned_msg_id:
                 try:
                     parsed_chat.pinned_message = await client.get_messages(
-                        chat_id=parsed_chat.id,
-                        message_ids=full_user.pinned_msg_id
+                        chat_id=parsed_chat.id, message_ids=full_user.pinned_msg_id
                     )
                 except MessageIdsEmpty:
                     parsed_chat.pinned_message = types.Message(
-                        id=full_user.pinned_msg_id,
-                        empty=True,
-                        client=client
+                        id=full_user.pinned_msg_id, empty=True, client=client
                     )
 
             if getattr(full_user, "stories"):
@@ -541,8 +540,7 @@ class Chat(Object):
 
             if full_chat.pinned_msg_id:
                 parsed_chat.pinned_message = await client.get_messages(
-                    chat_id=parsed_chat.id,
-                    message_ids=full_chat.pinned_msg_id
+                    chat_id=parsed_chat.id, message_ids=full_chat.pinned_msg_id
                 )
 
             if isinstance(full_chat.exported_invite, raw.types.ChatInviteExported):

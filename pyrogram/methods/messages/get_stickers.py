@@ -28,8 +28,7 @@ log = logging.getLogger(__name__)
 
 class GetStickers:
     async def get_stickers(
-        self: "pyrogram.Client",
-        short_name: str
+        self: "pyrogram.Client", short_name: str
     ) -> List["types.Sticker"]:
         """Get all stickers from set by short name.
 
@@ -54,7 +53,7 @@ class GetStickers:
         sticker_set = await self.invoke(
             raw.functions.messages.GetStickerSet(
                 stickerset=raw.types.InputStickerSetShortName(short_name=short_name),
-                hash=0
+                hash=0,
             )
         )
 

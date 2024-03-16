@@ -120,8 +120,7 @@ class CopyMessage:
 
         """
         message: types.Message = await self.get_messages(
-            chat_id=from_chat_id,
-            message_ids=message_id
+            chat_id=from_chat_id, message_ids=message_id
         )
 
         return await message.copy(

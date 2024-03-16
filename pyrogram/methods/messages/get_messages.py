@@ -98,13 +98,19 @@ class GetMessages:
         """
         if chat_id:
             ids, ids_type = (
-                (message_ids, raw.types.InputMessageID) if message_ids
-                else (reply_to_message_ids, raw.types.InputMessageReplyTo) if reply_to_message_ids
-                else (None, None)
+                (message_ids, raw.types.InputMessageID)
+                if message_ids
+                else (
+                    (reply_to_message_ids, raw.types.InputMessageReplyTo)
+                    if reply_to_message_ids
+                    else (None, None)
+                )
             )
 
             if ids is None:
-                raise ValueError("No argument supplied. Either pass message_ids or reply_to_message_ids")
+                raise ValueError(
+                    "No argument supplied. Either pass message_ids or reply_to_message_ids"
+                )
 
             peer = await self.resolve_peer(chat_id)
 
@@ -129,22 +135,15 @@ class GetMessages:
         if link:
             linkps = link.split("/")
             raw_chat_id, message_thread_id, message_id = None, None, None
-            if (
-                len(linkps) == 7 and
-                linkps[3] == "c"
-            ):
+            if len(linkps) == 7 and linkps[3] == "c":
                 # https://t.me/c/1192302355/322/487
-                raw_chat_id = utils.get_channel_id(
-                    int(linkps[4])
-                )
+                raw_chat_id = utils.get_channel_id(int(linkps[4]))
                 message_thread_id = int(linkps[5])
                 message_id = int(linkps[6])
             elif len(linkps) == 6:
                 if linkps[3] == "c":
                     # https://t.me/c/1387666944/609282
-                    raw_chat_id = utils.get_channel_id(
-                        int(linkps[4])
-                    )
+                    raw_chat_id = utils.get_channel_id(int(linkps[4]))
                     message_id = int(linkps[5])
                 else:
                     # https://t.me/TheForum/322/487
@@ -155,9 +154,8 @@ class GetMessages:
                 # https://t.me/pyrogramchat/609282
                 raw_chat_id = linkps[3]
                 message_id = int(linkps[4])
-            return await self.get_messages(
-                chat_id=raw_chat_id,
-                message_ids=message_id
-            )
+            return await self.get_messages(chat_id=raw_chat_id, message_ids=message_id)
 
-        raise ValueError("No argument supplied. Either pass link OR (chat_id, message_ids or reply_to_message_ids)")
+        raise ValueError(
+            "No argument supplied. Either pass link OR (chat_id, message_ids or reply_to_message_ids)"
+        )
