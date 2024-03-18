@@ -308,6 +308,9 @@ class Message(Object, Update):
         forwards (``int``, *optional*):
             Channel post forwards.
 
+        sender_boost_count (``int``, *optional*):
+            The number of boosts applied by the sender.
+
         via_bot (:obj:`~pyrogram.types.User`):
             The information of the bot that generated the message from an inline query of a user.
 
@@ -481,6 +484,7 @@ class Message(Object, Update):
         game_high_score: int = None,
         views: int = None,
         forwards: int = None,
+        sender_boost_count: int = None,
         via_bot: "types.User" = None,
         outgoing: bool = None,
         matches: List[Match] = None,
@@ -586,6 +590,7 @@ class Message(Object, Update):
         self.game_high_score = game_high_score
         self.views = views
         self.forwards = forwards
+        self.sender_boost_count = sender_boost_count
         self.via_bot = via_bot
         self.outgoing = outgoing
         self.matches = matches
@@ -1211,6 +1216,7 @@ class Message(Object, Update):
                 dice=dice,
                 views=message.views,
                 forwards=message.forwards,
+                sender_boost_count=getattr(message, "from_boosts_applied", None),
                 via_bot=types.User._parse(client, users.get(message.via_bot_id, None)),
                 outgoing=message.out,
                 reply_markup=reply_markup,
