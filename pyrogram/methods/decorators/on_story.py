@@ -18,14 +18,18 @@
 #  along with pyroblack.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from typing import Callable
+from typing import Callable, Optional, Union
 
 import pyrogram
 from pyrogram.filters import Filter
 
 
 class OnStory:
-    def on_story(self=None, filters=None, group: int = 0) -> Callable:
+    def on_story(
+        self: Union["OnStory", Filter, None] = None,
+        filters: Optional[Filter] = None,
+        group: int = 0,
+    ) -> Callable:
         """Decorator for handling new stories.
 
         This does the same thing as :meth:`~pyrogram.Client.add_handler` using the
