@@ -22,7 +22,7 @@ Installation
 
 .. code-block:: bash
 
-    $ pip3 install -U tgcrypto-pyrofork
+    $ pip3 install -U tgcrypto-pyroblack
 
 Usage
 ^^^^^
@@ -84,5 +84,5 @@ The ``uvloop.install()`` call also needs to be placed before creating a Client i
 
     app.run()
 
-.. _TgCrypto: https://github.com/pyrogram/tgcrypto
+.. _TgCrypto: https://github.com/eyMarv/tgcrypto-pyroblack
 .. _uvloop: https://github.com/MagicStack/uvloop
