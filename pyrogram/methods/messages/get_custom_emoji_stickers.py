@@ -33,12 +33,13 @@ class GetCustomEmojiStickers:
         .. include:: /_includes/usable-by/users-bots.rst
 
         Parameters:
-            custom_emoji_ids (List of ``int``):
-                List of custom emoji identifiers.
+            custom_emoji_ids (:obj:`int` | :obj:`List[int]`):
+                Custom emoji ID.
                 At most 200 custom emoji identifiers can be specified.
 
         Returns:
-            List of :obj:`~pyrogram.types.Sticker`: On success, a list of sticker objects is returned.
+            :obj: `~pyrogram.types.Sticker` | List of :obj:`~pyrogram.types.Sticker`: In case *custom_emoji_ids* was not
+             a list, a single sticker is returned, otherwise a list of stickers is returned.
         """
         result = await self.invoke(
             raw.functions.messages.GetCustomEmojiDocuments(document_id=custom_emoji_ids)
