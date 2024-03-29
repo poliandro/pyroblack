@@ -104,6 +104,9 @@ class DownloadMedia:
                 # Download from file id
                 await app.download_media(message.photo.file_id)
 
+                # Download document of a message
+                await app.download_media(message.document)
+
                 # Keep track of the progress while downloading
                 async def progress(current, total):
                     print(f"{current * 100 / total:.1f}%")
@@ -141,6 +144,8 @@ class DownloadMedia:
                 raise ValueError("This message doesn't contain any downloadable media")
         else:
             media = message
+        elif hasattr(message, "file_id"):
+            media = getattr(message, "file_id")
 
         if isinstance(media, str):
             file_id_str = media
