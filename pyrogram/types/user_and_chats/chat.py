@@ -345,7 +345,7 @@ class Chat(Object):
 
     @staticmethod
     def _parse_channel_chat(client, channel: raw.types.Channel) -> "Chat":
-        peer_id = utils.get_channel_id(channel.id)
+        peer_id = utils.get_channel_id(channel.id if not isinstance(channel, int) else channel)
         restriction_reason = getattr(channel, "restriction_reason", [])
         user_name = getattr(channel, "username", None)
         active_usernames = getattr(channel, "usernames", [])
