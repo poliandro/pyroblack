@@ -28,7 +28,7 @@ class GiftCode(Object):
             True if the gift code is received via giveaway.
 
         unclaimed (``bool``):
-            True if the gift code is unclaimed.
+            True if the winner for the corresponding Telegram Premium subscription wasn't chosen.
 
         boost_peer (:obj:`~pyrogram.types.Chat`):
             The channel where the gift code was won.
@@ -40,6 +40,9 @@ class GiftCode(Object):
             Identifier of gift code.
             You can combine it with `t.me/giftcode/{slug}`
             to get link for this gift.
+
+        link (``str``, *property*):
+            Generate a link to this gift code.
     """
 
     def __init__(
@@ -55,7 +58,7 @@ class GiftCode(Object):
 
     @staticmethod
     def _parse(client, giftcode: "raw.types.MessageActionGiftCode", chats):
-        peer = chats.get(utils.get_raw_peer_id(giftcode.boost_peer))
+        peer = chats.get(utils.get_raw_peer_id(getattr(giftcode, "boost_peer")))
 
         return GiftCode(
             via_giveaway=giftcode.via_giveaway,
