@@ -20,6 +20,7 @@
 
 from .animation import Animation
 from .audio import Audio
+from .checked_gift_code import CheckedGiftCode
 from .contact import Contact
 from .dice import Dice
 from .document import Document
@@ -67,6 +68,7 @@ from .web_page_preview import WebPagePreview
 __all__ = [
     "Animation",
     "Audio",
+    "CheckedGiftCode",
     "Contact",
     "Document",
     "Game",

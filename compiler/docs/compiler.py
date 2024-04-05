@@ -337,6 +337,10 @@ def pyrogram_api():
             get_contacts
             get_contacts_count
         """,
+        payments="""
+        Payments
+            check_gift_code
+        """,
         password="""
         Password
             enable_cloud_password
@@ -504,6 +508,7 @@ def pyrogram_api():
             ReactionType
             MessageReactionUpdated
             MessageReactionCountUpdated
+            CheckedGiftCode
         """,
         stories="""
         Stories
