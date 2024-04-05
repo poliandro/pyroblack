@@ -78,6 +78,9 @@ class Message(Object, Update):
             The supergroup itself for messages from anonymous group administrators.
             The linked channel for messages automatically forwarded to the discussion group.
 
+        sender_business_bot (:obj:`~pyrogram.types.User`, *optional*):
+            Sender of the message, sent on behalf of a business bot.
+
         date (:py:obj:`~datetime.datetime`, *optional*):
             Date the message was sent.
 
@@ -416,6 +419,7 @@ class Message(Object, Update):
         message_thread_id: int = None,
         from_user: "types.User" = None,
         sender_chat: "types.Chat" = None,
+        sender_business_bot: "types.User" = None,
         date: datetime = None,
         chat: "types.Chat" = None,
         topics: "types.ForumTopic" = None,
@@ -522,6 +526,7 @@ class Message(Object, Update):
         self.message_thread_id = message_thread_id
         self.from_user = from_user
         self.sender_chat = sender_chat
+        self.sender_business_bot = sender_business_bot
         self.date = date
         self.chat = chat
         self.topics = topics
@@ -966,6 +971,7 @@ class Message(Object, Update):
             ]
             entities = types.List(filter(lambda x: x is not None, entities))
 
+            sender_business_bot = None
             forward_from = None
             forward_sender_name = None
             forward_from_chat = None
@@ -1151,6 +1157,9 @@ class Message(Object, Update):
 
             reactions = types.MessageReactions._parse(client, message.reactions)
 
+            if message.via_business_bot_id:
+                sender_business_bot = types.User._parse(client, users.get(message.via_business_bot_id, None))
+
             parsed_message = Message(
                 id=message.id,
                 message_thread_id=message_thread_id,
@@ -1159,6 +1168,7 @@ class Message(Object, Update):
                 topics=None,
                 from_user=from_user,
                 sender_chat=sender_chat,
+                sender_business_bot=sender_business_bot,
                 text=(
                     Str(message.message).init(entities) or None
                     if media is None or web_page_preview is not None
