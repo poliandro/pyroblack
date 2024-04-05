@@ -3,7 +3,7 @@ name = "pyroblack"
 dynamic = ["version"]
 description = "Pyrogram, but black. Elegant, modern and asynchronous Telegram MTProto API framework in Python for users and bots"
 authors = [{ name = "eyMarv", email = "eyMarv07@gmail.com" }]
-dependencies = ["aiosqlite>=0.19.0", "pyaes==1.6.1", "pysocks==1.7.1", "pymediainfo-pyroblack>=6.0.1,<7.0.0"]
+dependencies = ["aiosqlite-black>=0.21.0", "pyaes==1.6.1", "pysocks==1.7.1", "pymediainfo-pyroblack>=6.1.1,<7.0.0"]
 readme = "README.md"
 license = "LGPL-3.0-or-later"
 requires-python = "~=3.8"
@@ -30,7 +30,7 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Software Development :: Libraries :: Application Frameworks",
 ]
-keywords = ["telegram chat messenger mtproto api client library python"]
+keywords = ["black bsxcs telegram chat messenger mtproto api client library python"]
 
 [tool.hatch.version]
 path = "pyrogram/__init__.py"
@@ -66,7 +66,7 @@ docs = [
 ]
 
 speedup = [
-    "tgcrypto-pyroblack>=1.2.5",
+    "tgcrypto-pyroblack>=1.2.6",
     "uvloop>=0.19.0"
 ]
 
