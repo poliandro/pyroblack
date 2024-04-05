@@ -142,10 +142,10 @@ class DownloadMedia:
                     break
             else:
                 raise ValueError("This message doesn't contain any downloadable media")
-        else:
-            media = message
         elif hasattr(message, "file_id"):
             media = getattr(message, "file_id")
+        else:
+            media = message
 
         if isinstance(media, str):
             file_id_str = media
