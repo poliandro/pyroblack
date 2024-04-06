@@ -1407,6 +1407,7 @@ class Message(Object, Update):
         disable_web_page_preview: bool = None,
         disable_notification: bool = None,
         reply_to_message_id: int = None,
+        business_connection_id: str = None,
         reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
@@ -1460,6 +1461,10 @@ class Message(Object, Update):
             reply_to_message_id (``int``, *optional*):
                 If the message is a reply, ID of the original message.
 
+            business_connection_id (``str``, *optional*):
+                Business connection identifier.
+                for business bots only.
+
             reply_in_chat_id (``int`` | ``str``, *optional*):
                 Unique identifier for the origin chat.
                 for reply to message from another chat.
@@ -1503,6 +1508,9 @@ class Message(Object, Update):
         if self.message_thread_id:
             message_thread_id = self.message_thread_id
 
+        if business_connection_id is None and self.business_connection_id:
+            business_connection_id = self.business_connection_id
+
         chat_id = self.chat.id
         reply_to_chat_id = None
         if reply_in_chat_id is not None:
@@ -1518,6 +1526,7 @@ class Message(Object, Update):
             disable_notification=disable_notification,
             message_thread_id=message_thread_id,
             reply_to_message_id=reply_to_message_id,
+            business_connection_id=business_connection_id,
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
             quote_entities=quote_entities,
@@ -1550,6 +1559,7 @@ class Message(Object, Update):
             "types.ForceReply",
         ] = None,
         reply_to_message_id: int = None,
+        business_connection_id: str = None,
         reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
@@ -1623,6 +1633,10 @@ class Message(Object, Update):
             reply_to_message_id (``int``, *optional*):
                 If the message is a reply, ID of the original message.
 
+            business_connection_id (``str``, *optional*):
+                Business connection identifier.
+                for business bots only.
+
             reply_in_chat_id (``int`` | ``str``, *optional*):
                 Unique identifier for the origin chat.
                 for reply to message from another chat.
@@ -1680,6 +1694,9 @@ class Message(Object, Update):
         if self.message_thread_id:
             message_thread_id = self.message_thread_id
 
+        if business_connection_id is None and self.business_connection_id:
+            business_connection_id = self.business_connection_id
+
         chat_id = self.chat.id
         reply_to_chat_id = None
         if reply_in_chat_id is not None:
@@ -1701,6 +1718,7 @@ class Message(Object, Update):
             disable_notification=disable_notification,
             message_thread_id=message_thread_id,
             reply_to_message_id=reply_to_message_id,
+            business_connection_id=business_connection_id,
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
             quote_entities=quote_entities,
@@ -1723,6 +1741,7 @@ class Message(Object, Update):
         file_name: str = None,
         disable_notification: bool = None,
         reply_to_message_id: int = None,
+        business_connection_id: str = None,
         reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
@@ -1799,6 +1818,10 @@ class Message(Object, Update):
             reply_to_message_id (``int``, *optional*):
                 If the message is a reply, ID of the original message.
 
+            business_connection_id (``str``, *optional*):
+                Business connection identifier.
+                for business bots only.
+
             reply_in_chat_id: Union[int, str] = None,
                 Unique identifier of target chat.
                 for reply message in another chat.
@@ -1855,6 +1878,9 @@ class Message(Object, Update):
         if self.message_thread_id:
             message_thread_id = self.message_thread_id
 
+        if business_connection_id is None and self.business_connection_id:
+            business_connection_id = self.business_connection_id
+
         chat_id = self.chat.id
         reply_to_chat_id = None
         if reply_in_chat_id is not None:
@@ -1875,6 +1901,7 @@ class Message(Object, Update):
             disable_notification=disable_notification,
             message_thread_id=message_thread_id,
             reply_to_message_id=reply_to_message_id,
+            business_connection_id=business_connection_id,
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
             quote_entities=quote_entities,
@@ -1998,7 +2025,11 @@ class Message(Object, Update):
             reply_markup=reply_markup,
         )
 
-    async def reply_chat_action(self, action: "enums.ChatAction") -> bool:
+    async def reply_chat_action(
+        self,
+        action: "enums.ChatAction",
+        business_connection_id: str = None
+    ) -> bool:
         """Bound method *reply_chat_action* of :obj:`~pyrogram.types.Message`.
 
         Use as a shortcut for:
@@ -2023,6 +2054,10 @@ class Message(Object, Update):
             action (:obj:`~pyrogram.enums.ChatAction`):
                 Type of action to broadcast.
 
+            business_connection_id (``str``, *optional*):
+                Business connection identifier.
+                for business bots only.
+
         Returns:
             ``bool``: On success, True is returned.
 
@@ -2030,7 +2065,14 @@ class Message(Object, Update):
             RPCError: In case of a Telegram RPC error.
             ValueError: In case the provided string is not a valid chat action.
         """
-        return await self._client.send_chat_action(chat_id=self.chat.id, action=action)
+        if business_connection_id is None and self.business_connection_id:
+            business_connection_id = self.business_connection_id
+
+        return await self._client.send_chat_action(
+            chat_id=self.chat.id,
+            business_connection_id=business_connection_id,
+            action=action
+        )
 
     async def reply_contact(
         self,
@@ -2041,6 +2083,7 @@ class Message(Object, Update):
         vcard: str = "",
         disable_notification: bool = None,
         reply_to_message_id: int = None,
+        business_connection_id: str = None,
         reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
@@ -2094,6 +2137,10 @@ class Message(Object, Update):
             reply_to_message_id (``int``, *optional*):
                 If the message is a reply, ID of the original message.
 
+            business_connection_id (``str``, *optional*):
+                Business connection identifier.
+                for business bots only.
+
             reply_in_chat_id: Union[int, str] = None,
                 Unique identifier of target chat.
                 for reply message in another chat.
@@ -2131,6 +2178,9 @@ class Message(Object, Update):
         if self.message_thread_id:
             message_thread_id = self.message_thread_id
 
+        if business_connection_id is None and self.business_connection_id:
+            business_connection_id = self.business_connection_id
+
         chat_id = self.chat.id
         reply_to_chat_id = None
         if reply_in_chat_id is not None:
@@ -2147,6 +2197,7 @@ class Message(Object, Update):
             message_thread_id=message_thread_id,
             reply_to_message_id=reply_to_message_id,
             reply_to_chat_id=reply_to_chat_id,
+            business_connection_id=business_connection_id,
             quote_text=quote_text,
             quote_entities=quote_entities,
             parse_mode=parse_mode,
@@ -2165,6 +2216,7 @@ class Message(Object, Update):
         force_document: bool = None,
         disable_notification: bool = None,
         reply_to_message_id: int = None,
+        business_connection_id: str = None,
         reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
@@ -2239,6 +2291,10 @@ class Message(Object, Update):
             reply_to_message_id (``int``, *optional*):
                 If the message is a reply, ID of the original message.
 
+            business_connection_id (``str``, *optional*):
+                Business connection identifier.
+                for business bots only.
+
             reply_in_chat_id: Union[int, str] = None,
                 Unique identifier of target chat.
                 for reply message in another chat.
@@ -2301,6 +2357,9 @@ class Message(Object, Update):
         if self.message_thread_id:
             message_thread_id = self.message_thread_id
 
+        if business_connection_id is None and self.business_connection_id:
+            business_connection_id = self.business_connection_id
+
         chat_id = self.chat.id
         reply_to_chat_id = None
         if reply_in_chat_id is not None:
@@ -2319,6 +2378,7 @@ class Message(Object, Update):
             disable_notification=disable_notification,
             message_thread_id=message_thread_id,
             reply_to_message_id=reply_to_message_id,
+            business_connection_id=business_connection_id,
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
             quote_entities=quote_entities,
@@ -2335,6 +2395,7 @@ class Message(Object, Update):
         quote: bool = None,
         disable_notification: bool = None,
         reply_to_message_id: int = None,
+        business_connection_id: str = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
@@ -2374,6 +2435,10 @@ class Message(Object, Update):
             reply_to_message_id (``int``, *optional*):
                 If the message is a reply, ID of the original message.
 
+            business_connection_id (``str``, *optional*):
+                Business connection identifier.
+                for business bots only.
+
             reply_markup (:obj:`~pyrogram.types.InlineKeyboardMarkup`, *optional*):
                 An object for an inline keyboard. If empty, one ‘Play game_title’ button will be shown automatically.
                 If not empty, the first button must launch the game.
@@ -2390,6 +2455,9 @@ class Message(Object, Update):
         if reply_to_message_id is None and quote:
             reply_to_message_id = self.id
 
+        if business_connection_id is None and self.business_connection_id:
+            business_connection_id = self.business_connection_id
+
         message_thread_id = None
         if self.message_thread_id:
             message_thread_id = self.message_thread_id
@@ -2400,7 +2468,8 @@ class Message(Object, Update):
             disable_notification=disable_notification,
             message_thread_id=message_thread_id,
             reply_to_message_id=reply_to_message_id,
-            reply_markup=reply_markup,
+            business_connection_id=business_connection_id,
+            reply_markup=reply_markup
         )
 
     async def reply_inline_bot_result(
@@ -2498,6 +2567,7 @@ class Message(Object, Update):
         quote: bool = None,
         disable_notification: bool = None,
         reply_to_message_id: int = None,
+        business_connection_id: str = None,
         reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
@@ -2545,6 +2615,10 @@ class Message(Object, Update):
             reply_to_message_id (``int``, *optional*):
                 If the message is a reply, ID of the original message
 
+            business_connection_id (``str``, *optional*):
+                Business connection identifier.
+                for business bots only.
+
             reply_in_chat_id: Union[int, str] = None,
                 Unique identifier of target chat.
                 for reply message in another chat.
@@ -2578,6 +2652,9 @@ class Message(Object, Update):
         if reply_to_message_id is None and quote:
             reply_to_message_id = self.id
 
+        if business_connection_id is None and self.business_connection_id:
+            business_connection_id = self.business_connection_id
+
         message_thread_id = None
         if self.message_thread_id:
             message_thread_id = self.message_thread_id
@@ -2595,6 +2672,7 @@ class Message(Object, Update):
             disable_notification=disable_notification,
             message_thread_id=message_thread_id,
             reply_to_message_id=reply_to_message_id,
+            business_connection_id=business_connection_id,
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
             quote_entities=quote_entities,
@@ -2616,6 +2694,7 @@ class Message(Object, Update):
         disable_notification: bool = None,
         reply_to_message_id: int = None,
         reply_in_chat_id: Union[int, str] = None,
+        business_connection_id: str = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
         parse_mode: Optional["enums.ParseMode"] = None,
@@ -2654,6 +2733,10 @@ class Message(Object, Update):
             reply_to_message_id (``int``, *optional*):
                 If the message is a reply, ID of the original message.
 
+            business_connection_id (``str``, *optional*):
+                Business connection identifier.
+                for business bots only.
+
             reply_in_chat_id: Union[int, str] = None,
                 Unique identifier of target chat.
                 for reply message in another chat.
@@ -2684,6 +2767,9 @@ class Message(Object, Update):
         if reply_to_message_id is None and quote:
             reply_to_message_id = self.id
 
+        if business_connection_id is None and self.business_connection_id:
+            business_connection_id = self.business_connection_id
+
         message_thread_id = None
         if self.message_thread_id:
             message_thread_id = self.message_thread_id
@@ -2700,6 +2786,7 @@ class Message(Object, Update):
             disable_notification=disable_notification,
             message_thread_id=message_thread_id,
             reply_to_message_id=reply_to_message_id,
+            business_connection_id=business_connection_id,
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
             quote_entities=quote_entities,
@@ -2717,6 +2804,7 @@ class Message(Object, Update):
         ttl_seconds: int = None,
         disable_notification: bool = None,
         reply_to_message_id: int = None,
+        business_connection_id: str = None,
         reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
@@ -2782,6 +2870,10 @@ class Message(Object, Update):
             reply_to_message_id (``int``, *optional*):
                 If the message is a reply, ID of the original message.
 
+            business_connection_id (``str``, *optional*):
+                Business connection identifier.
+                for business bots only.
+
             reply_in_chat_id: Union[int, str] = None,
                 Unique identifier of target chat.
                 for reply message in another chat.
@@ -2834,6 +2926,9 @@ class Message(Object, Update):
         if reply_to_message_id is None and quote:
             reply_to_message_id = self.id
 
+        if business_connection_id is None and self.business_connection_id:
+            business_connection_id = self.business_connection_id
+
         message_thread_id = None
         if self.message_thread_id:
             message_thread_id = self.message_thread_id
@@ -2855,6 +2950,7 @@ class Message(Object, Update):
             disable_notification=disable_notification,
             message_thread_id=message_thread_id,
             reply_to_message_id=reply_to_message_id,
+            business_connection_id=business_connection_id,
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
             quote_entities=quote_entities,
@@ -2881,6 +2977,7 @@ class Message(Object, Update):
         disable_notification: bool = None,
         protect_content: bool = None,
         reply_to_message_id: int = None,
+        business_connection_id: str = None,
         reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
@@ -2972,6 +3069,10 @@ class Message(Object, Update):
             reply_to_message_id (``int``, *optional*):
                 If the message is a reply, ID of the original message.
 
+            business_connection_id (``str``, *optional*):
+                Business connection identifier.
+                for business bots only.
+
             reply_in_chat_id: Union[int, str] = None,
                 Unique identifier of target chat.
                 for reply message in another chat.
@@ -3008,6 +3109,9 @@ class Message(Object, Update):
         if reply_to_message_id is None and quote:
             reply_to_message_id = self.id
 
+        if business_connection_id is None and self.business_connection_id:
+            business_connection_id = self.business_connection_id
+
         message_thread_id = None
         if self.message_thread_id:
             message_thread_id = self.message_thread_id
@@ -3035,6 +3139,7 @@ class Message(Object, Update):
             disable_notification=disable_notification,
             protect_content=protect_content,
             message_thread_id=message_thread_id,
+            business_connection_id=business_connection_id,
             reply_to_message_id=reply_to_message_id,
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
@@ -3050,6 +3155,7 @@ class Message(Object, Update):
         quote: bool = None,
         disable_notification: bool = None,
         reply_to_message_id: int = None,
+        business_connection_id: str = None,
         reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
@@ -3097,6 +3203,10 @@ class Message(Object, Update):
 
             reply_to_message_id (``int``, *optional*):
                 If the message is a reply, ID of the original message.
+
+            business_connection_id (``str``, *optional*):
+                Business connection identifier.
+                for business bots only.
 
             reply_in_chat_id: Union[int, str] = None,
                 Unique identifier of target chat.
@@ -3155,6 +3265,9 @@ class Message(Object, Update):
         if reply_to_message_id is None and quote:
             reply_to_message_id = self.id
 
+        if business_connection_id is None and self.business_connection_id:
+            business_connection_id = self.business_connection_id
+
         message_thread_id = None
         if self.message_thread_id:
             message_thread_id = self.message_thread_id
@@ -3171,6 +3284,7 @@ class Message(Object, Update):
             disable_notification=disable_notification,
             message_thread_id=message_thread_id,
             reply_to_message_id=reply_to_message_id,
+            business_connection_id=business_connection_id,
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
             quote_entities=quote_entities,
@@ -3191,6 +3305,7 @@ class Message(Object, Update):
         foursquare_type: str = "",
         disable_notification: bool = None,
         reply_to_message_id: int = None,
+        business_connection_id: str = None,
         reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
@@ -3253,6 +3368,10 @@ class Message(Object, Update):
             reply_to_message_id (``int``, *optional*):
                 If the message is a reply, ID of the original message
 
+            business_connection_id (``str``, *optional*):
+                Business connection identifier.
+                for business bots only.
+
             reply_in_chat_id: Union[int, str] = None,
                 Unique identifier of target chat.
                 for reply message in another chat.
@@ -3286,6 +3405,9 @@ class Message(Object, Update):
         if reply_to_message_id is None and quote:
             reply_to_message_id = self.id
 
+        if business_connection_id is None and self.business_connection_id:
+            business_connection_id = self.business_connection_id
+
         message_thread_id = None
         if self.message_thread_id:
             message_thread_id = self.message_thread_id
@@ -3307,6 +3429,7 @@ class Message(Object, Update):
             disable_notification=disable_notification,
             message_thread_id=message_thread_id,
             reply_to_message_id=reply_to_message_id,
+            business_connection_id=business_connection_id,
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
             quote_entities=quote_entities,
@@ -3331,6 +3454,7 @@ class Message(Object, Update):
         supports_streaming: bool = True,
         disable_notification: bool = None,
         reply_to_message_id: int = None,
+        business_connection_id: str = None,
         reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
@@ -3418,6 +3542,10 @@ class Message(Object, Update):
             reply_to_message_id (``int``, *optional*):
                 If the message is a reply, ID of the original message.
 
+            business_connection_id (``str``, *optional*):
+                Business connection identifier.
+                for business bots only.
+
             reply_in_chat_id: Union[int, str] = None,
                 Unique identifier of target chat.
                 for reply message in another chat.
@@ -3470,6 +3598,9 @@ class Message(Object, Update):
         if reply_to_message_id is None and quote:
             reply_to_message_id = self.id
 
+        if business_connection_id is None and self.business_connection_id:
+            business_connection_id = self.business_connection_id
+
         message_thread_id = None
         if self.message_thread_id:
             message_thread_id = self.message_thread_id
@@ -3497,6 +3628,7 @@ class Message(Object, Update):
             disable_notification=disable_notification,
             message_thread_id=message_thread_id,
             reply_to_message_id=reply_to_message_id,
+            business_connection_id=business_connection_id,
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
             quote_entities=quote_entities,
@@ -3514,6 +3646,7 @@ class Message(Object, Update):
         thumb: Union[str, BinaryIO] = None,
         disable_notification: bool = None,
         reply_to_message_id: int = None,
+        business_connection_id: str = None,
         reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
@@ -3575,6 +3708,10 @@ class Message(Object, Update):
 
             reply_to_message_id (``int``, *optional*):
                 If the message is a reply, ID of the original message
+
+            business_connection_id (``str``, *optional*):
+                Business connection identifier.
+                for business bots only.
 
             reply_in_chat_id: Union[int, str] = None,
                 Unique identifier of target chat.
@@ -3641,6 +3778,9 @@ class Message(Object, Update):
         if reply_to_message_id is None and quote:
             reply_to_message_id = self.id
 
+        if business_connection_id is None and self.business_connection_id:
+            business_connection_id = self.business_connection_id
+
         message_thread_id = None
         if self.message_thread_id:
             message_thread_id = self.message_thread_id
@@ -3660,6 +3800,7 @@ class Message(Object, Update):
             disable_notification=disable_notification,
             message_thread_id=message_thread_id,
             reply_to_message_id=reply_to_message_id,
+            business_connection_id=business_connection_id,
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
             quote_entities=quote_entities,
@@ -3681,6 +3822,7 @@ class Message(Object, Update):
         duration: int = 0,
         disable_notification: bool = None,
         reply_to_message_id: int = None,
+        business_connection_id: str = None,
         reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
@@ -3741,6 +3883,10 @@ class Message(Object, Update):
             reply_to_message_id (``int``, *optional*):
                 If the message is a reply, ID of the original message
 
+            business_connection_id (``str``, *optional*):
+                Business connection identifier.
+                for business bots only.
+
             reply_in_chat_id: Union[int, str] = None,
                 Unique identifier of target chat.
                 for reply message in another chat.
@@ -3793,6 +3939,9 @@ class Message(Object, Update):
         if reply_to_message_id is None and quote:
             reply_to_message_id = self.id
 
+        if business_connection_id is None and self.business_connection_id:
+            business_connection_id = self.business_connection_id
+
         message_thread_id = None
         if self.message_thread_id:
             message_thread_id = self.message_thread_id
@@ -3813,6 +3962,7 @@ class Message(Object, Update):
             disable_notification=disable_notification,
             message_thread_id=message_thread_id,
             reply_to_message_id=reply_to_message_id,
+            business_connection_id=business_connection_id,
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
             quote_entities=quote_entities,
@@ -3832,6 +3982,7 @@ class Message(Object, Update):
         invert_media: bool = None,
         disable_notification: bool = None,
         reply_to_message_id: int = None,
+        business_connection_id: str = None,
         reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
@@ -3888,6 +4039,10 @@ class Message(Object, Update):
             reply_to_message_id (``int``, *optional*):
                 If the message is a reply, ID of the original message.
 
+            business_connection_id (``str``, *optional*):
+                Business connection identifier.
+                for business bots only.
+
             reply_in_chat_id: Union[int, str] = None,
                 Unique identifier of target chat.
                 for reply message in another chat.
@@ -3923,6 +4078,9 @@ class Message(Object, Update):
         if reply_to_message_id is None and quote:
             reply_to_message_id = self.id
 
+        if business_connection_id is None and self.business_connection_id:
+            business_connection_id = self.business_connection_id
+
         message_thread_id = None
         if self.message_thread_id:
             message_thread_id = self.message_thread_id
@@ -3944,6 +4102,7 @@ class Message(Object, Update):
             disable_notification=disable_notification,
             message_thread_id=message_thread_id,
             reply_to_message_id=reply_to_message_id,
+            business_connection_id=business_connection_id,
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
             quote_entities=quote_entities,
