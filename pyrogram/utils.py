@@ -209,7 +209,7 @@ async def parse_messages(
     return types.List(parsed_messages)
 
 
-def parse_deleted_messages(client, update) -> List["types.Message"]:
+def parse_deleted_messages(client, update, business_connection_id: str = None) -> List["types.Message"]:
     messages = update.messages
     channel_id = getattr(update, "channel_id", None)
 
@@ -219,16 +219,13 @@ def parse_deleted_messages(client, update) -> List["types.Message"]:
         parsed_messages.append(
             types.Message(
                 id=message,
-                chat=(
-                    types.Chat(
-                        id=get_channel_id(channel_id),
-                        type=enums.ChatType.CHANNEL,
-                        client=client,
-                    )
-                    if channel_id is not None
-                    else None
-                ),
-                client=client,
+                chat=types.Chat(
+                    id=get_channel_id(channel_id),
+                    type=enums.ChatType.CHANNEL,
+                    client=client
+                ) if channel_id is not None else None,
+                business_connection_id=business_connection_id,
+                client=client
             )
         )
 

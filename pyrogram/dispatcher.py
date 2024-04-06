@@ -23,29 +23,6 @@ import inspect
 import logging
 from collections import OrderedDict
 
-from pyrogram.raw.types import (
-    UpdateNewMessage,
-    UpdateNewChannelMessage,
-    UpdateNewScheduledMessage,
-    UpdateBotNewBusinessMessage,
-    UpdateEditMessage,
-    UpdateEditChannelMessage,
-    UpdateDeleteMessages,
-    UpdateDeleteChannelMessages,
-    UpdateBotCallbackQuery,
-    UpdateInlineBotCallbackQuery,
-    UpdateUserStatus,
-    UpdateBotInlineQuery,
-    UpdateMessagePoll,
-    UpdateBotInlineSend,
-    UpdateChatParticipant,
-    UpdateChannelParticipant,
-    UpdateBotChatInviteRequester,
-    UpdateStory,
-    UpdateBotMessageReaction,
-    UpdateBotMessageReactions,
-)
-
 import pyrogram
 from pyrogram import utils
 from pyrogram.handlers import (
@@ -53,7 +30,9 @@ from pyrogram.handlers import (
     CallbackQueryHandler,
     MessageHandler,
     EditedMessageHandler,
+    EditedBotBusinessMessageHandler,
     DeletedMessagesHandler,
+    DeletedBotBusinessMessagesHandler,
     MessageReactionUpdatedHandler,
     MessageReactionCountUpdatedHandler,
     UserStatusHandler,
@@ -65,6 +44,18 @@ from pyrogram.handlers import (
     ChatMemberUpdatedHandler,
     ChatJoinRequestHandler,
     StoryHandler,
+)
+from pyrogram.raw.types import (
+    UpdateNewMessage, UpdateNewChannelMessage, UpdateNewScheduledMessage,
+    UpdateBotNewBusinessMessage, UpdateBotDeleteBusinessMessage, UpdateBotEditBusinessMessage,
+    UpdateEditMessage, UpdateEditChannelMessage,
+    UpdateDeleteMessages, UpdateDeleteChannelMessages,
+    UpdateBotCallbackQuery, UpdateInlineBotCallbackQuery,
+    UpdateUserStatus, UpdateBotInlineQuery, UpdateMessagePoll,
+    UpdateBotInlineSend, UpdateChatParticipant, UpdateChannelParticipant,
+    UpdateBotChatInviteRequester, UpdateStory,
+    UpdateBotMessageReaction,
+    UpdateBotMessageReactions
 )
 
 log = logging.getLogger(__name__)
@@ -78,7 +69,9 @@ class Dispatcher:
     )
     NEW_BOT_BUSINESS_MESSAGE_UPDATES = (UpdateBotNewBusinessMessage,)
     EDIT_MESSAGE_UPDATES = (UpdateEditMessage, UpdateEditChannelMessage)
+    EDIT_BOT_BUSINESS_MESSAGE_UPDATES = (UpdateBotEditBusinessMessage,)
     DELETE_MESSAGES_UPDATES = (UpdateDeleteMessages, UpdateDeleteChannelMessages)
+    DELETE_BOT_BUSINESS_MESSAGES_UPDATES = (UpdateBotDeleteBusinessMessage,)
     CALLBACK_QUERY_UPDATES = (UpdateBotCallbackQuery, UpdateInlineBotCallbackQuery)
     CHAT_MEMBER_UPDATES = (UpdateChatParticipant, UpdateChannelParticipant)
     USER_STATUS_UPDATES = (UpdateUserStatus,)
@@ -133,10 +126,25 @@ class Dispatcher:
 
             return (parsed, EditedMessageHandler)
 
+        async def edited_bot_business_message_parser(update, users, chats):
+            # Edited messages are parsed the same way as new messages, but the handler is different
+            parsed, _ = await bot_business_message_parser(update, users, chats)
+
+            return (
+                parsed,
+                EditedBotBusinessMessageHandler
+            )
+
         async def deleted_messages_parser(update, users, chats):
             return (
                 utils.parse_deleted_messages(self.client, update),
                 DeletedMessagesHandler,
+            )
+
+        async def deleted_bot_business_messages_parser(update, users, chats):
+            return (
+                utils.parse_deleted_messages(self.client, update, business_connection_id=update.connection_id),
+                DeletedBotBusinessMessagesHandler
             )
 
         async def callback_query_parser(update, users, chats):
@@ -210,7 +218,9 @@ class Dispatcher:
             Dispatcher.NEW_MESSAGE_UPDATES: message_parser,
             Dispatcher.NEW_BOT_BUSINESS_MESSAGE_UPDATES: bot_business_message_parser,
             Dispatcher.EDIT_MESSAGE_UPDATES: edited_message_parser,
+            Dispatcher.EDIT_BOT_BUSINESS_MESSAGE_UPDATES: edited_bot_business_message_parser,
             Dispatcher.DELETE_MESSAGES_UPDATES: deleted_messages_parser,
+            Dispatcher.DELETE_BOT_BUSINESS_MESSAGES_UPDATES: deleted_bot_business_messages_parser,
             Dispatcher.CALLBACK_QUERY_UPDATES: callback_query_parser,
             Dispatcher.USER_STATUS_UPDATES: user_status_parser,
             Dispatcher.BOT_INLINE_QUERY_UPDATES: inline_query_parser,
