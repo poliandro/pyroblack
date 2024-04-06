@@ -49,3 +49,10 @@ class Birthday(Object):
         return Birthday(
             day=birthday.day, month=birthday.month, year=getattr(birthday, "year", None)
         )
+
+    async def write(self) -> "raw.types.Birthday":
+        return raw.types.Birthday(
+            day=self.day,
+            month=self.month,
+            year=self.year
+        )
