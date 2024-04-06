@@ -187,7 +187,11 @@ class Chat(Object):
             Business information of a chat.
 
         birthday (:obj:`~pyrogram.types.Birthday`, *optional*):
-            Information about user birthday.
+            User Date of birth.
+
+        personal_chat (:obj:`~pyrogram.types.Chat`, *optional*):
+            For private chats, the personal channel of the user.
+            Returned only in :meth:`~pyrogram.Client.get_chat`.
     """
 
     def __init__(
@@ -237,6 +241,7 @@ class Chat(Object):
         profile_color: "types.ChatColor" = None,
         business_info: "types.BusinessInfo" = None,
         birthday: "types.Birthday" = None,
+        personal_chat: "types.Chat" = None
     ):
         super().__init__(client)
 
@@ -283,6 +288,7 @@ class Chat(Object):
         self.profile_color = profile_color
         self.business_info = business_info
         self.birthday = birthday
+        self.personal_chat = personal_chat
 
     @property
     def full_name(self) -> str:
@@ -449,12 +455,15 @@ class Chat(Object):
             parsed_chat = Chat._parse_user_chat(client, users[full_user.id])
             parsed_chat.bio = full_user.about
             parsed_chat.folder_id = getattr(full_user, "folder_id", None)
-            parsed_chat.business_info = types.BusinessInfo._parse(
-                client, full_user, users
+            parsed_chat.business_info = types.BusinessInfo._parse(client, full_user, users)
+            birthday = getattr(full_user, "birthday", None)
+            parsed_chat.birthday = types.Birthday._parse(birthday) if birthday is not None else None
+            personal_chat = await client.invoke(
+                raw.functions.channels.GetChannels(
+                    id=[await client.resolve_peer(utils.get_channel_id(full_user.personal_channel_id))]
+                )
             )
-            parsed_chat.birthday = types.Birthday._parse(
-                getattr(full_user, "birthday", None)
-            )
+            parsed_chat.personal_chat = Chat._parse_chat(client, personal_chat.chats[0])
 
             if full_user.pinned_msg_id:
                 try:
