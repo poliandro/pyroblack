@@ -96,7 +96,10 @@ def get_input_media_from_file_id(
 
 
 async def parse_messages(
-    client, messages: "raw.types.messages.Messages", replies: int = 1, business_connection_id: str = None
+    client,
+    messages: "raw.types.messages.Messages",
+    replies: int = 1,
+    business_connection_id: str = None,
 ) -> List["types.Message"]:
     users = {i.id: i for i in messages.users}
     chats = {i.id: i for i in messages.chats}
@@ -110,7 +113,17 @@ async def parse_messages(
     parsed_messages = []
 
     for message in messages.messages:
-        parsed_messages.append(await types.Message._parse(client, message, users, chats, topics, replies=0, business_connection_id=business_connection_id))
+        parsed_messages.append(
+            await types.Message._parse(
+                client,
+                message,
+                users,
+                chats,
+                topics,
+                replies=0,
+                business_connection_id=business_connection_id,
+            )
+        )
 
     if replies:
         messages_with_replies = {
@@ -209,7 +222,9 @@ async def parse_messages(
     return types.List(parsed_messages)
 
 
-def parse_deleted_messages(client, update, business_connection_id: str = None) -> List["types.Message"]:
+def parse_deleted_messages(
+    client, update, business_connection_id: str = None
+) -> List["types.Message"]:
     messages = update.messages
     channel_id = getattr(update, "channel_id", None)
 
@@ -219,13 +234,17 @@ def parse_deleted_messages(client, update, business_connection_id: str = None) -
         parsed_messages.append(
             types.Message(
                 id=message,
-                chat=types.Chat(
-                    id=get_channel_id(channel_id),
-                    type=enums.ChatType.CHANNEL,
-                    client=client
-                ) if channel_id is not None else None,
+                chat=(
+                    types.Chat(
+                        id=get_channel_id(channel_id),
+                        type=enums.ChatType.CHANNEL,
+                        client=client,
+                    )
+                    if channel_id is not None
+                    else None
+                ),
                 business_connection_id=business_connection_id,
-                client=client
+                client=client,
             )
         )
 

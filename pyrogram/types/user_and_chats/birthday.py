@@ -51,8 +51,4 @@ class Birthday(Object):
         )
 
     async def write(self) -> "raw.types.Birthday":
-        return raw.types.Birthday(
-            day=self.day,
-            month=self.month,
-            year=self.year
-        )
+        return raw.types.Birthday(day=self.day, month=self.month, year=self.year)

@@ -499,22 +499,23 @@ class SendMediaGroup:
                 )
             )
 
-        rpc = raw.functions.messages.SendMultiMedia(
-            peer=await self.resolve_peer(chat_id),
-            multi_media=multi_media,
-            silent=disable_notification or None,
-            reply_to=reply_to,
-            schedule_date=utils.datetime_to_timestamp(schedule_date),
-            noforwards=protect_content
-        ),
+        rpc = (
+            raw.functions.messages.SendMultiMedia(
+                peer=await self.resolve_peer(chat_id),
+                multi_media=multi_media,
+                silent=disable_notification or None,
+                reply_to=reply_to,
+                schedule_date=utils.datetime_to_timestamp(schedule_date),
+                noforwards=protect_content,
+            ),
+        )
 
         if business_connection_id is not None:
             r = await self.invoke(
                 raw.functions.InvokeWithBusinessConnection(
-                    connection_id=business_connection_id,
-                    query=rpc
+                    connection_id=business_connection_id, query=rpc
                 ),
-                sleep_threshold=60
+                sleep_threshold=60,
             )
         else:
             r = await self.invoke(rpc, sleep_threshold=60)
@@ -522,15 +523,23 @@ class SendMediaGroup:
         return await utils.parse_messages(
             self,
             raw.types.messages.Messages(
-                messages=[m.message for m in filter(
-                    lambda u: isinstance(u, (raw.types.UpdateNewMessage,
-                                             raw.types.UpdateNewChannelMessage,
-                                             raw.types.UpdateNewScheduledMessage,
-                                             raw.types.UpdateBotNewBusinessMessage)),
-                    r.updates
-                )],
+                messages=[
+                    m.message
+                    for m in filter(
+                        lambda u: isinstance(
+                            u,
+                            (
+                                raw.types.UpdateNewMessage,
+                                raw.types.UpdateNewChannelMessage,
+                                raw.types.UpdateNewScheduledMessage,
+                                raw.types.UpdateBotNewBusinessMessage,
+                            ),
+                        ),
+                        r.updates,
+                    )
+                ],
                 users=r.users,
-                chats=r.chats
+                chats=r.chats,
             ),
-            business_connection_id=business_connection_id
+            business_connection_id=business_connection_id,
         )

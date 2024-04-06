@@ -674,7 +674,7 @@ class Message(Object, Update):
         topics: dict = None,
         is_scheduled: bool = False,
         business_connection_id: str = None,
-        replies: int = 1
+        replies: int = 1,
     ):
         if isinstance(message, raw.types.MessageEmpty):
             return Message(id=message.id, empty=True, client=client, raw=message)
@@ -1164,7 +1164,9 @@ class Message(Object, Update):
             reactions = types.MessageReactions._parse(client, message.reactions)
 
             if message.via_business_bot_id:
-                sender_business_bot = types.User._parse(client, users.get(message.via_business_bot_id, None))
+                sender_business_bot = types.User._parse(
+                    client, users.get(message.via_business_bot_id, None)
+                )
 
             parsed_message = Message(
                 id=message.id,
@@ -2026,9 +2028,7 @@ class Message(Object, Update):
         )
 
     async def reply_chat_action(
-        self,
-        action: "enums.ChatAction",
-        business_connection_id: str = None
+        self, action: "enums.ChatAction", business_connection_id: str = None
     ) -> bool:
         """Bound method *reply_chat_action* of :obj:`~pyrogram.types.Message`.
 
@@ -2071,7 +2071,7 @@ class Message(Object, Update):
         return await self._client.send_chat_action(
             chat_id=self.chat.id,
             business_connection_id=business_connection_id,
-            action=action
+            action=action,
         )
 
     async def reply_contact(
@@ -2469,7 +2469,7 @@ class Message(Object, Update):
             message_thread_id=message_thread_id,
             reply_to_message_id=reply_to_message_id,
             business_connection_id=business_connection_id,
-            reply_markup=reply_markup
+            reply_markup=reply_markup,
         )
 
     async def reply_inline_bot_result(

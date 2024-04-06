@@ -241,7 +241,7 @@ class Chat(Object):
         profile_color: "types.ChatColor" = None,
         business_info: "types.BusinessInfo" = None,
         birthday: "types.Birthday" = None,
-        personal_chat: "types.Chat" = None
+        personal_chat: "types.Chat" = None,
     ):
         super().__init__(client)
 
@@ -455,12 +455,20 @@ class Chat(Object):
             parsed_chat = Chat._parse_user_chat(client, users[full_user.id])
             parsed_chat.bio = full_user.about
             parsed_chat.folder_id = getattr(full_user, "folder_id", None)
-            parsed_chat.business_info = types.BusinessInfo._parse(client, full_user, users)
+            parsed_chat.business_info = types.BusinessInfo._parse(
+                client, full_user, users
+            )
             birthday = getattr(full_user, "birthday", None)
-            parsed_chat.birthday = types.Birthday._parse(birthday) if birthday is not None else None
+            parsed_chat.birthday = (
+                types.Birthday._parse(birthday) if birthday is not None else None
+            )
             personal_chat = await client.invoke(
                 raw.functions.channels.GetChannels(
-                    id=[await client.resolve_peer(utils.get_channel_id(full_user.personal_channel_id))]
+                    id=[
+                        await client.resolve_peer(
+                            utils.get_channel_id(full_user.personal_channel_id)
+                        )
+                    ]
                 )
             )
             parsed_chat.personal_chat = Chat._parse_chat(client, personal_chat.chats[0])

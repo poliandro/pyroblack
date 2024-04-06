@@ -97,8 +97,7 @@ class SendGame:
             peer=await self.resolve_peer(chat_id),
             media=raw.types.InputMediaGame(
                 id=raw.types.InputGameShortName(
-                    bot_id=raw.types.InputUserSelf(),
-                    short_name=game_short_name
+                    bot_id=raw.types.InputUserSelf(), short_name=game_short_name
                 ),
             ),
             message="",
@@ -106,13 +105,12 @@ class SendGame:
             reply_to=reply_to,
             random_id=self.rnd_id(),
             noforwards=protect_content,
-            reply_markup=await reply_markup.write(self) if reply_markup else None
+            reply_markup=await reply_markup.write(self) if reply_markup else None,
         )
         if business_connection_id is not None:
             r = await self.invoke(
                 raw.functions.InvokeWithBusinessConnection(
-                    connection_id=business_connection_id,
-                    query=rpc
+                    connection_id=business_connection_id, query=rpc
                 )
             )
         else:
@@ -124,13 +122,13 @@ class SendGame:
                 (
                     raw.types.UpdateNewMessage,
                     raw.types.UpdateNewChannelMessage,
-                    raw.types.UpdateBotNewBusinessMessage
-                )
+                    raw.types.UpdateBotNewBusinessMessage,
+                ),
             ):
                 return await types.Message._parse(
                     self,
                     i.message,
                     {i.id: i for i in r.users},
                     {i.id: i for i in r.chats},
-                    business_connection_id=business_connection_id
+                    business_connection_id=business_connection_id,
                 )

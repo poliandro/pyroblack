@@ -30,7 +30,7 @@ class SendChatAction:
         chat_id: Union[int, str],
         action: "enums.ChatAction",
         message_thread_id: int = None,
-        business_connection_id: str = None
+        business_connection_id: str = None,
     ) -> bool:
         """Tell the other party that something is happening on your side.
 
@@ -87,13 +87,12 @@ class SendChatAction:
         rpc = raw.functions.messages.SetTyping(
             peer=await self.resolve_peer(chat_id),
             action=action,
-            top_msg_id=message_thread_id
+            top_msg_id=message_thread_id,
         )
         if business_connection_id:
             return await self.invoke(
                 raw.functions.InvokeWithBusinessConnection(
-                    connection_id=business_connection_id,
-                    query=rpc
+                    connection_id=business_connection_id, query=rpc
                 )
             )
         return await self.invoke(rpc)

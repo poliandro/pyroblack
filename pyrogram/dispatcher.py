@@ -44,20 +44,32 @@ from pyrogram.handlers import (
     ChosenInlineResultHandler,
     ChatMemberUpdatedHandler,
     ChatJoinRequestHandler,
-    StoryHandler
+    StoryHandler,
 )
 from pyrogram.raw.types import (
-    UpdateNewMessage, UpdateNewChannelMessage, UpdateNewScheduledMessage,
+    UpdateNewMessage,
+    UpdateNewChannelMessage,
+    UpdateNewScheduledMessage,
     UpdateBotBusinessConnect,
-    UpdateBotNewBusinessMessage, UpdateBotDeleteBusinessMessage, UpdateBotEditBusinessMessage,
-    UpdateEditMessage, UpdateEditChannelMessage,
-    UpdateDeleteMessages, UpdateDeleteChannelMessages,
-    UpdateBotCallbackQuery, UpdateInlineBotCallbackQuery,
-    UpdateUserStatus, UpdateBotInlineQuery, UpdateMessagePoll,
-    UpdateBotInlineSend, UpdateChatParticipant, UpdateChannelParticipant,
-    UpdateBotChatInviteRequester, UpdateStory,
+    UpdateBotNewBusinessMessage,
+    UpdateBotDeleteBusinessMessage,
+    UpdateBotEditBusinessMessage,
+    UpdateEditMessage,
+    UpdateEditChannelMessage,
+    UpdateDeleteMessages,
+    UpdateDeleteChannelMessages,
+    UpdateBotCallbackQuery,
+    UpdateInlineBotCallbackQuery,
+    UpdateUserStatus,
+    UpdateBotInlineQuery,
+    UpdateMessagePoll,
+    UpdateBotInlineSend,
+    UpdateChatParticipant,
+    UpdateChannelParticipant,
+    UpdateBotChatInviteRequester,
+    UpdateStory,
     UpdateBotMessageReaction,
-    UpdateBotMessageReactions
+    UpdateBotMessageReactions,
 )
 
 log = logging.getLogger(__name__)
@@ -118,9 +130,9 @@ class Dispatcher:
                     update.message,
                     users,
                     chats,
-                    business_connection_id=update.connection_id
+                    business_connection_id=update.connection_id,
                 ),
-                BotBusinessMessageHandler
+                BotBusinessMessageHandler,
             )
 
         async def edited_message_parser(update, users, chats):
@@ -133,10 +145,7 @@ class Dispatcher:
             # Edited messages are parsed the same way as new messages, but the handler is different
             parsed, _ = await bot_business_message_parser(update, users, chats)
 
-            return (
-                parsed,
-                EditedBotBusinessMessageHandler
-            )
+            return (parsed, EditedBotBusinessMessageHandler)
 
         async def deleted_messages_parser(update, users, chats):
             return (
@@ -146,8 +155,10 @@ class Dispatcher:
 
         async def deleted_bot_business_messages_parser(update, users, chats):
             return (
-                utils.parse_deleted_messages(self.client, update, business_connection_id=update.connection_id),
-                DeletedBotBusinessMessagesHandler
+                utils.parse_deleted_messages(
+                    self.client, update, business_connection_id=update.connection_id
+                ),
+                DeletedBotBusinessMessagesHandler,
             )
 
         async def callback_query_parser(update, users, chats):
@@ -219,8 +230,10 @@ class Dispatcher:
 
         async def bot_business_connect_parser(update, users, chats):
             return (
-                await pyrogram.types.BotBusinessConnection._parse(self.client, update.connection),
-                BotBusinessConnectHandler
+                await pyrogram.types.BotBusinessConnection._parse(
+                    self.client, update.connection
+                ),
+                BotBusinessConnectHandler,
             )
 
         self.update_parsers = {
@@ -240,7 +253,7 @@ class Dispatcher:
             Dispatcher.NEW_STORY_UPDATES: story_parser,
             Dispatcher.MESSAGE_BOT_NA_REACTION_UPDATES: message_bot_na_reaction_parser,
             Dispatcher.MESSAGE_BOT_A_REACTION_UPDATES: message_bot_a_reaction_parser,
-            Dispatcher.BOT_BUSINESS_CONNECT_UPDATES: bot_business_connect_parser
+            Dispatcher.BOT_BUSINESS_CONNECT_UPDATES: bot_business_connect_parser,
         }
 
         self.update_parsers = {

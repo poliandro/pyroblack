@@ -215,14 +215,15 @@ class SendSticker:
                         random_id=self.rnd_id(),
                         schedule_date=utils.datetime_to_timestamp(schedule_date),
                         noforwards=protect_content,
-                        reply_markup=await reply_markup.write(self) if reply_markup else None,
-                        message=""
+                        reply_markup=(
+                            await reply_markup.write(self) if reply_markup else None
+                        ),
+                        message="",
                     )
                     if business_connection_id is not None:
                         r = await self.invoke(
                             raw.functions.InvokeWithBusinessConnection(
-                                connection_id=business_connection_id,
-                                query=rpc
+                                connection_id=business_connection_id, query=rpc
                             )
                         )
                     else:
@@ -231,17 +232,24 @@ class SendSticker:
                     await self.save_file(sticker, file_id=file.id, file_part=e.value)
                 else:
                     for i in r.updates:
-                        if isinstance(i, (raw.types.UpdateNewMessage,
-                                          raw.types.UpdateNewChannelMessage,
-                                          raw.types.UpdateNewScheduledMessage,
-                                          raw.types.UpdateBotNewBusinessMessage)):
+                        if isinstance(
+                            i,
+                            (
+                                raw.types.UpdateNewMessage,
+                                raw.types.UpdateNewChannelMessage,
+                                raw.types.UpdateNewScheduledMessage,
+                                raw.types.UpdateBotNewBusinessMessage,
+                            ),
+                        ):
                             return await types.Message._parse(
                                 self,
                                 i.message,
                                 {i.id: i for i in r.users},
                                 {i.id: i for i in r.chats},
-                                is_scheduled=isinstance(i, raw.types.UpdateNewScheduledMessage),
-                                business_connection_id=business_connection_id
+                                is_scheduled=isinstance(
+                                    i, raw.types.UpdateNewScheduledMessage
+                                ),
+                                business_connection_id=business_connection_id,
                             )
         except StopTransmission:
             return None
