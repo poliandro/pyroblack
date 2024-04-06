@@ -16,6 +16,7 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
+from .bot_business_connection import BotBusinessConnection
 from .bot_command import BotCommand
 from .bot_command_scope import BotCommandScope
 from .bot_command_scope_all_chat_administrators import (
@@ -50,6 +51,7 @@ from .web_app_info import WebAppInfo
 from .requested_chats import RequestedChats
 
 __all__ = [
+    "BotBusinessConnection",
     "CallbackGame",
     "CallbackQuery",
     "ForceReply",

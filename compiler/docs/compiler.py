@@ -534,6 +534,7 @@ def pyrogram_api():
         """,
         bot_keyboards="""
         Bot keyboards
+            BotBusinessConnection
             ReplyKeyboardMarkup
             KeyboardButton
             ReplyKeyboardRemove

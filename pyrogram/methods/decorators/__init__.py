@@ -18,6 +18,7 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with pyroblack.  If not, see <http://www.gnu.org/licenses/>.
 
+from .on_bot_business_connect import OnBotBusinessConnect
 from .on_bot_business_message import OnBotBusinessMessage
 from .on_callback_query import OnCallbackQuery
 from .on_chat_join_request import OnChatJoinRequest
@@ -39,6 +40,7 @@ from .on_message_reaction_count_updated import OnMessageReactionCountUpdated
 
 
 class Decorators(
+    OnBotBusinessConnect,
     OnMessage,
     OnBotBusinessMessage,
     OnEditedMessage,
