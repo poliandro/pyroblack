@@ -236,7 +236,7 @@ class Chat(Object):
         reply_color: "types.ChatColor" = None,
         profile_color: "types.ChatColor" = None,
         business_info: "types.BusinessInfo" = None,
-        birthday: "types.Birthday" = None
+        birthday: "types.Birthday" = None,
     ):
         super().__init__(client)
 
@@ -449,8 +449,12 @@ class Chat(Object):
             parsed_chat = Chat._parse_user_chat(client, users[full_user.id])
             parsed_chat.bio = full_user.about
             parsed_chat.folder_id = getattr(full_user, "folder_id", None)
-            parsed_chat.business_info = types.BusinessInfo._parse(client, full_user, users)
-            parsed_chat.birthday = types.Birthday._parse(getattr(full_user, "birthday", None))
+            parsed_chat.business_info = types.BusinessInfo._parse(
+                client, full_user, users
+            )
+            parsed_chat.birthday = types.Birthday._parse(
+                getattr(full_user, "birthday", None)
+            )
 
             if full_user.pinned_msg_id:
                 try:
