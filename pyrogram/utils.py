@@ -96,7 +96,7 @@ def get_input_media_from_file_id(
 
 
 async def parse_messages(
-    client, messages: "raw.types.messages.Messages", replies: int = 1
+    client, messages: "raw.types.messages.Messages", replies: int = 1, business_connection_id: str = None
 ) -> List["types.Message"]:
     users = {i.id: i for i in messages.users}
     chats = {i.id: i for i in messages.chats}
@@ -110,9 +110,7 @@ async def parse_messages(
     parsed_messages = []
 
     for message in messages.messages:
-        parsed_messages.append(
-            await types.Message._parse(client, message, users, chats, topics, replies=0)
-        )
+        parsed_messages.append(await types.Message._parse(client, message, users, chats, topics, replies=0, business_connection_id=business_connection_id))
 
     if replies:
         messages_with_replies = {

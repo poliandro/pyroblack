@@ -134,6 +134,9 @@ class Message(Object, Update):
         reply_to_story (:obj:`~pyrogram.types.Story`, *optional*):
             For replies, the original story.
 
+        business_connection_id (``str``, *optional*):
+            The business connection identifier.
+
         mentioned (``bool``, *optional*):
             The message contains a mention.
 
@@ -417,6 +420,7 @@ class Message(Object, Update):
         client: "pyrogram.Client" = None,
         id: int,
         message_thread_id: int = None,
+        business_connection_id: str = None,
         from_user: "types.User" = None,
         sender_chat: "types.Chat" = None,
         sender_business_bot: "types.User" = None,
@@ -524,6 +528,7 @@ class Message(Object, Update):
 
         self.id = id
         self.message_thread_id = message_thread_id
+        self.business_connection_id = business_connection_id
         self.from_user = from_user
         self.sender_chat = sender_chat
         self.sender_business_bot = sender_business_bot
@@ -668,7 +673,8 @@ class Message(Object, Update):
         chats: dict,
         topics: dict = None,
         is_scheduled: bool = False,
-        replies: int = 1,
+        business_connection_id: str = None,
+        replies: int = 1
     ):
         if isinstance(message, raw.types.MessageEmpty):
             return Message(id=message.id, empty=True, client=client, raw=message)
@@ -1163,6 +1169,7 @@ class Message(Object, Update):
             parsed_message = Message(
                 id=message.id,
                 message_thread_id=message_thread_id,
+                business_connection_id=business_connection_id,
                 date=utils.timestamp_to_datetime(message.date),
                 chat=types.Chat._parse(client, message, users, chats, is_chat=True),
                 topics=None,

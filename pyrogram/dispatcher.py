@@ -27,6 +27,7 @@ from pyrogram.raw.types import (
     UpdateNewMessage,
     UpdateNewChannelMessage,
     UpdateNewScheduledMessage,
+    UpdateBotNewBusinessMessage,
     UpdateEditMessage,
     UpdateEditChannelMessage,
     UpdateDeleteMessages,
@@ -48,6 +49,7 @@ from pyrogram.raw.types import (
 import pyrogram
 from pyrogram import utils
 from pyrogram.handlers import (
+    BotBusinessMessageHandler,
     CallbackQueryHandler,
     MessageHandler,
     EditedMessageHandler,
@@ -74,6 +76,7 @@ class Dispatcher:
         UpdateNewChannelMessage,
         UpdateNewScheduledMessage,
     )
+    NEW_BOT_BUSINESS_MESSAGE_UPDATES = (UpdateBotNewBusinessMessage,)
     EDIT_MESSAGE_UPDATES = (UpdateEditMessage, UpdateEditChannelMessage)
     DELETE_MESSAGES_UPDATES = (UpdateDeleteMessages, UpdateDeleteChannelMessages)
     CALLBACK_QUERY_UPDATES = (UpdateBotCallbackQuery, UpdateInlineBotCallbackQuery)
@@ -110,6 +113,18 @@ class Dispatcher:
                     is_scheduled=isinstance(update, UpdateNewScheduledMessage),
                 ),
                 MessageHandler,
+            )
+
+        async def bot_business_message_parser(update, users, chats):
+            return (
+                await pyrogram.types.Message._parse(
+                    self.client,
+                    update.message,
+                    users,
+                    chats,
+                    business_connection_id=update.connection_id
+                ),
+                BotBusinessMessageHandler
             )
 
         async def edited_message_parser(update, users, chats):
@@ -193,6 +208,7 @@ class Dispatcher:
 
         self.update_parsers = {
             Dispatcher.NEW_MESSAGE_UPDATES: message_parser,
+            Dispatcher.NEW_BOT_BUSINESS_MESSAGE_UPDATES: bot_business_message_parser,
             Dispatcher.EDIT_MESSAGE_UPDATES: edited_message_parser,
             Dispatcher.DELETE_MESSAGES_UPDATES: deleted_messages_parser,
             Dispatcher.CALLBACK_QUERY_UPDATES: callback_query_parser,
