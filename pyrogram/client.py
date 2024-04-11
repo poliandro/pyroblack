@@ -53,13 +53,6 @@ from pyrogram.handlers.handler import Handler
 from pyrogram.methods import Methods
 from pyrogram.session import Auth, Session
 from pyrogram.storage import FileStorage, MemoryStorage, Storage
-
-try:
-    import pymongo
-except Exception:
-    pass
-else:
-    from pyrogram.storage import MongoStorage
 from pyrogram.types import User, TermsOfService
 from pyrogram.utils import ainput
 from .dispatcher import Dispatcher
@@ -142,10 +135,6 @@ class Client(Methods):
             :meth:`~pyrogram.Client.export_session_string` before stopping the client to get a session string you can
             pass to the ``session_string`` parameter.
             Defaults to False.
-
-        mongodb (``dict``, *optional*):
-            Mongodb config as dict, e.g.: *dict(connection=async_pymongo.AsyncClient("mongodb://..."), remove_peers=False)*.
-            Only applicable for new sessions.
 
         storage (:obj:`~pyrogram.storage.Storage`, *optional*):
             Custom session storage.
@@ -259,7 +248,6 @@ class Client(Methods):
         bot_token: str = None,
         session_string: str = None,
         in_memory: bool = None,
-        mongodb: dict = None,
         storage: Storage = None,
         phone_number: str = None,
         phone_code: str = None,
@@ -294,7 +282,6 @@ class Client(Methods):
         self.bot_token = bot_token
         self.session_string = session_string
         self.in_memory = in_memory
-        self.mongodb = mongodb
         self.phone_number = phone_number
         self.phone_code = phone_code
         self.password = password
@@ -318,16 +305,6 @@ class Client(Methods):
             self.storage = MemoryStorage(self.name, self.session_string)
         elif self.in_memory:
             self.storage = MemoryStorage(self.name)
-        elif self.mongodb:
-            try:
-                import pymongo
-            except Exception:
-                log.warning(
-                    "pymongo is missing! " "Using MemoryStorage as session storage"
-                )
-                self.storage = MemoryStorage(self.name)
-            else:
-                self.storage = MongoStorage(self.name, **self.mongodb)
         else:
             self.storage = FileStorage(self.name, self.workdir)
 
