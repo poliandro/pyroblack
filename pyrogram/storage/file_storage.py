@@ -25,6 +25,17 @@ from .sqlite_storage import SQLiteStorage
 
 log = logging.getLogger(__name__)
 
+UPDATE_STATE_SCHEMA = """
+CREATE TABLE update_state
+(
+    id   INTEGER PRIMARY KEY,
+    pts  INTEGER,
+    qts  INTEGER,
+    date INTEGER,
+    seq  INTEGER
+);
+"""
+
 
 class FileStorage(SQLiteStorage):
     FILE_EXTENSION = ".session"
@@ -45,6 +56,12 @@ class FileStorage(SQLiteStorage):
 
         if version == 2:
             await self.conn.execute("ALTER TABLE sessions ADD api_id INTEGER")
+            await self.conn.commit()
+
+            version += 1
+
+        if version == 3:
+            await self.conn.execute(UPDATE_STATE_SCHEMA)
             await self.conn.commit()
 
             version += 1

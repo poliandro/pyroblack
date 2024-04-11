@@ -173,6 +173,10 @@ class Client(Methods):
             Useful for batch programs that don't need to deal with updates.
             Defaults to False (updates enabled and received).
 
+        skip_updates (``bool``, *optional*):
+            Pass True to skip pending updates that arrived while the client was offline.
+            Defaults to True.
+
         takeout (``bool``, *optional*):
             Pass True to let the client use a takeout session instead of a normal one, implies *no_updates=True*.
             Useful for exporting Telegram data. Methods invoked inside a takeout session (such as get_chat_history,
@@ -257,6 +261,7 @@ class Client(Methods):
         plugins: dict = None,
         parse_mode: "enums.ParseMode" = enums.ParseMode.DEFAULT,
         no_updates: bool = None,
+        skip_updates: bool = True,
         takeout: bool = None,
         sleep_threshold: int = Session.SLEEP_THRESHOLD,
         hide_password: bool = False,
@@ -290,6 +295,7 @@ class Client(Methods):
         self.plugins = plugins
         self.parse_mode = parse_mode
         self.no_updates = no_updates
+        self.skip_updates = skip_updates
         self.takeout = takeout
         self.sleep_threshold = sleep_threshold
         self.hide_password = hide_password
@@ -625,13 +631,26 @@ class Client(Methods):
 
             for update in updates.updates:
                 channel_id = getattr(
-                    getattr(getattr(update, "message", None), "peer_id", None),
-                    "channel_id",
-                    None,
+                    getattr(
+                        getattr(
+                            update, "message", None
+                        ), "peer_id", None
+                    ), "channel_id", None
                 ) or getattr(update, "channel_id", None)
 
                 pts = getattr(update, "pts", None)
                 pts_count = getattr(update, "pts_count", None)
+
+                if pts:
+                    await self.storage.update_state(
+                        (
+                            utils.get_channel_id(channel_id) if channel_id else 0,
+                            pts,
+                            None,
+                            updates.date,
+                            updates.seq
+                        )
+                    )
 
                 if isinstance(update, raw.types.UpdateChannelTooLong):
                     log.info(update)
@@ -661,34 +680,40 @@ class Client(Methods):
                         except ChannelPrivate:
                             pass
                         else:
-                            if not isinstance(
-                                diff, raw.types.updates.ChannelDifferenceEmpty
-                            ):
+                            if not isinstance(diff, raw.types.updates.ChannelDifferenceEmpty):
                                 users.update({u.id: u for u in diff.users})
                                 chats.update({c.id: c for c in diff.chats})
 
                 self.dispatcher.updates_queue.put_nowait((update, users, chats))
-        elif isinstance(
-            updates, (raw.types.UpdateShortMessage, raw.types.UpdateShortChatMessage)
-        ):
+        elif isinstance(updates, (raw.types.UpdateShortMessage, raw.types.UpdateShortChatMessage)):
+            await self.storage.update_state(
+                (
+                    0,
+                    updates.pts,
+                    None,
+                    updates.date,
+                    None
+                )
+            )
+
             diff = await self.invoke(
                 raw.functions.updates.GetDifference(
-                    pts=updates.pts - updates.pts_count, date=updates.date, qts=-1
+                    pts=updates.pts - updates.pts_count,
+                    date=updates.date,
+                    qts=-1
                 )
             )
 
             if diff.new_messages:
-                self.dispatcher.updates_queue.put_nowait(
-                    (
-                        raw.types.UpdateNewMessage(
-                            message=diff.new_messages[0],
-                            pts=updates.pts,
-                            pts_count=updates.pts_count,
-                        ),
-                        {u.id: u for u in diff.users},
-                        {c.id: c for c in diff.chats},
-                    )
-                )
+                self.dispatcher.updates_queue.put_nowait((
+                    raw.types.UpdateNewMessage(
+                        message=diff.new_messages[0],
+                        pts=updates.pts,
+                        pts_count=updates.pts_count
+                    ),
+                    {u.id: u for u in diff.users},
+                    {c.id: c for c in diff.chats}
+                ))
             else:
                 if diff.other_updates:  # The other_updates list can be empty
                     self.dispatcher.updates_queue.put_nowait(

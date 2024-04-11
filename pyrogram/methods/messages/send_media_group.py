@@ -505,9 +505,9 @@ class SendMediaGroup:
             silent=disable_notification or None,
             reply_to=reply_to,
             schedule_date=utils.datetime_to_timestamp(schedule_date),
-            noforwards=protect_content
+            noforwards=protect_content,
         )
-        
+
         if business_connection_id is not None:
             r = await self.invoke(
                 raw.functions.InvokeWithBusinessConnection(
