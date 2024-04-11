@@ -990,21 +990,23 @@ class Message(Object, Update):
 
             if forward_header:
                 forward_date = utils.timestamp_to_datetime(forward_header.date)
+                try:
+                    if forward_header.from_id:
+                        raw_peer_id = utils.get_raw_peer_id(forward_header.from_id)
+                        peer_id = utils.get_peer_id(forward_header.from_id)
 
-                if forward_header.from_id:
-                    raw_peer_id = utils.get_raw_peer_id(forward_header.from_id)
-                    peer_id = utils.get_peer_id(forward_header.from_id)
-
-                    if peer_id > 0:
-                        forward_from = types.User._parse(client, users[raw_peer_id])
-                    else:
-                        forward_from_chat = types.Chat._parse_channel_chat(
-                            client, chats[raw_peer_id]
-                        )
-                        forward_from_message_id = forward_header.channel_post
-                        forward_signature = forward_header.post_author
-                elif forward_header.from_name:
-                    forward_sender_name = forward_header.from_name
+                        if peer_id > 0:
+                            forward_from = types.User._parse(client, users[raw_peer_id])
+                        else:
+                            forward_from_chat = types.Chat._parse_channel_chat(
+                                client, chats[raw_peer_id]
+                            )
+                            forward_from_message_id = forward_header.channel_post
+                            forward_signature = forward_header.post_author
+                    elif forward_header.from_name:
+                        forward_sender_name = forward_header.from_name
+                except Exception:
+                    pass  # sometimes, peer not found
 
             photo = None
             location = None
