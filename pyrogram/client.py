@@ -198,7 +198,7 @@ class Client(Methods):
         max_concurrent_transmissions (``int``, *optional*):
             Set the maximum amount of concurrent transmissions (uploads & downloads).
             A value that is too high may result in network related issues.
-            Defaults to 3.
+            Defaults to 20.
 
         init_params (``raw.types.JsonObject``, *optional*):
             Additional initConnection parameters.
@@ -228,7 +228,7 @@ class Client(Methods):
     # Interval of seconds in which the updates watchdog will kick in
     UPDATES_WATCHDOG_INTERVAL = 10 * 60
 
-    MAX_CONCURRENT_TRANSMISSIONS = 3
+    MAX_CONCURRENT_TRANSMISSIONS = 20
     MAX_MESSAGE_CACHE_SIZE = 10000
 
     mimetypes = MimeTypes()
@@ -631,11 +631,9 @@ class Client(Methods):
 
             for update in updates.updates:
                 channel_id = getattr(
-                    getattr(
-                        getattr(
-                            update, "message", None
-                        ), "peer_id", None
-                    ), "channel_id", None
+                    getattr(getattr(update, "message", None), "peer_id", None),
+                    "channel_id",
+                    None,
                 ) or getattr(update, "channel_id", None)
 
                 pts = getattr(update, "pts", None)
@@ -648,7 +646,7 @@ class Client(Methods):
                             pts,
                             None,
                             updates.date,
-                            updates.seq
+                            updates.seq,
                         )
                     )
 
@@ -680,40 +678,36 @@ class Client(Methods):
                         except ChannelPrivate:
                             pass
                         else:
-                            if not isinstance(diff, raw.types.updates.ChannelDifferenceEmpty):
+                            if not isinstance(
+                                diff, raw.types.updates.ChannelDifferenceEmpty
+                            ):
                                 users.update({u.id: u for u in diff.users})
                                 chats.update({c.id: c for c in diff.chats})
 
                 self.dispatcher.updates_queue.put_nowait((update, users, chats))
-        elif isinstance(updates, (raw.types.UpdateShortMessage, raw.types.UpdateShortChatMessage)):
-            await self.storage.update_state(
-                (
-                    0,
-                    updates.pts,
-                    None,
-                    updates.date,
-                    None
-                )
-            )
+        elif isinstance(
+            updates, (raw.types.UpdateShortMessage, raw.types.UpdateShortChatMessage)
+        ):
+            await self.storage.update_state((0, updates.pts, None, updates.date, None))
 
             diff = await self.invoke(
                 raw.functions.updates.GetDifference(
-                    pts=updates.pts - updates.pts_count,
-                    date=updates.date,
-                    qts=-1
+                    pts=updates.pts - updates.pts_count, date=updates.date, qts=-1
                 )
             )
 
             if diff.new_messages:
-                self.dispatcher.updates_queue.put_nowait((
-                    raw.types.UpdateNewMessage(
-                        message=diff.new_messages[0],
-                        pts=updates.pts,
-                        pts_count=updates.pts_count
-                    ),
-                    {u.id: u for u in diff.users},
-                    {c.id: c for c in diff.chats}
-                ))
+                self.dispatcher.updates_queue.put_nowait(
+                    (
+                        raw.types.UpdateNewMessage(
+                            message=diff.new_messages[0],
+                            pts=updates.pts,
+                            pts_count=updates.pts_count,
+                        ),
+                        {u.id: u for u in diff.users},
+                        {c.id: c for c in diff.chats},
+                    )
+                )
             else:
                 if diff.other_updates:  # The other_updates list can be empty
                     self.dispatcher.updates_queue.put_nowait(
