@@ -70,7 +70,7 @@ class BotBusinessMessageHandler(Handler):
 
         message_id = getattr(message, "id", getattr(message, "message_id", None))
 
-        if not message.chat.id:
+        if not message.chat:
             return False, None
 
         data = Identifier(
