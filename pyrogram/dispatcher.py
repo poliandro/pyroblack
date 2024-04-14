@@ -297,12 +297,11 @@ class Dispatcher:
                                     channel=await self.client.resolve_peer(id),
                                     filter=raw.types.ChannelMessagesFilterEmpty(),
                                     pts=local_pts,
-                                    limit=10000
-                                ) if id < 0 else
-                                raw.functions.updates.GetDifference(
-                                    pts=local_pts,
-                                    date=local_date,
-                                    qts=0
+                                    limit=10000,
+                                )
+                                if id < 0
+                                else raw.functions.updates.GetDifference(
+                                    pts=local_pts, date=local_date, qts=0
                                 )
                             )
                         except (errors.ChannelPrivate, errors.ChannelInvalid):
@@ -324,7 +323,9 @@ class Dispatcher:
                             prev_pts = local_pts
                         elif isinstance(diff, raw.types.updates.ChannelDifferenceEmpty):
                             break
-                        elif isinstance(diff, raw.types.updates.ChannelDifferenceTooLong):
+                        elif isinstance(
+                            diff, raw.types.updates.ChannelDifferenceTooLong
+                        ):
                             break
                         elif isinstance(diff, raw.types.updates.ChannelDifference):
                             local_pts = diff.pts
@@ -336,33 +337,40 @@ class Dispatcher:
                             message_updates_counter += 1
                             self.updates_queue.put_nowait(
                                 (
-                                    raw.types.UpdateNewMessage(
-                                        message=message,
-                                        pts=local_pts,
-                                        pts_count=-1
-                                    ) if id == self.client.me.id else
-                                    raw.types.UpdateNewChannelMessage(
-                                        message=message,
-                                        pts=local_pts,
-                                        pts_count=-1
+                                    (
+                                        raw.types.UpdateNewMessage(
+                                            message=message, pts=local_pts, pts_count=-1
+                                        )
+                                        if id == self.client.me.id
+                                        else raw.types.UpdateNewChannelMessage(
+                                            message=message, pts=local_pts, pts_count=-1
+                                        )
                                     ),
                                     users,
-                                    chats
+                                    chats,
                                 )
                             )
 
                         for update in diff.other_updates:
                             other_updates_counter += 1
-                            self.updates_queue.put_nowait(
-                                (update, users, chats)
-                            )
+                            self.updates_queue.put_nowait((update, users, chats))
 
-                        if isinstance(diff, (raw.types.updates.Difference, raw.types.updates.ChannelDifference)):
+                        if isinstance(
+                            diff,
+                            (
+                                raw.types.updates.Difference,
+                                raw.types.updates.ChannelDifference,
+                            ),
+                        ):
                             break
 
                     await self.client.storage.update_state(id)
 
-                log.info("Recovered %s messages and %s updates.", message_updates_counter, other_updates_counter)
+                log.info(
+                    "Recovered %s messages and %s updates.",
+                    message_updates_counter,
+                    other_updates_counter,
+                )
 
     async def stop(self):
         if not self.client.no_updates:
