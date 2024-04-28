@@ -118,3 +118,6 @@ class MessageServiceType(AutoName):
 
     BOOST_APPLY = auto()
     "Boost apply"
+
+    JOIN_REQUEST_APPROVED = auto()
+    "Join request approved"

@@ -392,6 +392,9 @@ class Message(Object, Update):
         boosts_applied (``int``, *optional*):
             Service message: how many boosts were applied.
 
+        join_request_approved (``bool``, *optional*):
+            Service message: user join request approved
+
         reply_markup (:obj:`~pyrogram.types.InlineKeyboardMarkup` | :obj:`~pyrogram.types.ReplyKeyboardMarkup` | :obj:`~pyrogram.types.ReplyKeyboardRemove` | :obj:`~pyrogram.types.ForceReply`, *optional*):
             Additional interface options. An object for an inline keyboard, custom reply keyboard,
             instructions to remove reply keyboard or to force a reply from the user.
@@ -515,6 +518,7 @@ class Message(Object, Update):
         requested_chats: "types.RequestedChats" = None,
         chat_ttl_period: int = None,
         boosts_applied: int = None,
+        join_request_approved: bool = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
@@ -625,6 +629,7 @@ class Message(Object, Update):
         self.giveaway_launched = giveaway_launched
         self.chat_ttl_period = chat_ttl_period
         self.boosts_applied = boosts_applied
+        self.join_request_approved = join_request_approved
         self.reactions = reactions
         self.raw = raw
 
@@ -735,6 +740,7 @@ class Message(Object, Update):
             requested_chats = None
             chat_ttl_period = None
             boosts_applied = None
+            join_request_approved = None
 
             service_type = None
 
@@ -847,6 +853,9 @@ class Message(Object, Update):
             elif isinstance(action, raw.types.MessageActionBoostApply):
                 boosts_applied = action.boosts
                 service_type = enums.MessageServiceType.BOOST_APPLY
+            elif isinstance(action, raw.types.MessageActionChatJoinedByRequest):
+                join_request_approved = True
+                service_type = enums.MessageServiceType.JOIN_REQUEST_APPROVED
 
                 giveaway_launched = types.GiveawayLaunched()
                 service_type = enums.MessageServiceType.GIVEAWAY_LAUNCHED
@@ -915,6 +924,7 @@ class Message(Object, Update):
                 requested_chats=requested_chats,
                 chat_ttl_period=chat_ttl_period,
                 boosts_applied=boosts_applied,
+                join_request_approved=join_request_approved,
                 raw=message,
                 client=client,
                 # TODO: supergroup_chat_created
