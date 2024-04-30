@@ -28,6 +28,7 @@ from .invite_links import InviteLinks
 from .messages import Messages
 from .password import Password
 from .payments import Payments
+from .phone import Phone
 from .pyromod import Pyromod
 from .stickers import Stickers
 from .users import Users
@@ -41,6 +42,7 @@ class Methods(
     Contacts,
     Password,
     Payments,
+    Phone,
     Pyromod,
     Chats,
     Stickers,
