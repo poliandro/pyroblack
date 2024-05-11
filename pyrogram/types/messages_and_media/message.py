@@ -5179,7 +5179,7 @@ class Message(Object, Update):
 
         .. code-block:: python
 
-            await client.increment_message_views(
+            await client.view_messages(
                 chat_id=message.chat.id,
                 message_id=message_id
             )
@@ -5195,7 +5195,7 @@ class Message(Object, Update):
         Raises:
             RPCError: In case of a Telegram RPC error.
         """
-        return await self._client.increment_message_views(
+        return await self._client.view_messages(
             chat_id=self.chat.id,
             message_id=self.id
         )
