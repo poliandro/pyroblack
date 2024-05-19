@@ -51,7 +51,8 @@ class SendPhoto:
         quote_entities: List["types.MessageEntity"] = None,
         schedule_date: datetime = None,
         protect_content: bool = None,
-        reply_markup: Union[
+            view_once: bool = None,
+            reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
             "types.ReplyKeyboardRemove",
@@ -133,6 +134,10 @@ class SendPhoto:
             protect_content (``bool``, *optional*):
                 Protects the contents of the sent message from forwarding and saving.
 
+            view_once (``bool``, *optional*):
+                Self-Destruct Timer.
+                If True, the photo will self-destruct after it was viewed.
+
             reply_markup (:obj:`~pyrogram.types.InlineKeyboardMarkup` | :obj:`~pyrogram.types.ReplyKeyboardMarkup` | :obj:`~pyrogram.types.ReplyKeyboardRemove` | :obj:`~pyrogram.types.ForceReply`, *optional*):
                 Additional interface options. An object for an inline keyboard, custom reply keyboard,
                 instructions to remove reply keyboard or to force a reply from the user.
@@ -200,24 +205,25 @@ class SendPhoto:
                     )
                     media = raw.types.InputMediaUploadedPhoto(
                         file=file,
-                        ttl_seconds=ttl_seconds,
+                        ttl_seconds=(1 << 31) - 1 if view_once else ttl_seconds,
                         spoiler=has_spoiler,
                     )
                 elif re.match("^https?://", photo):
                     media = raw.types.InputMediaPhotoExternal(
-                        url=photo, ttl_seconds=ttl_seconds, spoiler=has_spoiler
+                        url=photo,
+                        ttl_seconds=(1 << 31) - 1 if view_once else ttl_seconds,
+                        spoiler=has_spoiler
                     )
                 else:
-                    media = utils.get_input_media_from_file_id(
-                        photo, FileType.PHOTO, ttl_seconds=ttl_seconds
-                    )
-                    media.spoiler = has_spoiler
+                    media = utils.get_input_media_from_file_id(photo, FileType.PHOTO, ttl_seconds=(1 << 31) - 1 if view_once else ttl_seconds, has_spoiler=has_spoiler)
             else:
                 file = await self.save_file(
                     photo, progress=progress, progress_args=progress_args
                 )
                 media = raw.types.InputMediaUploadedPhoto(
-                    file=file, ttl_seconds=ttl_seconds, spoiler=has_spoiler
+                    file=file,
+                    ttl_seconds=(1 << 31) - 1 if view_once else ttl_seconds,
+                    spoiler=has_spoiler
                 )
 
             while True:
