@@ -210,6 +210,10 @@ class Client(Methods):
         max_message_cache_size (``int``, *optional*):
             Set the maximum size of the message cache.
             Defaults to 10000.
+
+        client_platform (:obj:`~pyrogram.enums.ClientPlatform`, *optional*):
+            The platform where this client is running.
+            Defaults to 'other'
     """
 
     APP_VERSION = f"pyroblack {__version__}"
@@ -271,6 +275,7 @@ class Client(Methods):
         max_concurrent_transmissions: int = MAX_CONCURRENT_TRANSMISSIONS,
         init_params: raw.types.JsonObject = None,
         max_message_cache_size: int = MAX_MESSAGE_CACHE_SIZE,
+            client_platform: "enums.ClientPlatform" = enums.ClientPlatform.OTHER,
     ):
         super().__init__()
 
@@ -305,6 +310,7 @@ class Client(Methods):
         self.max_concurrent_transmissions = max_concurrent_transmissions
         self.init_params = init_params
         self.max_message_cache_size = max_message_cache_size
+        self.client_platform = client_platform
 
         self.executor = ThreadPoolExecutor(self.workers, thread_name_prefix="Handler")
 
