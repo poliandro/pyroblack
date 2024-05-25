@@ -85,7 +85,7 @@ class InlineKeyboardButton(Object):
         switch_inline_query: str = None,
         switch_inline_query_current_chat: str = None,
         callback_game: "types.CallbackGame" = None,
-            requires_password: Optional[bool] = None
+        requires_password: Optional[bool] = None
     ):
         super().__init__()
 

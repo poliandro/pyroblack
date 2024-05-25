@@ -275,7 +275,7 @@ class Client(Methods):
         max_concurrent_transmissions: int = MAX_CONCURRENT_TRANSMISSIONS,
         init_params: raw.types.JsonObject = None,
         max_message_cache_size: int = MAX_MESSAGE_CACHE_SIZE,
-            client_platform: "enums.ClientPlatform" = enums.ClientPlatform.OTHER,
+        client_platform: "enums.ClientPlatform" = enums.ClientPlatform.OTHER,
     ):
         super().__init__()
 

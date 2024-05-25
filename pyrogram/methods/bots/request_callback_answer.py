@@ -28,7 +28,7 @@ class RequestCallbackAnswer:
         chat_id: Union[int, str],
         message_id: int,
         callback_data: Union[str, bytes],
-            password: Optional[str] = None,
+        password: Optional[str] = None,
         timeout: int = 10,
     ):
         """Request a callback answer from bots.

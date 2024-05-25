@@ -4815,6 +4815,19 @@ class Message(Object, Update):
                     password=password,
                     timeout=timeout
                 )
+            elif button.requires_password:
+                if password is None:
+                    raise ValueError(
+                        "This button requires a password"
+                    )
+
+                return await self._client.request_callback_answer(
+                    chat_id=self.chat.id,
+                    message_id=self.id,
+                    callback_data=button.callback_data,
+                    password=password,
+                    timeout=timeout
+                )
             elif button.url:
                 return button.url
             elif button.web_app:
