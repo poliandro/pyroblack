@@ -377,6 +377,9 @@ class Message(Object, Update):
         web_app_data (:obj:`~pyrogram.types.WebAppData`, *optional*):
             Service message: web app data sent to the bot.
 
+        successful_payment (:obj:`~pyrogram.types.SuccessfulPayment`, *optional*):
+            Service message: successful payment.
+
         gift_code (:obj:`~pyrogram.types.GiftCode`, *optional*):
             Service message: gift code information.
 
@@ -514,7 +517,8 @@ class Message(Object, Update):
         video_chat_ended: "types.VideoChatEnded" = None,
         video_chat_members_invited: "types.VideoChatMembersInvited" = None,
         web_app_data: "types.WebAppData" = None,
-        gift_code: "types.GiftCode" = None,
+                        successful_payment: "types.SuccessfulPayment" = None,
+            gift_code: "types.GiftCode" = None,
         requested_chats: "types.RequestedChats" = None,
         chat_ttl_period: int = None,
         boosts_applied: int = None,
@@ -624,6 +628,7 @@ class Message(Object, Update):
         self.video_chat_ended = video_chat_ended
         self.video_chat_members_invited = video_chat_members_invited
         self.web_app_data = web_app_data
+        self.successful_payment = successful_payment
         self.gift_code = gift_code
         self.requested_chats = requested_chats
         self.giveaway_launched = giveaway_launched
@@ -736,6 +741,7 @@ class Message(Object, Update):
             web_app_data = None
             giveaway_launched = None
             gift_code = None
+                        successful_payment = None
             giveaway_result = None
             requested_chats = None
             chat_ttl_period = None
@@ -864,6 +870,12 @@ class Message(Object, Update):
                     client, action, True
                 )
                 service_type = enums.MessageServiceType.GIVEAWAY_RESULT
+            elif isinstance(action, raw.types.MessageActionBoostApply):
+                boosts_applied = action.boosts
+                service_type = enums.MessageServiceType.BOOST_APPLY
+            elif isinstance(action, (raw.types.MessageActionPaymentSent, raw.types.MessageActionPaymentSentMe)):
+                successful_payment = types.SuccessfulPayment._parse(client, action)
+                service_type = enums.MessageServiceType.SUCCESSFUL_PAYMENT
             from_user = types.User._parse(client, users.get(user_id, None))
             sender_chat = (
                 types.Chat._parse(client, message, users, chats, is_chat=False)
@@ -921,6 +933,7 @@ class Message(Object, Update):
                 giveaway_launched=giveaway_launched,
                 giveaway_result=giveaway_result,
                 gift_code=gift_code,
+                successful_payment=successful_payment,
                 requested_chats=requested_chats,
                 chat_ttl_period=chat_ttl_period,
                 boosts_applied=boosts_applied,

@@ -375,6 +375,7 @@ def pyrogram_api():
             set_chat_menu_button
             get_chat_menu_button
             answer_web_app_query
+            answer_pre_checkout_query
             get_bot_info
             set_bot_info
         """,
@@ -522,6 +523,7 @@ def pyrogram_api():
             MessageReactionUpdated
             MessageReactionCountUpdated
             CheckedGiftCode
+            SuccessfulPayment
         """,
         stories="""
         Stories
@@ -564,6 +566,9 @@ def pyrogram_api():
             MenuButtonWebApp
             MenuButtonDefault
             SentWebAppMessage
+            PaymentInfo
+            PreCheckoutQuery
+            ShippingAddress
         """,
         bot_commands="""
         Bot commands
@@ -609,6 +614,10 @@ def pyrogram_api():
             InlineQueryResultVideo
             InlineQueryResultVoice
             ChosenInlineResult
+        """,
+        pre_checkout_query="""
+        PreCheckoutQuery
+            PreCheckoutQuery.answer
         """,
         input_message_content="""
         InputMessageContent
@@ -761,6 +770,10 @@ def pyrogram_api():
         inline_query="""
         InlineQuery
             InlineQuery.answer
+        """,
+        pre_checkout_query="""
+        PreCheckoutQuery
+            PreCheckoutQuery.answer
         """,
         chat_join_request="""
         ChatJoinRequest

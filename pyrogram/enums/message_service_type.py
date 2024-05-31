@@ -121,3 +121,6 @@ class MessageServiceType(AutoName):
 
     JOIN_REQUEST_APPROVED = auto()
     "Join request approved"
+
+    SUCCESSFUL_PAYMENT = auto()
+    "Successful payment"
