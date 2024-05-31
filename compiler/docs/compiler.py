@@ -198,6 +198,7 @@ def pyrogram_api():
             edit_inline_reply_markup
             send_chat_action
             delete_messages
+            get_available_effects
             get_messages
             get_scheduled_messages
             get_stickers
@@ -479,6 +480,7 @@ def pyrogram_api():
             Photo
             Thumbnail
             Audio
+            AvailableEffect
             Document
             Animation
             Video

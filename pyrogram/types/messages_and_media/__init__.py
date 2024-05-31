@@ -21,6 +21,7 @@
 from .animation import Animation
 from .audio import Audio
 from .checked_gift_code import CheckedGiftCode
+from .available_effect import AvailableEffect
 from .contact import Contact
 from .dice import Dice
 from .document import Document
@@ -69,6 +70,7 @@ __all__ = [
     "Animation",
     "Audio",
     "CheckedGiftCode",
+    "AvailableEffect",
     "Contact",
     "Document",
     "Game",
