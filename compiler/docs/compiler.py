@@ -378,6 +378,7 @@ def pyrogram_api():
             answer_pre_checkout_query
             get_bot_info
             set_bot_info
+            get_collectible_item_info
         """,
         authorization="""
         Authorization
@@ -473,6 +474,7 @@ def pyrogram_api():
             BotInfo
             GroupCallMember
             ChatColor
+            CollectibleItemInfo
         """,
         messages_media="""
         Messages & Media
