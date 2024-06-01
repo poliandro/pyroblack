@@ -77,3 +77,6 @@ class MessageMediaType(AutoName):
 
     STORY = auto()
     "Forwarded story media"
+
+    INVOICE = auto()
+    "Invoice media"

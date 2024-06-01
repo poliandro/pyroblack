@@ -100,6 +100,7 @@ __all__ = [
     "Dice",
     "Reaction",
     "WebAppData",
+    "MessageInvoice",
     "MessageReactions",
     "ReactionCount",
     "ReactionType",

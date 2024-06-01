@@ -498,6 +498,7 @@ def pyrogram_api():
             Giveaway
             GiveawayLaunched
             GiveawayResult
+            MessageInvoice
             MessageStory
             WebPage
             WebPageEmpty
@@ -554,6 +555,7 @@ def pyrogram_api():
             ReplyKeyboardRemove
             InlineKeyboardMarkup
             InlineKeyboardButton
+            InlineKeyboardButtonBuy
             RequestPeerTypeChannel
             RequestPeerTypeChat
             RequestPeerTypeUser

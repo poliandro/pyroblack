@@ -224,6 +224,9 @@ class Message(Object, Update):
         giveaway_result (:obj:`~pyrogram.types.GiveawayResult`, *optional*):
             Message is a giveaway result, information about the giveaway result.
 
+        invoice (:obj:`~pyrogram.types.MessageInvoice`, *optional*):
+            Message is an invoice for a payment, information about the invoice.
+
         story (:obj:`~pyrogram.types.MessageStory` | :obj:`~pyrogram.types.Story`, *optional*):
             Message is a forwarded story, information about the forwarded story.
 
@@ -481,6 +484,8 @@ class Message(Object, Update):
         game: "types.Game" = None,
         giveaway: "types.Giveaway" = None,
         giveaway_result: "types.GiveawayResult" = None,
+        boosts_applied: int = None,
+        invoice: "types.MessageInvoice" = None,
         story: Union["types.MessageStory", "types.Story"] = None,
         video: "types.Video" = None,
         voice: "types.Voice" = None,
@@ -593,6 +598,8 @@ class Message(Object, Update):
         self.game = game
         self.giveaway = giveaway
         self.giveaway_result = giveaway_result
+        self.boosts_applied = boosts_applied
+        self.invoice = invoice
         self.story = story
         self.video = video
         self.voice = voice
@@ -1049,6 +1056,7 @@ class Message(Object, Update):
             game = None
             giveaway = None
             giveaway_result = None
+            invoice = None
             story = None
             audio = None
             voice = None
@@ -1173,6 +1181,9 @@ class Message(Object, Update):
                 elif isinstance(media, raw.types.MessageMediaDice):
                     dice = types.Dice._parse(client, media)
                     media_type = enums.MessageMediaType.DICE
+                elif isinstance(media, raw.types.MessageMediaInvoice):
+                    invoice = types.MessageInvoice._parse(media)
+                    media = enums.MessageMediaType.INVOICE
                 else:
                     media = None
 
@@ -1262,6 +1273,7 @@ class Message(Object, Update):
                 game=game,
                 giveaway=giveaway,
                 giveaway_result=giveaway_result,
+                invoice=invoice,
                 story=story,
                 video=video,
                 video_note=video_note,
