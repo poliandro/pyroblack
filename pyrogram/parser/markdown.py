@@ -34,6 +34,7 @@ SPOILER_DELIM = "||"
 CODE_DELIM = "`"
 PRE_DELIM = "```"
 BLOCKQUOTE_DELIM = ">"
+BLOCKQUOTE_EXPANDABLE_DELIM = "**>"
 
 MARKDOWN_RE = re.compile(
     r"({d})|\[(.+?)\]\((.+?)\)".format(
@@ -83,6 +84,14 @@ class Markdown:
                     result.append(line.strip())
                 else:
                     result.append(line[1:].strip())
+            elif line.startswith(BLOCKQUOTE_EXPANDABLE_DELIM):
+                if not in_blockquote:
+                    line = re.sub(r'^\*\*> ', OPENING_TAG.format("blockquote expandable"), line)
+                    line = re.sub(r'^\*\*>', OPENING_TAG.format("blockquote expandable"), line)
+                    in_blockquote = True
+                    result.append(line.strip())
+                else:
+                    result.append(line[3:].strip())
             else:
                 if in_blockquote:
                     line = CLOSING_TAG.format("blockquote") + line
@@ -183,7 +192,10 @@ class Markdown:
                 start_tag = f"{PRE_DELIM}{language}\n"
                 end_tag = f"\n{PRE_DELIM}"
             elif entity_type == MessageEntityType.BLOCKQUOTE:
-                start_tag = BLOCKQUOTE_DELIM + " "
+                if entity.collapsed:
+                    start_tag = BLOCKQUOTE_EXPANDABLE_DELIM + " "
+                else:
+                    start_tag = BLOCKQUOTE_DELIM + " "
                 end_tag = ""
                 blockquote_text = text[start:end]
                 lines = blockquote_text.split("\n")
