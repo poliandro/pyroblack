@@ -36,6 +36,7 @@ class EditMessageMedia:
         media: "types.InputMedia",
         reply_markup: "types.InlineKeyboardMarkup" = None,
         file_name: str = None,
+        invert_media: bool = False
     ) -> "types.Message":
         """Edit animation, audio, document, photo or video messages.
 
@@ -63,6 +64,9 @@ class EditMessageMedia:
             file_name (``str``, *optional*):
                 File name of the media to be sent. Not applicable to photos.
                 Defaults to file's path basename.
+
+            invert_media (``bool``, *optional*):
+                Inverts the position of the media and caption.
 
         Returns:
             :obj:`~pyrogram.types.Message`: On success, the edited message is returned.
@@ -274,6 +278,7 @@ class EditMessageMedia:
                 reply_markup=await reply_markup.write(self) if reply_markup else None,
                 message=message,
                 entities=entities,
+                invert_media=invert_media
             )
         )
 
