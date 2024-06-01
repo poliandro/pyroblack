@@ -193,6 +193,13 @@ class Message(Object, Update):
         quote_entities (List of :obj:`~pyrogram.types.MessageEntity`, *optional*):
             For quote text, special entities like usernames, URLs, bot commands, etc. that appear in the quote text.
 
+        effect_id (``str``, *optional*):
+            Unique identifier of the message effect added to the message.
+
+        invert_media (``bool``, *optional*):
+            True, If the media position is inverted.
+            only animation, photo, video, and webpage preview messages.
+
         audio (:obj:`~pyrogram.types.Audio`, *optional*):
             Message is an audio file, information about the file.
 
@@ -464,6 +471,8 @@ class Message(Object, Update):
         caption_entities: List["types.MessageEntity"] = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
+        effect_id: str = None,
+        invert_media: bool = None,
         audio: "types.Audio" = None,
         document: "types.Document" = None,
         photo: "types.Photo" = None,
@@ -574,6 +583,8 @@ class Message(Object, Update):
         self.caption_entities = caption_entities
         self.quote_text = quote_text
         self.quote_entities = quote_entities
+        self.effect_id = effect_id
+        self.invert_media = invert_media
         self.audio = audio
         self.document = document
         self.photo = photo
@@ -1240,6 +1251,7 @@ class Message(Object, Update):
                 edit_hide=message.edit_hide,
                 edit_date=utils.timestamp_to_datetime(message.edit_date),
                 media_group_id=message.grouped_id,
+                invert_media=message.invert_media,
                 photo=photo,
                 location=location,
                 contact=contact,
