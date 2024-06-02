@@ -535,7 +535,6 @@ class Message(Object, Update):
         gift_code: "types.GiftCode" = None,
         requested_chats: "types.RequestedChats" = None,
         chat_ttl_period: int = None,
-        boosts_applied: int = None,
         join_request_approved: bool = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
