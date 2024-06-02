@@ -40,6 +40,7 @@ from .message_reaction_count_updated import MessageReactionCountUpdated
 from .message_reaction_updated import MessageReactionUpdated
 from .message_reactions import MessageReactions
 from .message_story import MessageStory
+from .message_invoice import MessageInvoice
 from .photo import Photo
 from .poll import Poll
 from .poll_option import PollOption
