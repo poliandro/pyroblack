@@ -138,6 +138,6 @@ class CopyMessage:
             reply_to_message_id=reply_to_message_id,
             schedule_date=schedule_date,
             protect_content=protect_content,
-            invert_media=invert_media,
+            #TEMP invert_media=invert_media,
             reply_markup=reply_markup,
         )
