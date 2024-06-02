@@ -86,8 +86,12 @@ class Markdown:
                     result.append(line[1:].strip())
             elif line.startswith(BLOCKQUOTE_EXPANDABLE_DELIM):
                 if not in_blockquote:
-                    line = re.sub(r'^\*\*> ', OPENING_TAG.format("blockquote expandable"), line)
-                    line = re.sub(r'^\*\*>', OPENING_TAG.format("blockquote expandable"), line)
+                    line = re.sub(
+                        r"^\*\*> ", OPENING_TAG.format("blockquote expandable"), line
+                    )
+                    line = re.sub(
+                        r"^\*\*>", OPENING_TAG.format("blockquote expandable"), line
+                    )
                     in_blockquote = True
                     result.append(line.strip())
                 else:

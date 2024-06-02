@@ -219,8 +219,10 @@ class Dispatcher:
 
         async def pre_checkout_query_parser(update, users, chats):
             return (
-                await pyrogram.types.PreCheckoutQuery._parse(self.client, update, users),
-                PreCheckoutQueryHandler
+                await pyrogram.types.PreCheckoutQuery._parse(
+                    self.client, update, users
+                ),
+                PreCheckoutQueryHandler,
             )
 
         async def message_bot_na_reaction_parser(update, users, chats):

@@ -60,6 +60,6 @@ class Decorators(
     OnStory,
     OnMessageReactionUpdated,
     OnMessageReactionCountUpdated,
-    OnPreCheckoutQuery
+    OnPreCheckoutQuery,
 ):
     pass

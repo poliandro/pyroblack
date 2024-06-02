@@ -62,7 +62,7 @@ class ChatMemberUpdated(Object, Update):
         old_chat_member: "types.ChatMember",
         new_chat_member: "types.ChatMember",
         invite_link: "types.ChatInviteLink" = None,
-        via_join_request: bool = None
+        via_join_request: bool = None,
     ):
         super().__init__(client)
 

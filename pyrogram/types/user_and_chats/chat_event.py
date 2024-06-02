@@ -447,10 +447,14 @@ class ChatEvent(Object):
             message = action.message
 
             if isinstance(message, raw.types.Message) and message.pinned:
-                pinned_message = await types.Message._parse(client, message, users, chats)
+                pinned_message = await types.Message._parse(
+                    client, message, users, chats
+                )
                 action = enums.ChatEventAction.MESSAGE_PINNED
             elif isinstance(message, raw.types.Message) and not message.pinned:
-                unpinned_message = await types.Message._parse(client, message, users, chats)
+                unpinned_message = await types.Message._parse(
+                    client, message, users, chats
+                )
                 action = enums.ChatEventAction.MESSAGE_UNPINNED
             else:
                 action = enums.ChatEventAction.MESSAGE_PIN_CHANGED

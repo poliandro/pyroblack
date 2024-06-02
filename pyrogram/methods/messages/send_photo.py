@@ -217,10 +217,15 @@ class SendPhoto:
                     media = raw.types.InputMediaPhotoExternal(
                         url=photo,
                         ttl_seconds=(1 << 31) - 1 if view_once else ttl_seconds,
-                        spoiler=has_spoiler
+                        spoiler=has_spoiler,
                     )
                 else:
-                    media = utils.get_input_media_from_file_id(photo, FileType.PHOTO, ttl_seconds=(1 << 31) - 1 if view_once else ttl_seconds, has_spoiler=has_spoiler)
+                    media = utils.get_input_media_from_file_id(
+                        photo,
+                        FileType.PHOTO,
+                        ttl_seconds=(1 << 31) - 1 if view_once else ttl_seconds,
+                        has_spoiler=has_spoiler,
+                    )
             else:
                 file = await self.save_file(
                     photo, progress=progress, progress_args=progress_args
@@ -228,7 +233,7 @@ class SendPhoto:
                 media = raw.types.InputMediaUploadedPhoto(
                     file=file,
                     ttl_seconds=(1 << 31) - 1 if view_once else ttl_seconds,
-                    spoiler=has_spoiler
+                    spoiler=has_spoiler,
                 )
 
             while True:
@@ -243,8 +248,12 @@ class SendPhoto:
                         noforwards=protect_content,
                         effect=message_effect_id,
                         invert_media=invert_media,
-                        reply_markup=await reply_markup.write(self) if reply_markup else None,
-                        **await utils.parse_text_entities(self, caption, parse_mode, caption_entities)
+                        reply_markup=(
+                            await reply_markup.write(self) if reply_markup else None
+                        ),
+                        **await utils.parse_text_entities(
+                            self, caption, parse_mode, caption_entities
+                        ),
                     )
                     if business_connection_id is not None:
                         r = await self.invoke(

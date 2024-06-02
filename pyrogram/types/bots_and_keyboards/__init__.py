@@ -93,5 +93,5 @@ __all__ = [
     "ShippingAddress",
     "PaymentInfo",
     "PreCheckoutQuery",
-    "SuccessfulPayment"
+    "SuccessfulPayment",
 ]

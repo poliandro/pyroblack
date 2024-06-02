@@ -107,8 +107,10 @@ class MessageHandler(Handler):
         :return: Whether the message has a matching listener or handler and its filters does match with the Message.
         """
         listener_does_match = (
-            await self.check_if_has_matching_listener(client, message)
-        )[0] if message.chat is not None and message.from_user is not None else False
+            (await self.check_if_has_matching_listener(client, message))[0]
+            if message.chat is not None and message.from_user is not None
+            else False
+        )
 
         if callable(self.filters):
             if iscoroutinefunction(self.filters.__call__):
@@ -135,9 +137,11 @@ class MessageHandler(Handler):
         :param args: Arguments to call the callback with.
         :return: None
         """
-        listener_does_match, listener = await self.check_if_has_matching_listener(
-            client, message
-        ) if message.chat is not None and message.from_user is not None else False, None
+        listener_does_match, listener = (
+            await self.check_if_has_matching_listener(client, message)
+            if message.chat is not None and message.from_user is not None
+            else False
+        ), None
 
         if listener and listener_does_match:
             client.remove_listener(listener)

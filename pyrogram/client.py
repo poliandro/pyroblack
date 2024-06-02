@@ -50,7 +50,7 @@ from pyrogram.errors import (
     BadRequest,
     AuthBytesInvalid,
     FloodWait,
-    FloodPremiumWait
+    FloodPremiumWait,
 )
 from pyrogram.handlers.handler import Handler
 from pyrogram.methods import Methods

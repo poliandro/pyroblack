@@ -34,7 +34,7 @@ class EditMessageText:
         entities: List["types.MessageEntity"] = None,
         disable_web_page_preview: bool = None,
         invert_media: bool = None,
-        reply_markup: "types.InlineKeyboardMarkup" = None
+        reply_markup: "types.InlineKeyboardMarkup" = None,
     ) -> "types.Message":
         """Edit the text of messages.
 

@@ -126,7 +126,7 @@ class MessageEntity(Object):
 
         if self.type not in [
             enums.MessageEntityType.BLOCKQUOTE,
-            enums.MessageEntityType.EXPANDABLE_BLOCKQUOTE
+            enums.MessageEntityType.EXPANDABLE_BLOCKQUOTE,
         ]:
             args.pop("collapsed")
 

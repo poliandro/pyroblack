@@ -36,7 +36,7 @@ class EditMessageMedia:
         media: "types.InputMedia",
         reply_markup: "types.InlineKeyboardMarkup" = None,
         file_name: str = None,
-        invert_media: bool = False
+        invert_media: bool = False,
     ) -> "types.Message":
         """Edit animation, audio, document, photo or video messages.
 
@@ -278,7 +278,7 @@ class EditMessageMedia:
                 reply_markup=await reply_markup.write(self) if reply_markup else None,
                 message=message,
                 entities=entities,
-                invert_media=invert_media
+                invert_media=invert_media,
             )
         )
 

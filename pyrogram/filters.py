@@ -741,6 +741,7 @@ video_chat_members_invited = create(video_chat_members_invited_filter)
 
 # endregion
 
+
 # region successful_payment_filter
 async def successful_payment_filter(_, __, m: Message):
     return bool(m.successful_payment)
@@ -751,6 +752,7 @@ successful_payment = create(successful_payment_filter)
 
 
 # endregion
+
 
 # region service_filter
 async def service_filter(_, __, m: Message):
@@ -1139,11 +1141,11 @@ class topic(Filter, set):
     """
 
     def __init__(self, topics: Union[int, List[int]] = None):
-        topics = [] if topics is None else topics if isinstance(topics, list) else [topics]
-
-        super().__init__(
-            t for t in topics
+        topics = (
+            [] if topics is None else topics if isinstance(topics, list) else [topics]
         )
+
+        super().__init__(t for t in topics)
 
     async def __call__(self, _, message: Message):
         return message.topic and message.topic.id in self

@@ -58,6 +58,6 @@ class Bots(
     GetChatMenuButton,
     AnswerWebAppQuery,
     AnswerPreCheckoutQuery,
-    GetCollectibleItemInfo
+    GetCollectibleItemInfo,
 ):
     pass

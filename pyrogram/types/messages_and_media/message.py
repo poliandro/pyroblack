@@ -531,8 +531,8 @@ class Message(Object, Update):
         video_chat_ended: "types.VideoChatEnded" = None,
         video_chat_members_invited: "types.VideoChatMembersInvited" = None,
         web_app_data: "types.WebAppData" = None,
-                        successful_payment: "types.SuccessfulPayment" = None,
-            gift_code: "types.GiftCode" = None,
+        successful_payment: "types.SuccessfulPayment" = None,
+        gift_code: "types.GiftCode" = None,
         requested_chats: "types.RequestedChats" = None,
         chat_ttl_period: int = None,
         boosts_applied: int = None,
@@ -759,7 +759,7 @@ class Message(Object, Update):
             web_app_data = None
             giveaway_launched = None
             gift_code = None
-                        successful_payment = None
+            successful_payment = None
             giveaway_result = None
             requested_chats = None
             chat_ttl_period = None
@@ -868,7 +868,13 @@ class Message(Object, Update):
             elif isinstance(action, raw.types.MessageActionGiftCode):
                 gift_code = types.GiftCode._parse(client, action, chats)
                 service_type = enums.MessageServiceType.GIFT_CODE
-            elif isinstance(action, (raw.types.MessageActionRequestedPeer, raw.types.MessageActionRequestedPeerSentMe)):
+            elif isinstance(
+                action,
+                (
+                    raw.types.MessageActionRequestedPeer,
+                    raw.types.MessageActionRequestedPeerSentMe,
+                ),
+            ):
                 requested_chats = types.RequestedChats._parse(client, action)
                 service_type = enums.MessageServiceType.REQUESTED_CHAT
             elif isinstance(action, raw.types.MessageActionSetMessagesTTL):
@@ -891,7 +897,13 @@ class Message(Object, Update):
             elif isinstance(action, raw.types.MessageActionBoostApply):
                 boosts_applied = action.boosts
                 service_type = enums.MessageServiceType.BOOST_APPLY
-            elif isinstance(action, (raw.types.MessageActionPaymentSent, raw.types.MessageActionPaymentSentMe)):
+            elif isinstance(
+                action,
+                (
+                    raw.types.MessageActionPaymentSent,
+                    raw.types.MessageActionPaymentSentMe,
+                ),
+            ):
                 successful_payment = types.SuccessfulPayment._parse(client, action)
                 service_type = enums.MessageServiceType.SUCCESSFUL_PAYMENT
             from_user = types.User._parse(client, users.get(user_id, None))
@@ -3008,7 +3020,7 @@ class Message(Object, Update):
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
             quote_entities=quote_entities,
-                        view_once=view_once,
+            view_once=view_once,
             reply_markup=reply_markup,
             progress=progress,
             progress_args=progress_args,
@@ -4173,7 +4185,7 @@ class Message(Object, Update):
         entities: List["types.MessageEntity"] = None,
         disable_web_page_preview: bool = None,
         invert_media: bool = None,
-        reply_markup: "types.InlineKeyboardMarkup" = None
+        reply_markup: "types.InlineKeyboardMarkup" = None,
     ) -> "Message":
         """Bound method *edit_text* of :obj:`~pyrogram.types.Message`.
 
@@ -4228,7 +4240,7 @@ class Message(Object, Update):
             entities=entities,
             disable_web_page_preview=disable_web_page_preview,
             invert_media=invert_media,
-            reply_markup=reply_markup
+            reply_markup=reply_markup,
         )
 
     edit = edit_text
@@ -4729,7 +4741,7 @@ class Message(Object, Update):
         quote: bool = None,
         timeout: int = 10,
         request_write_access: bool = True,
-        password: str = None
+        password: str = None,
     ):
         """Bound method *click* of :obj:`~pyrogram.types.Message`.
 
@@ -4846,29 +4858,25 @@ class Message(Object, Update):
                 )
             elif button.requires_password:
                 if password is None:
-                    raise ValueError(
-                        "This button requires a password"
-                    )
+                    raise ValueError("This button requires a password")
 
                 return await self._client.request_callback_answer(
                     chat_id=self.chat.id,
                     message_id=self.id,
                     callback_data=button.callback_data,
                     password=password,
-                    timeout=timeout
+                    timeout=timeout,
                 )
             elif button.requires_password:
                 if password is None:
-                    raise ValueError(
-                        "This button requires a password"
-                    )
+                    raise ValueError("This button requires a password")
 
                 return await self._client.request_callback_answer(
                     chat_id=self.chat.id,
                     message_id=self.id,
                     callback_data=button.callback_data,
                     password=password,
-                    timeout=timeout
+                    timeout=timeout,
                 )
             elif button.url:
                 return button.url
@@ -4876,18 +4884,13 @@ class Message(Object, Update):
                 web_app = button.web_app
 
                 bot_peer_id = (
-                    self.via_bot and
-                    self.via_bot.id
-                ) or (
-                    self.from_user and
-                    self.from_user.is_bot and
-                    self.from_user.id
-                ) or None
+                    (self.via_bot and self.via_bot.id)
+                    or (self.from_user and self.from_user.is_bot and self.from_user.id)
+                    or None
+                )
 
                 if not bot_peer_id:
-                    raise ValueError(
-                        "This button requires a bot as the sender"
-                    )
+                    raise ValueError("This button requires a bot as the sender")
 
                 r = await self._client.invoke(
                     raw.functions.messages.RequestWebView(
@@ -4900,10 +4903,7 @@ class Message(Object, Update):
                 )
                 return r.url
             elif button.user_id:
-                return await self._client.get_chat(
-                    button.user_id,
-                    force_full=False
-                )
+                return await self._client.get_chat(button.user_id, force_full=False)
             elif button.switch_inline_query:
                 return button.switch_inline_query
             elif button.switch_inline_query_current_chat:
@@ -5287,8 +5287,7 @@ class Message(Object, Update):
             RPCError: In case of a Telegram RPC error.
         """
         return await self._client.read_chat_history(
-            chat_id=self.chat.id,
-            max_id=self.id
+            chat_id=self.chat.id, max_id=self.id
         )
 
     async def view(self) -> bool:
@@ -5315,6 +5314,5 @@ class Message(Object, Update):
             RPCError: In case of a Telegram RPC error.
         """
         return await self._client.view_messages(
-            chat_id=self.chat.id,
-            message_id=self.id
+            chat_id=self.chat.id, message_id=self.id
         )

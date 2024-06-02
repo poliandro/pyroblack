@@ -183,19 +183,29 @@ class SendPoll:
             parse_mode=parse_mode,
         )
 
-        solution, solution_entities = (await utils.parse_text_entities(
-            self, explanation, explanation_parse_mode, explanation_entities
-        )).values()
-        q, q_entities = (await pyrogram.utils.parse_text_entities(self, question, None, question_entities)).values()
+        solution, solution_entities = (
+            await utils.parse_text_entities(
+                self, explanation, explanation_parse_mode, explanation_entities
+            )
+        ).values()
+        q, q_entities = (
+            await pyrogram.utils.parse_text_entities(
+                self, question, None, question_entities
+            )
+        ).values()
 
         rpc = raw.functions.messages.SendMedia(
             peer=await self.resolve_peer(chat_id),
             media=raw.types.InputMediaPoll(
                 poll=raw.types.Poll(
                     id=self.rnd_id(),
-                    question=raw.types.TextWithEntities(text=q, entities=q_entities or []),
+                    question=raw.types.TextWithEntities(
+                        text=q, entities=q_entities or []
+                    ),
                     answers=[
-                        await types.PollOption(text=option.text,entities=option.entities).write(self,i)
+                        await types.PollOption(
+                            text=option.text, entities=option.entities
+                        ).write(self, i)
                         for i, option in enumerate(options)
                     ],
                     closed=is_closed,

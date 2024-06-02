@@ -46,7 +46,7 @@ __all__ = [
     "ChatMemberStatus",
     "ChatMembersFilter",
     "ChatType",
-    'ClientPlatform',
+    "ClientPlatform",
     "ListenerTypes",
     "MessageEntityType",
     "MessageMediaType",

@@ -61,7 +61,7 @@ class SendMediaGroup:
         schedule_date: datetime = None,
         protect_content: bool = None,
         message_effect_id: int = None,
-        invert_media: bool = None
+        invert_media: bool = None,
     ) -> List["types.Message"]:
         """Send a group of photos or videos as an album.
 
@@ -515,7 +515,7 @@ class SendMediaGroup:
             schedule_date=utils.datetime_to_timestamp(schedule_date),
             noforwards=protect_content,
             effect=message_effect_id,
-            invert_media=invert_media
+            invert_media=invert_media,
         )
 
         if business_connection_id is not None:

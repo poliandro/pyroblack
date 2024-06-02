@@ -36,7 +36,7 @@ from pyrogram.errors import (
     InternalServerError,
     AuthKeyDuplicated,
     FloodWait,
-    FloodPremiumWait
+    FloodPremiumWait,
     ServiceUnavailable,
     BadMsgNotification,
     SecurityCheckMismatch,

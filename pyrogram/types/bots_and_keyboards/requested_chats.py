@@ -50,11 +50,11 @@ class RequestedChats(Object):
 
     @staticmethod
     def _parse(
-            client,
-            action: Union[
-                "raw.types.MessageActionRequestedPeer",
-                "raw.types.MessageActionRequestedPeerSentMe"
-            ]
+        client,
+        action: Union[
+            "raw.types.MessageActionRequestedPeer",
+            "raw.types.MessageActionRequestedPeerSentMe",
+        ],
     ) -> "RequestedChats":
         _requested_chats = []
 
@@ -76,8 +76,10 @@ class RequestedChats(Object):
                     first_name=getattr(requested_peer, "first_name", None),
                     last_name=getattr(requested_peer, "last_name", None),
                     username=getattr(requested_peer, "username", None),
-                    photo=types.ChatPhoto._parse(client, getattr(requested_peer, "photo", None), peer_id, 0),
-                    client=client
+                    photo=types.ChatPhoto._parse(
+                        client, getattr(requested_peer, "photo", None), peer_id, 0
+                    ),
+                    client=client,
                 )
             )
 
