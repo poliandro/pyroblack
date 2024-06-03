@@ -29,18 +29,13 @@ class InlineKeyboardButtonBuy(Object):
             the button is pressed.
     """
 
-    def __init__(
-        self,
-        text: str
-    ):
+    def __init__(self, text: str):
         super().__init__()
 
         self.text = str(text)
 
     @staticmethod
     def read(b):
-        return InlineKeyboardButtonBuy(
-            text=b.text
-        )
+        return InlineKeyboardButtonBuy(text=b.text)
 
     # TODO: Implement write method

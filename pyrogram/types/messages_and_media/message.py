@@ -4273,7 +4273,7 @@ class Message(Object, Update):
         parse_mode: Optional["enums.ParseMode"] = None,
         caption_entities: List["types.MessageEntity"] = None,
         invert_media: bool = None,
-        reply_markup: "types.InlineKeyboardMarkup" = None
+        reply_markup: "types.InlineKeyboardMarkup" = None,
     ) -> "Message":
         """Bound method *edit_caption* of :obj:`~pyrogram.types.Message`.
 
@@ -4322,14 +4322,14 @@ class Message(Object, Update):
             parse_mode=parse_mode,
             caption_entities=caption_entities,
             invert_media=invert_media,
-            reply_markup=reply_markup
+            reply_markup=reply_markup,
         )
 
     async def edit_media(
         self,
         media: "types.InputMedia",
         invert_media: bool = None,
-        reply_markup: "types.InlineKeyboardMarkup" = None
+        reply_markup: "types.InlineKeyboardMarkup" = None,
     ) -> "Message":
         """Bound method *edit_media* of :obj:`~pyrogram.types.Message`.
 
@@ -4369,7 +4369,7 @@ class Message(Object, Update):
             message_id=self.id,
             media=media,
             invert_media=invert_media,
-            reply_markup=reply_markup
+            reply_markup=reply_markup,
         )
 
     async def edit_reply_markup(
@@ -4622,7 +4622,9 @@ class Message(Object, Update):
                 has_spoiler=has_spoiler,
                 protect_content=protect_content,
                 invert_media=invert_media,
-                reply_markup=self.reply_markup if reply_markup is object else reply_markup
+                reply_markup=(
+                    self.reply_markup if reply_markup is object else reply_markup
+                ),
             )
 
             if self.photo:
