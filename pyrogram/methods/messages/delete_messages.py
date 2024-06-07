@@ -28,7 +28,7 @@ class DeleteMessages:
         chat_id: Union[int, str],
         message_ids: Union[int, Iterable[int]],
         revoke: bool = True,
-        is_scheduled: bool = None
+        is_scheduled: bool = None,
     ) -> int:
         """Delete messages, including service messages.
 
@@ -81,8 +81,7 @@ class DeleteMessages:
         if is_scheduled:
             r = await self.invoke(
                 raw.functions.messages.DeleteScheduledMessages(
-                    peer=peer,
-                    id=message_ids
+                    peer=peer, id=message_ids
                 )
             )
         elif isinstance(peer, raw.types.InputPeerChannel):

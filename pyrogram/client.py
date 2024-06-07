@@ -695,16 +695,12 @@ class Client(Methods):
                                 chats.update({c.id: c for c in diff.chats})
 
                 self.dispatcher.updates_queue.put_nowait((update, users, chats))
-        elif isinstance(updates, (raw.types.UpdateShortMessage, raw.types.UpdateShortChatMessage)):
+        elif isinstance(
+            updates, (raw.types.UpdateShortMessage, raw.types.UpdateShortChatMessage)
+        ):
             if not self.skip_updates:
                 await self.storage.update_state(
-                    (
-                        0,
-                        updates.pts,
-                        None,
-                        updates.date,
-                        None
-                    )
+                    (0, updates.pts, None, updates.date, None)
                 )
 
             diff = await self.invoke(
