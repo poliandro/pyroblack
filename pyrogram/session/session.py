@@ -178,9 +178,10 @@ class Session:
 
         log.info("Session started")
 
-    async def stop(self):
-        if self.client.instant_stop:
-            return  # stop instantly
+    async def stop(self, force: bool = False):
+        if not force:
+            if self.client.instant_stop:
+                return  # stop instantly
 
         self.is_started.clear()
 
