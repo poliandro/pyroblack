@@ -176,6 +176,7 @@ def pyrogram_api():
             send_photo
             send_audio
             send_document
+            send_invoice
             send_sticker
             send_video
             send_animation
@@ -490,6 +491,7 @@ def pyrogram_api():
             AvailableEffect
             Document
             Animation
+            LabeledPrice
             Video
             Voice
             VideoNote

@@ -30,6 +30,7 @@ from .game import Game
 from .giveaway import Giveaway
 from .giveaway_launched import GiveawayLaunched
 from .giveaway_result import GiveawayResult
+from .labeled_price import LabeledPrice
 from .location import Location
 from .media_area import MediaArea
 from .media_area_channel_post import MediaAreaChannelPost
@@ -68,52 +69,7 @@ from .web_page_empty import WebPageEmpty
 from .web_page_preview import WebPagePreview
 
 __all__ = [
-    "Animation",
-    "Audio",
-    "CheckedGiftCode",
-    "AvailableEffect",
-    "Contact",
-    "Document",
-    "Game",
-    "Giveaway",
-    "GiveawayLaunched",
-    "GiveawayResult",
-    "Location",
-    "MediaArea",
-    "MediaAreaChannelPost",
-    "MediaAreaCoordinates",
-    "Message",
-    "MessageEntity",
-    "Photo",
-    "Thumbnail",
-    "StrippedThumbnail",
-    "Poll",
-    "PollOption",
-    "Sticker",
-    "StickerSet",
-    "Venue",
-    "Video",
-    "VideoNote",
-    "Voice",
-    "WebPage",
-    "WebPageEmpty",
-    "WebPagePreview",
-    "Dice",
-    "Reaction",
-    "WebAppData",
-    "MessageInvoice",
-    "MessageReactions",
-    "ReactionCount",
-    "ReactionType",
-    "MessageReactionUpdated",
-    "MessageReactionCountUpdated",
-    "MessageStory",
-    "Story",
-    "StoryDeleted",
-    "StorySkipped",
-    "StoryViews",
-    "GiftCode",
-    "StoryForwardHeader",
-    "StoriesPrivacyRules",
-    "ExportedStoryLink",
+    "Animation", "Audio", "AvailableEffect", "Contact", "Document", "Game", "Giveaway", "GiveawayLaunched", "GiveawayResult", "LabeledPrice", "Location", "MediaArea", "MediaAreaChannelPost", "MediaAreaCoordinates", "Message", "MessageEntity", "Photo", "Thumbnail",
+    "StrippedThumbnail", "Poll", "PollOption", "Sticker", "StickerSet", "Venue", "Video", "VideoNote", "Voice", "WebPage", "WebPageEmpty", "WebPagePreview", "Dice",
+    "Reaction", "WebAppData", "MessageInvoice", "MessageReactions", "ReactionCount", "ReactionType", "MessageReactionUpdated", "MessageReactionCountUpdated", "MessageStory", "Story", "StoryDeleted", "StorySkipped", "StoryViews", "StoryForwardHeader", "StoriesPrivacyRules", "ExportedStoryLink"
 ]
