@@ -77,7 +77,7 @@ from .stop_poll import StopPoll
 from .stream_media import StreamMedia
 from .view_messages import ViewMessages
 from .vote_poll import VotePoll
-
+from .translate_text import TranslateText
 
 class Messages(
     DeleteMessages,
@@ -141,5 +141,6 @@ class Messages(
     GetDiscussionRepliesCount,
     StreamMedia,
     GetCustomEmojiStickers,
+    TranslateText,
 ):
     pass

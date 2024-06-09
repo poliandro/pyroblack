@@ -230,6 +230,7 @@ def pyrogram_api():
             get_custom_emoji_stickers
             delete_chat_history
             send_paid_reaction
+            translate_message_text
         """,
         chats="""
         Chats
@@ -536,6 +537,7 @@ def pyrogram_api():
             WebPage
             WebPageEmpty
             WebPagePreview
+            TranslatedText
             Poll
             PollOption
             Dice
