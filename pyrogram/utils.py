@@ -101,6 +101,9 @@ async def parse_messages(
     replies: int = 1,
     business_connection_id: str = None,
 ) -> List["types.Message"]:
+    if not messages:
+        return types.List()
+
     users = {i.id: i for i in messages.users}
     chats = {i.id: i for i in messages.chats}
     if hasattr(messages, "topics"):
