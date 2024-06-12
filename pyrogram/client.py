@@ -691,9 +691,8 @@ class Client(Methods):
                             if not isinstance(
                                 diff, raw.types.updates.ChannelDifferenceEmpty
                             ):
-                                if diff.users:
+                                if diff:
                                     users.update({u.id: u for u in diff.users})
-                                if diff.chats:
                                     chats.update({c.id: c for c in diff.chats})
 
                 self.dispatcher.updates_queue.put_nowait((update, users, chats))
