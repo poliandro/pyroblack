@@ -687,7 +687,7 @@ class Client(Methods):
                             )
                         except ChannelPrivate:
                             pass
-                        except (RuntimeError, OSError, TimeoutError) as e:
+                        except (RuntimeError, OSError) as e:
                             self.updates_invoke_error = e
                             return  # client is notified about exception
                         else:

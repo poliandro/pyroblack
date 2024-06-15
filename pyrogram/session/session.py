@@ -514,10 +514,9 @@ class Session:
                 RuntimeError,
                 InternalServerError,
                 ServiceUnavailable,
-                TimeoutError,
             ) as e:
                 instant_raise = isinstance(
-                    e, (OSError, RuntimeError, TimeoutError)
+                    e, (OSError, RuntimeError)
                 )  # connection related (telegram cutting)
                 retries -= 1
                 if (retries == 0) or instant_raise:
