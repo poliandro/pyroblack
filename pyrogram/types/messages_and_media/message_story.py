@@ -22,6 +22,7 @@ from pyrogram.errors.exceptions.bad_request_400 import PeerIdInvalid
 import pyrogram
 from pyrogram import raw, types, utils
 from ..object import Object
+from typing import Union
 
 
 class MessageStory(Object):
@@ -53,8 +54,9 @@ class MessageStory(Object):
 
     @staticmethod
     async def _parse(
-        client: "pyrogram.Client", message_story: "raw.types.MessageMediaStory"
-    ) -> "MessageStory":
+        client: "pyrogram.Client",
+        message_story: "raw.types.MessageMediaStory"
+    ) -> Union["MessageStory", "types.Story"]:
         from_user = None
         sender_chat = None
         user_id = None
