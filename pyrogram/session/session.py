@@ -509,8 +509,16 @@ class Session:
                 )
 
                 await asyncio.sleep(amount)
-            except (OSError, RuntimeError, InternalServerError, ServiceUnavailable, TimeoutError) as e:
-                instant_raise = isinstance(e, (OSError, RuntimeError, TimeoutError))  # connection related (telegram cutting)
+            except (
+                OSError,
+                RuntimeError,
+                InternalServerError,
+                ServiceUnavailable,
+                TimeoutError,
+            ) as e:
+                instant_raise = isinstance(
+                    e, (OSError, RuntimeError, TimeoutError)
+                )  # connection related (telegram cutting)
                 retries -= 1
                 if (retries == 0) or instant_raise:
                     self.client.updates_invoke_error = e
