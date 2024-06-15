@@ -62,7 +62,7 @@ class Session:
     ACKS_THRESHOLD = 10
     PING_INTERVAL = 5
     STORED_MSG_IDS_MAX_SIZE = 1000 * 2
-    RECONNECT_THRESHOLD = timedelta(seconds=10)
+    RECONNECT_THRESHOLD = timedelta(seconds=5)
 
     TRANSPORT_ERRORS = {
         404: "auth key not found",
@@ -509,17 +509,9 @@ class Session:
                 )
 
                 await asyncio.sleep(amount)
-            except (
-                OSError,
-                RuntimeError,
-                InternalServerError,
-                ServiceUnavailable,
-            ) as e:
-                instant_raise = isinstance(
-                    e, (OSError, RuntimeError)
-                )  # connection related (telegram cutting)
+            except (OSError, RuntimeError, InternalServerError, ServiceUnavailable, TimeoutError) as e:
                 retries -= 1
-                if (retries == 0) or instant_raise:
+                if retries == 0:
                     self.client.updates_invoke_error = e
                     raise
 
