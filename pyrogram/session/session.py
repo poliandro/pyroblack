@@ -25,6 +25,7 @@ import os
 from datetime import datetime, timedelta
 from hashlib import sha1
 from io import BytesIO
+from typing import Optional
 
 from pyrogram.raw.all import layer
 
@@ -86,7 +87,7 @@ class Session:
         self.is_media = is_media
         self.is_cdn = is_cdn
 
-        self.connection = None
+        self.connection: Optional[Connection] = None
 
         self.auth_key_id = sha1(auth_key).digest()[-8:]
 
@@ -117,13 +118,14 @@ class Session:
             if self.client.instant_stop:
                 return  # stop instantly
 
-            self.connection = Connection(
-                self.dc_id,
-                self.test_mode,
-                self.client.ipv6,
-                self.client.alt_port,
-                self.client.proxy,
-                self.is_media,
+            self.connection = self.client.connection_factory(
+                dc_id=self.dc_id,
+                test_mode=self.test_mode,
+                ipv6=self.client.ipv6,
+                proxy=self.client.proxy,
+                alt_port=self.client.alt_port,
+                media=self.is_media,
+                protocol_factory=self.client.protocol_factory
             )
 
             try:
