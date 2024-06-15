@@ -553,6 +553,15 @@ def pyrogram_api():
             Identifier
             Listener
         """,
+        bot="""
+        Bot
+            BotAllowed
+            BotApp
+            BotBusinessConnection
+            PaymentInfo
+            ShippingAddress
+            SuccessfulPayment
+        """,
         bot_keyboards="""
         Bot keyboards
             BotBusinessConnection

@@ -345,6 +345,9 @@ class Message(Object, Update):
             E.g.: "/start 1 2 3" would produce ["start", "1", "2", "3"].
             Only applicable when using :obj:`~pyrogram.filters.command`.
 
+        bot_allowed (:obj:`~pyrogram.types.BotAllowed`, *optional*):
+            Contains information about a allowed bot.
+
         chat_shared (List of ``int``, *optional*):
             Service message: chat/channel shared
 
@@ -517,6 +520,7 @@ class Message(Object, Update):
         outgoing: bool = None,
         matches: List[Match] = None,
         command: List[str] = None,
+        bot_allowed: "types.BotAllowed" = None,
         chat_shared: List[int] = None,
         user_shared: List[int] = None,
         forum_topic_created: "types.ForumTopicCreated" = None,
@@ -631,6 +635,7 @@ class Message(Object, Update):
         self.matches = matches
         self.command = command
         self.reply_markup = reply_markup
+        self.bot_allowed = bot_allowed
         self.chat_shared = chat_shared
         self.user_shared = user_shared
         self.forum_topic_created = forum_topic_created
@@ -742,6 +747,7 @@ class Message(Object, Update):
             group_chat_created = None
             channel_chat_created = None
             new_chat_photo = None
+            bot_allowed = None
             chat_shared = None
             user_shared = None
             is_topic_message = None
@@ -806,6 +812,9 @@ class Message(Object, Update):
             elif isinstance(action, raw.types.MessageActionChatEditPhoto):
                 new_chat_photo = types.Photo._parse(client, action.photo)
                 service_type = enums.MessageServiceType.NEW_CHAT_PHOTO
+            elif isinstance(action, raw.types.MessageActionBotAllowed):
+                bot_allowed = types.BotAllowed._parse(client, action)
+                service_type = enums.MessageServiceType.BOT_ALLOWED
             elif isinstance(action, raw.types.MessageActionRequestedPeer):
                 chat_shared = []
                 user_shared = []
@@ -936,6 +945,7 @@ class Message(Object, Update):
                     -migrate_from_chat_id if migrate_from_chat_id else None
                 ),
                 group_chat_created=group_chat_created,
+                bot_allowed=bot_allowed,
                 channel_chat_created=channel_chat_created,
                 chat_shared=(
                     chat_shared
