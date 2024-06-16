@@ -67,7 +67,8 @@ class TCP:
             log.info("Using proxy %s", hostname)
         else:
             self.socket = socket.socket(socket.AF_INET6 if ipv6 else socket.AF_INET)
-
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
+            self.socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
             self.socket.setblocking(False)
 
     async def connect(self, address: tuple):

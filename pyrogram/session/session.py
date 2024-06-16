@@ -475,10 +475,6 @@ class Session:
         if self.client.instant_stop:
             return  # stop instantly
 
-        try:
-            await asyncio.wait_for(self.is_started.wait(), self.WAIT_TIMEOUT)
-        except asyncio.TimeoutError:
-            pass
 
         if isinstance(
             query, (raw.functions.InvokeWithoutUpdates, raw.functions.InvokeWithTakeout)
@@ -492,6 +488,11 @@ class Session:
         while retries > 0:
             if self.client.instant_stop:
                 return  # stop instantly
+
+            try:
+                await asyncio.wait_for(self.is_started.wait(), self.WAIT_TIMEOUT)
+            except asyncio.TimeoutError:
+                pass
 
             try:
                 return await self.send(query, timeout=timeout)
