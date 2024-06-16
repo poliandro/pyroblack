@@ -41,9 +41,6 @@ class TCP:
 
         self.proxy = proxy
 
-        self.ipv6 = ipv6
-        self.address = None
-
         if proxy:
             hostname = proxy.get("hostname")
 
@@ -74,7 +71,6 @@ class TCP:
             self.socket.setblocking(False)
 
     async def connect(self, address: tuple):
-        self.address = address
         if self.proxy:
             with ThreadPoolExecutor(1) as executor:
                 await self.loop.run_in_executor(executor, self.socket.connect, address)
@@ -101,54 +97,16 @@ class TCP:
 
     async def send(self, data: bytes):
         async with self.lock:
-            for _ in (1, 2):
-                try:
-                    if self.writer is not None:
-                        self.writer.write(data)
-                        await self.writer.drain()
-                except RuntimeError as e:
-                    rec = await self.recon()
-                    if rec is True:
-                        log.info(
-                            "TCP successfully reconnected, reason: %s %s",
-                            type(e).__name__,
-                            e,
-                        )
-                        continue  # try to send again
-                    else:
-                        log.info("TCP reconnect error: %s %s", type(rec).__name__, rec)
-                        raise OSError(rec)
-                except Exception as e:
-                    log.info("Send exception: %s %s", type(e).__name__, e)
-                    raise OSError(e)
-                break
-
-    async def recon(self):
-        try:
-            # replace the socket
-            self.socket, self.reader, self.writer = None, None, None
-            self.socket = socket.socket(
-                socket.AF_INET6 if self.ipv6 else socket.AF_INET
-            )
-            self.socket.setblocking(False)
-            # connect the new socket
-            await self.connect(self.address)
-            return True
-        except Exception as e:
-            log.info("ReConnect TCP exception: %s %s", type(e).__name__, e)
-            return e
+            try:
+                if self.writer is not None:
+                    self.writer.write(data)
+                    await self.writer.drain()
+            except Exception as e:
+                log.info("Send exception: %s %s", type(e).__name__, e)
+                raise OSError(e)
 
     async def recv(self, length: int = 0):
         data = b""
-
-        if self.reader is None:
-            slept = 0
-            while self.reader is None:
-                # TCP reconnect going on currently
-                if slept >= TCP.TIMEOUT:
-                    return None
-                await asyncio.sleep(1)
-                slept += 1
 
         while len(data) < length:
             try:
