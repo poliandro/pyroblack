@@ -111,6 +111,7 @@ class Session:
         self.loop = asyncio.get_event_loop()
 
         self.last_reconnect_attempt = None
+        self.restart_lock = asyncio.Lock()
 
     async def start(self):
         while True:
@@ -213,6 +214,10 @@ class Session:
     async def restart(self):
         if self.client.instant_stop:
             return  # stop instantly
+
+        if self.restart_lock.locked():
+            return  # already restarting currently
+        await self.restart_lock.acquire()
 
         now = datetime.now()
         if (
