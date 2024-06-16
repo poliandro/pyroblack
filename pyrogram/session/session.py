@@ -219,8 +219,8 @@ class Session:
             self.last_reconnect_attempt
             and now - self.last_reconnect_attempt < self.RECONNECT_THRESHOLD
         ):
-            log.info(f"Reconnecting too frequently, sleeping for {self.RECONNECT_THRESHOLD} seconds")
-            await asyncio.sleep(self.RECONNECT_THRESHOLD)
+            log.info(f"Reconnecting too frequently, sleeping for 5 seconds")
+            await asyncio.sleep(5)
 
         self.last_reconnect_attempt = now
         await self.stop(True)
