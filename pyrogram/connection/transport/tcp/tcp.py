@@ -109,7 +109,11 @@ class TCP:
                 except RuntimeError as e:
                     rec = await self.recon()
                     if rec is True:
-                        log.info("TCP successfully reconnected, reason: %s %s", type(e).__name__, e)
+                        log.info(
+                            "TCP successfully reconnected, reason: %s %s",
+                            type(e).__name__,
+                            e,
+                        )
                         continue  # try to send again
                     else:
                         log.info("TCP reconnect error: %s %s", type(rec).__name__, rec)
@@ -123,7 +127,9 @@ class TCP:
         try:
             # replace the socket
             self.socket, self.reader, self.writer = None, None, None
-            self.socket = socket.socket(socket.AF_INET6 if self.ipv6 else socket.AF_INET)
+            self.socket = socket.socket(
+                socket.AF_INET6 if self.ipv6 else socket.AF_INET
+            )
             self.socket.setblocking(False)
             # connect the new socket
             await self.connect(self.address)

@@ -509,7 +509,13 @@ class Session:
                 )
 
                 await asyncio.sleep(amount)
-            except (OSError, RuntimeError, InternalServerError, ServiceUnavailable, TimeoutError) as e:
+            except (
+                OSError,
+                RuntimeError,
+                InternalServerError,
+                ServiceUnavailable,
+                TimeoutError,
+            ) as e:
                 retries -= 1
                 if retries == 0:
                     self.client.updates_invoke_error = e

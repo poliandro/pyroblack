@@ -75,5 +75,11 @@ class GetStories:
         r = await self.invoke(rpc, sleep_threshold=-1)
 
         if is_iterable:
-            return types.List([await types.Story._parse(self, story, peer) for story in r.stories])
-        return await types.Story._parse(self, r.stories[0], peer) if r.stories and len(r.stories) > 0 else None
+            return types.List(
+                [await types.Story._parse(self, story, peer) for story in r.stories]
+            )
+        return (
+            await types.Story._parse(self, r.stories[0], peer)
+            if r.stories and len(r.stories) > 0
+            else None
+        )
