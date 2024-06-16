@@ -210,7 +210,10 @@ class Session:
 
     async def restart(self):
         if self.restart_lock.locked():
-            return  # already restarting currently
+            while self.restart_lock.locked():
+                await asyncio.sleep(1)
+            return  # restart is freshly done
+
         await self.restart_lock.acquire()
 
         now = datetime.now()
@@ -424,9 +427,6 @@ class Session:
                 if "handler is closed" in str(e):
                     # TCP handler closed, restart
                     await self.restart()
-                    if self.restart_lock.locked():
-                        while self.restart_lock.locked():
-                            await asyncio.sleep(1)
                     continue  # next try
                 self.results.pop(msg_id, None)
                 raise e
