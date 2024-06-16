@@ -164,12 +164,12 @@ class Session:
                     "System: %s (%s)", self.client.system_version, self.client.lang_code
                 )
             except AuthKeyDuplicated as e:
-                await self.stop()
+                await self.stop(True)
                 raise e
             except (OSError, RPCError):
-                await self.stop()
+                await self.stop(True)
             except Exception as e:
-                await self.stop()
+                await self.stop(True)
                 raise e
             else:
                 break
@@ -184,20 +184,23 @@ class Session:
                 return  # stop instantly
 
         self.is_started.clear()
-
         self.stored_msg_ids.clear()
 
         self.ping_task_event.set()
-
-        if self.ping_task is not None:
-            await self.ping_task
-
+        try:
+            if self.ping_task is not None:
+                await self.ping_task
+        except Exception:
+            pass
         self.ping_task_event.clear()
 
         await self.connection.close()
 
-        if self.recv_task:
-            await self.recv_task
+        try:
+            if self.recv_task:
+                await self.recv_task
+        except Exception:
+            pass
 
         if not self.is_media and callable(self.client.disconnect_handler):
             try:
@@ -216,11 +219,11 @@ class Session:
             self.last_reconnect_attempt
             and now - self.last_reconnect_attempt < self.RECONNECT_THRESHOLD
         ):
-            log.info("Reconnecting too frequently, sleeping for a while")
-            await asyncio.sleep(5)
+            log.info(f"Reconnecting too frequently, sleeping for {self.RECONNECT_THRESHOLD} seconds")
+            await asyncio.sleep(self.RECONNECT_THRESHOLD)
 
         self.last_reconnect_attempt = now
-        await self.stop()
+        await self.stop(True)
         await self.start()
 
     async def handle_packet(self, packet):
@@ -412,11 +415,17 @@ class Session:
             self.auth_key_id,
         )
 
-        try:
-            await self.connection.send(payload)
-        except OSError as e:
-            self.results.pop(msg_id, None)
-            raise e
+        for _ in (1, 2, 3):  # 3 tries
+            try:
+                await self.connection.send(payload)
+                break  # loop end, success
+            except OSError as e:
+                if "handler is closed" in str(e):
+                    # TCP handler closed, restart
+                    await self.restart()
+                    continue  # next try
+                self.results.pop(msg_id, None)
+                raise e
 
         if wait_response:
             try:
