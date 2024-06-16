@@ -165,12 +165,12 @@ class Session:
                     "System: %s (%s)", self.client.system_version, self.client.lang_code
                 )
             except AuthKeyDuplicated as e:
-                await self.stop(True)
+                await self.stop()
                 raise e
             except (OSError, RPCError):
-                await self.stop(True)
+                await self.stop()
             except Exception as e:
-                await self.stop(True)
+                await self.stop()
                 raise e
             else:
                 break
@@ -179,11 +179,8 @@ class Session:
 
         log.info("Session started")
 
-    async def stop(self, force: bool = False):
-        if not force:
-            if self.client.instant_stop:
-                return  # stop instantly
-
+    async def stop(self):
+        self.client.instant_stop = True  # tell other funcs to exit
         self.is_started.clear()
         self.stored_msg_ids.clear()
 
@@ -212,9 +209,6 @@ class Session:
         log.info("Session stopped")
 
     async def restart(self):
-        if self.client.instant_stop:
-            return  # stop instantly
-
         if self.restart_lock.locked():
             return  # already restarting currently
         await self.restart_lock.acquire()
@@ -224,11 +218,11 @@ class Session:
             self.last_reconnect_attempt
             and now - self.last_reconnect_attempt < self.RECONNECT_THRESHOLD
         ):
-            log.info(f"Reconnecting too frequently, sleeping for 5 seconds")
+            log.warning(f"Reconnecting too frequently, sleeping for 5 seconds")
             await asyncio.sleep(5)
 
         self.last_reconnect_attempt = now
-        await self.stop(True)
+        await self.stop()
         await self.start()
 
     async def handle_packet(self, packet):
@@ -420,9 +414,11 @@ class Session:
             self.auth_key_id,
         )
 
+        succ_ess = False
         for _ in (1, 2, 3):  # 3 tries
             try:
                 await self.connection.send(payload)
+                succ_ess = True
                 break  # loop end, success
             except OSError as e:
                 if "handler is closed" in str(e):
@@ -431,6 +427,8 @@ class Session:
                     continue  # next try
                 self.results.pop(msg_id, None)
                 raise e
+        if not succ_ess:
+            raise TimeoutError("Tries exceeded while sending request")
 
         if wait_response:
             try:
