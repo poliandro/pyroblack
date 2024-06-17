@@ -20,6 +20,7 @@ import pyrogram
 from pyrogram import types, raw, utils
 from typing import Union, List
 
+
 class SendInvoice:
     async def send_invoice(
         self: "pyrogram.Client",
@@ -118,7 +119,7 @@ class SendInvoice:
             reply_to_message_id=reply_to_message_id,
             message_thread_id=message_thread_id,
             quote_text=quote_text,
-            quote_entities=quote_entities
+            quote_entities=quote_entities,
         )
 
         r = await self.invoke(
@@ -128,38 +129,39 @@ class SendInvoice:
                     title=title,
                     description=description,
                     invoice=raw.types.Invoice(
-                        currency=currency,
-                        prices=[price.write() for price in prices]
+                        currency=currency, prices=[price.write() for price in prices]
                     ),
                     payload=f"{(title)}".encode(),
                     provider=provider,
-                    provider_data=raw.types.DataJSON(data=provider_data if provider_data else "{}"),
-                    photo=raw.types.InputWebDocument(
-                        url=photo_url,
-                        size=photo_size or 0,
-                        mime_type=photo_mime_type or "image/jpeg",
-                        attributes=[]
-                    ) if photo_url else None,
+                    provider_data=raw.types.DataJSON(
+                        data=provider_data if provider_data else "{}"
+                    ),
+                    photo=(
+                        raw.types.InputWebDocument(
+                            url=photo_url,
+                            size=photo_size or 0,
+                            mime_type=photo_mime_type or "image/jpeg",
+                            attributes=[],
+                        )
+                        if photo_url
+                        else None
+                    ),
                     start_param=start_parameter,
-                    extended_media=extended_media
+                    extended_media=extended_media,
                 ),
                 random_id=self.rnd_id(),
                 reply_to=reply_to,
-                message=""
+                message="",
             )
         )
 
         for i in r.updates:
             if isinstance(
-                i,
-                (
-                    raw.types.UpdateNewMessage,
-                    raw.types.UpdateNewChannelMessage
-                )
+                i, (raw.types.UpdateNewMessage, raw.types.UpdateNewChannelMessage)
             ):
                 return types.Message._parse(
                     self,
                     i.message,
                     users={i.id: i for i in r.users},
-                    chats={i.id: i for i in r.chats}
+                    chats={i.id: i for i in r.chats},
                 )

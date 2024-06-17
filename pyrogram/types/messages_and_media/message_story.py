@@ -54,8 +54,7 @@ class MessageStory(Object):
 
     @staticmethod
     async def _parse(
-        client: "pyrogram.Client",
-        message_story: "raw.types.MessageMediaStory"
+        client: "pyrogram.Client", message_story: "raw.types.MessageMediaStory"
     ) -> Union["MessageStory", "types.Story"]:
         from_user = None
         sender_chat = None

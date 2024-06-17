@@ -40,12 +40,7 @@ log = logging.getLogger(__name__)
 class Auth:
     MAX_RETRIES = 5
 
-    def __init__(
-        self,
-        client: "pyrogram.Client",
-        dc_id: int,
-        test_mode: bool
-    ):
+    def __init__(self, client: "pyrogram.Client", dc_id: int, test_mode: bool):
         self.dc_id = dc_id
         self.test_mode = test_mode
         self.ipv6 = client.ipv6
@@ -89,7 +84,7 @@ class Auth:
                 alt_port=self.alt_port,
                 proxy=self.proxy,
                 media=False,
-                protocol_factory=self.protocol_factory
+                protocol_factory=self.protocol_factory,
             )
 
             try:

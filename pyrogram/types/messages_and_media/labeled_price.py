@@ -19,6 +19,7 @@
 from pyrogram import raw
 from ..object import Object
 
+
 class LabeledPrice(Object):
     """This object represents a price for goods or services.
 
@@ -30,16 +31,9 @@ class LabeledPrice(Object):
             Price of the product in the smallest units of the currency (integer, not float/double).
     """
 
-    def __init__(
-        self,
-        label: str,
-        amount: int
-    ):
+    def __init__(self, label: str, amount: int):
         self.label = label
         self.amount = amount
 
     def write(self):
-        return raw.types.LabeledPrice(
-            label=self.label,
-            amount=self.amount
-        )
+        return raw.types.LabeledPrice(label=self.label, amount=self.amount)

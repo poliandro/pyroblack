@@ -125,7 +125,7 @@ class Session:
                 proxy=self.client.proxy,
                 alt_port=self.client.alt_port,
                 media=self.is_media,
-                protocol_factory=self.client.protocol_factory
+                protocol_factory=self.client.protocol_factory,
             )
 
             try:
@@ -514,7 +514,13 @@ class Session:
                 )
 
                 await asyncio.sleep(amount)
-            except (OSError, RuntimeError, InternalServerError, ServiceUnavailable, TimeoutError) as e:
+            except (
+                OSError,
+                RuntimeError,
+                InternalServerError,
+                ServiceUnavailable,
+                TimeoutError,
+            ) as e:
                 retries -= 1
                 if retries == 0:
                     self.client.updates_invoke_error = e

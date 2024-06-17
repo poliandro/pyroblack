@@ -188,8 +188,8 @@ class Story(Object, Update):
             "raw.types.PeerChannel",
             "raw.types.PeerUser",
             "raw.types.InputPeerChannel",
-            "raw.types.InputPeerUser"
-        ]
+            "raw.types.InputPeerUser",
+        ],
     ) -> "Story":
         if isinstance(stories, raw.types.StoryItemSkipped):
             return await types.StorySkipped._parse(client, stories, peer)
@@ -270,14 +270,22 @@ class Story(Object, Update):
             elif getattr(from_id, "channel_id", None) is not None:
                 chat = await client.invoke(
                     raw.functions.channels.GetChannels(
-                        id=[await client.resolve_peer(utils.get_channel_id(getattr(from_id, "channel_id")))]
+                        id=[
+                            await client.resolve_peer(
+                                utils.get_channel_id(getattr(from_id, "channel_id"))
+                            )
+                        ]
                     )
                 )
                 sender_chat = types.Chat._parse_chat(client, chat.chats[0])
             elif getattr(from_id, "chat_id", None) is not None:
                 chat = await client.invoke(
                     raw.functions.channels.GetChannels(
-                        id=[await client.resolve_peer(utils.get_channel_id(getattr(from_id, "chat_id")))]
+                        id=[
+                            await client.resolve_peer(
+                                utils.get_channel_id(getattr(from_id, "chat_id"))
+                            )
+                        ]
                     )
                 )
                 sender_chat = types.Chat._parse_chat(client, chat.chats[0])

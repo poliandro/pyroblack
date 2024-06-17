@@ -279,7 +279,7 @@ class Client(Methods):
         max_message_cache_size: int = MAX_MESSAGE_CACHE_SIZE,
         client_platform: "enums.ClientPlatform" = enums.ClientPlatform.OTHER,
         connection_factory: Type[Connection] = Connection,
-        protocol_factory: Type[TCP] = TCPAbridged
+        protocol_factory: Type[TCP] = TCPAbridged,
     ):
         super().__init__()
 
