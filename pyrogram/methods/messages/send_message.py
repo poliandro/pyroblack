@@ -223,6 +223,9 @@ class SendMessage:
                 client=self,
             )
 
+        if not r:
+            return None  # some failure
+
         for i in r.updates:
             if isinstance(
                 i,

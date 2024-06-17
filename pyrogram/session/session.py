@@ -184,7 +184,6 @@ class Session:
         if self.client.instant_stop:
             return  # stop doing anything instantly, client is manually handling
 
-        self.client.instant_stop = True  # tell other funcs to exit
         self.is_started.clear()
         self.stored_msg_ids.clear()
 
