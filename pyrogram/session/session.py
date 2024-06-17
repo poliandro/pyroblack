@@ -111,7 +111,6 @@ class Session:
         self.loop = asyncio.get_event_loop()
 
         self.last_reconnect_attempt = None
-        self.restart_lock = asyncio.Lock()
 
     async def start(self):
         while True:
@@ -180,6 +179,9 @@ class Session:
         log.info("Session started")
 
     async def stop(self):
+        if self.client.instant_stop:
+            return  # stop doing anything instantly, client is manually handling
+
         self.client.instant_stop = True  # tell other funcs to exit
         self.is_started.clear()
         self.stored_msg_ids.clear()
@@ -209,12 +211,8 @@ class Session:
         log.info("Session stopped")
 
     async def restart(self):
-        if self.restart_lock.locked():
-            while self.restart_lock.locked():
-                await asyncio.sleep(1)
-            return  # restart is freshly done
-
-        await self.restart_lock.acquire()
+        if self.client.instant_stop:
+            return  # stop instantly
 
         now = datetime.now()
         if (
@@ -417,21 +415,11 @@ class Session:
             self.auth_key_id,
         )
 
-        succ_ess = False
-        for _ in (1, 2, 3):  # 3 tries
-            try:
-                await self.connection.send(payload)
-                succ_ess = True
-                break  # loop end, success
-            except OSError as e:
-                if "handler is closed" in str(e):
-                    # TCP handler closed, restart
-                    await self.restart()
-                    continue  # next try
-                self.results.pop(msg_id, None)
-                raise e
-        if not succ_ess:
-            raise TimeoutError("Tries exceeded while sending request")
+        try:
+            await self.connection.send(payload)
+        except OSError as e:
+            self.results.pop(msg_id, None)
+            raise e
 
         if wait_response:
             try:
@@ -524,13 +512,7 @@ class Session:
                 )
 
                 await asyncio.sleep(amount)
-            except (
-                OSError,
-                RuntimeError,
-                InternalServerError,
-                ServiceUnavailable,
-                TimeoutError,
-            ) as e:
+            except (OSError, RuntimeError, InternalServerError, ServiceUnavailable, TimeoutError) as e:
                 retries -= 1
                 if retries == 0:
                     self.client.updates_invoke_error = e
