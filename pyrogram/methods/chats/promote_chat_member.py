@@ -26,10 +26,11 @@ from pyrogram import raw, types, errors
 
 class PromoteChatMember:
     async def promote_chat_member(
-        self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        user_id: Union[int, str],
-        privileges: "types.ChatPrivileges" = None,
+            self: "pyrogram.Client",
+            chat_id: Union[int, str],
+            user_id: Union[int, str],
+            privileges: "types.ChatPrivileges" = None,
+            title: Optional[str] = "",
     ) -> bool:
         """Promote or demote a user in a supergroup or a channel.
 
@@ -50,6 +51,12 @@ class PromoteChatMember:
 
             privileges (:obj:`~pyrogram.types.ChatPrivileges`, *optional*):
                 New user privileges.
+
+            title: (``str``, *optional*):
+                A custom title that will be shown to all members instead of "Owner" or "Admin".
+                Pass None or "" (empty string) will keep the current title.
+                If you want to delete the custom title, use :meth:`~pyrogram.Client.set_administrator_title()` method.
+
 
         Returns:
             ``bool``: True on success.
@@ -78,9 +85,10 @@ class PromoteChatMember:
         except errors.RPCError:
             raw_chat_member = None
 
-        rank = None
-        if isinstance(raw_chat_member, raw.types.ChannelParticipantAdmin):
+        if not title and isinstance(raw_chat_member, raw.types.ChannelParticipantAdmin):
             rank = raw_chat_member.rank
+        else:
+            rank = title
 
         await self.invoke(
             raw.functions.channels.EditAdmin(
