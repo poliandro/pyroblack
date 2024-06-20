@@ -63,7 +63,8 @@ class Session:
     ACKS_THRESHOLD = 10
     PING_INTERVAL = 5
     STORED_MSG_IDS_MAX_SIZE = 1000 * 2
-    RECONNECT_THRESHOLD = timedelta(seconds=5)
+    RECONNECT_WAIT = 10
+    RECONNECT_THRESHOLD = timedelta(seconds=RECONNECT_WAIT)
 
     TRANSPORT_ERRORS = {
         404: "auth key not found",
@@ -220,8 +221,8 @@ class Session:
             self.last_reconnect_attempt
             and now - self.last_reconnect_attempt < self.RECONNECT_THRESHOLD
         ):
-            log.warning(f"Reconnecting too frequently, sleeping for 5 seconds")
-            await asyncio.sleep(5)
+            log.warning(f"[{self.client.name}] Reconnecting too frequently, sleeping for {self.RECONNECT_WAIT} seconds")
+            await asyncio.sleep(self.RECONNECT_WAIT)
 
         self.last_reconnect_attempt = now
         await self.stop()
@@ -374,7 +375,8 @@ class Session:
                     error_code = -Int.read(BytesIO(packet))
 
                     log.warning(
-                        "Server sent transport error: %s (%s)",
+                        "[%s] Server sent transport error: %s (%s)",
+                        self.client.name,
                         error_code,
                         Session.TRANSPORT_ERRORS.get(error_code, "unknown error"),
                     )
@@ -521,12 +523,13 @@ class Session:
                 TimeoutError,
             ) as e:
                 retries -= 1
-                if retries == 0:
+                if (retries == 0) or (isinstance(e, OSError) and "handler is closed" in str(e)):
                     self.client.updates_invoke_error = e
                     raise
 
                 (log.warning if retries < 2 else log.info)(
-                    '[%s] Retrying "%s" due to: %s',
+                    '[%s] [%s] Retrying "%s" due to: %s',
+                    self.client.name,
                     Session.MAX_RETRIES - retries,
                     query_name,
                     str(e) or repr(e),
