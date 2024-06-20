@@ -59,7 +59,7 @@ class Session:
     START_TIMEOUT = 2
     WAIT_TIMEOUT = 15
     SLEEP_THRESHOLD = 10
-    MAX_RETRIES = 10
+    MAX_RETRIES = 15
     ACKS_THRESHOLD = 10
     PING_INTERVAL = 5
     STORED_MSG_IDS_MAX_SIZE = 1000 * 2
@@ -525,9 +525,7 @@ class Session:
                 TimeoutError,
             ) as e:
                 retries -= 1
-                if (retries == 0) or (
-                    isinstance(e, OSError) and "handler is closed" in str(e)
-                ):
+                if retries == 0:
                     self.client.updates_invoke_error = e
                     raise
 
