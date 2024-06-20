@@ -221,7 +221,9 @@ class Session:
             self.last_reconnect_attempt
             and now - self.last_reconnect_attempt < self.RECONNECT_THRESHOLD
         ):
-            log.warning(f"[{self.client.name}] Reconnecting too frequently, sleeping for {self.RECONNECT_WAIT} seconds")
+            log.warning(
+                f"[{self.client.name}] Reconnecting too frequently, sleeping for {self.RECONNECT_WAIT} seconds"
+            )
             await asyncio.sleep(self.RECONNECT_WAIT)
 
         self.last_reconnect_attempt = now
@@ -523,7 +525,9 @@ class Session:
                 TimeoutError,
             ) as e:
                 retries -= 1
-                if (retries == 0) or (isinstance(e, OSError) and "handler is closed" in str(e)):
+                if (retries == 0) or (
+                    isinstance(e, OSError) and "handler is closed" in str(e)
+                ):
                     self.client.updates_invoke_error = e
                     raise
 
