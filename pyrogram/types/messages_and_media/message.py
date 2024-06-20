@@ -4285,6 +4285,7 @@ class Message(Object, Update):
             disable_web_page_preview=disable_web_page_preview,
             invert_media=invert_media,
             reply_markup=reply_markup,
+            business_connection_id=self.business_connection_id
         )
 
     edit = edit_text
@@ -4392,6 +4393,7 @@ class Message(Object, Update):
             media=media,
             invert_media=invert_media,
             reply_markup=reply_markup,
+            business_connection_id=self.business_connection_id
         )
 
     async def edit_reply_markup(
@@ -4426,7 +4428,10 @@ class Message(Object, Update):
             RPCError: In case of a Telegram RPC error.
         """
         return await self._client.edit_message_reply_markup(
-            chat_id=self.chat.id, message_id=self.id, reply_markup=reply_markup
+            chat_id=self.chat.id,
+            message_id=self.id,
+            reply_markup=reply_markup,
+            business_connection_id=self.business_connection_id
         )
 
     async def forward(
