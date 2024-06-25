@@ -283,6 +283,7 @@ def pyrogram_api():
             unhide_general_topic
             join_folder
             leave_folder
+            update_color
         """,
         users="""
         Users
