@@ -534,6 +534,8 @@ def pyrogram_api():
             MessageReactionCountUpdated
             CheckedGiftCode
             SuccessfulPayment
+            ExtendedMediaPreview
+            PaidMedia
         """,
         stories="""
         Stories

@@ -26,6 +26,7 @@ from .contact import Contact
 from .dice import Dice
 from .document import Document
 from .exported_story_link import ExportedStoryLink
+from .extended_media_preview import ExtendedMediaPreview
 from .game import Game
 from .giveaway import Giveaway
 from .giveaway_launched import GiveawayLaunched
@@ -42,6 +43,7 @@ from .message_reaction_updated import MessageReactionUpdated
 from .message_reactions import MessageReactions
 from .message_story import MessageStory
 from .message_invoice import MessageInvoice
+from .paid_media import PaidMedia
 from .photo import Photo
 from .poll import Poll
 from .poll_option import PollOption
@@ -74,7 +76,9 @@ __all__ = [
     "AvailableEffect",
     "Contact",
     "Document",
+    "ExtendedMediaPreview",
     "Game",
+    "GiftedPremium",
     "Giveaway",
     "GiveawayLaunched",
     "GiveawayResult",
@@ -85,6 +89,7 @@ __all__ = [
     "MediaAreaCoordinates",
     "Message",
     "MessageEntity",
+    "PaidMedia",
     "Photo",
     "Thumbnail",
     "StrippedThumbnail",
