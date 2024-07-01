@@ -173,6 +173,7 @@ def pyrogram_api():
             forward_messages
             copy_message
             copy_media_group
+            send_paid_media
             send_photo
             send_audio
             send_document
