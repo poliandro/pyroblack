@@ -29,11 +29,13 @@ from .create_group import CreateGroup
 from .create_supergroup import CreateSupergroup
 from .delete_channel import DeleteChannel
 from .delete_chat_photo import DeleteChatPhoto
+from .delete_folder import DeleteFolder
 from .delete_forum_topic import DeleteForumTopic
 from .delete_supergroup import DeleteSupergroup
 from .delete_user_history import DeleteUserHistory
 from .edit_forum_topic import EditForumTopic
 from .edit_general_topic import EditGeneralTopic
+from .export_folder_link import ExportFolderLink
 from .get_chat import GetChat
 from .get_chat_event_log import GetChatEventLog
 from .get_chat_member import GetChatMember
@@ -42,6 +44,7 @@ from .get_chat_members_count import GetChatMembersCount
 from .get_chat_online_count import GetChatOnlineCount
 from .get_dialogs import GetDialogs
 from .get_dialogs_count import GetDialogsCount
+from .get_folders import GetFolders
 from .get_forum_topics import GetForumTopics
 from .get_forum_topics_by_id import GetForumTopicsByID
 from .get_nearby_chats import GetNearbyChats
@@ -75,6 +78,7 @@ from .unhide_general_topic import UnhideGeneralTopic
 from .unpin_all_chat_messages import UnpinAllChatMessages
 from .unpin_chat_message import UnpinChatMessage
 from .update_color import UpdateColor
+from .update_folder import UpdateFolder
 
 
 class Chats(
@@ -100,6 +104,7 @@ class Chats(
     SetChatUsername,
     SetChatPermissions,
     GetDialogsCount,
+    GetFolders,
     GetForumTopics,
     GetForumTopicsByID,
     ArchiveChats,
@@ -112,10 +117,12 @@ class Chats(
     CloseGeneralTopic,
     AddChatMembers,
     DeleteChannel,
+    DeleteFolder,
     DeleteForumTopic,
     DeleteSupergroup,
     EditForumTopic,
     EditGeneralTopic,
+    ExportFolderLink,
     ReopenForumTopic,
     ReopenGeneralTopic,
     HideGeneralTopic,
@@ -135,5 +142,6 @@ class Chats(
     SetSendAsChat,
     SetChatProtectedContent,
     UpdateColor,
+    UpdateFolder,
 ):
     pass
