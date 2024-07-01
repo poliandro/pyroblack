@@ -42,6 +42,11 @@ from .chat_privileges import ChatPrivileges
 from .chat_reactions import ChatReactions
 from .dialog import Dialog
 from .emoji_status import EmojiStatus
+from .folder import Folder
+from .invite_link_importer import InviteLinkImporter
+from .restriction import Restriction
+from .user import User
+from .username import Username
 from .group_call_member import GroupCallMember
 from .forum_topic import ForumTopic
 from .forum_topic_closed import ForumTopicClosed
@@ -74,6 +79,7 @@ __all__ = [
     "ChatPhoto",
     "ChatPreview",
     "Dialog",
+    "Folder",
     "User",
     "Username",
     "Restriction",
