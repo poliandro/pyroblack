@@ -42,4 +42,7 @@ class GetMe:
 
         users = {u.id: u for u in r.users}
 
-        return types.User._parse(self, users[r.full_user.id])
+        me = types.User._parse(self, users[r.full_user.id])
+        self.me = me  # update Client's info
+
+        return me
