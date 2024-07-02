@@ -156,7 +156,7 @@ class SendVenue:
                 geo_point=raw.types.InputGeoPoint(lat=latitude, long=longitude),
                 title=title,
                 address=address,
-                provider="", # TODO
+                provider="",  # TODO
                 venue_id=foursquare_id,
                 venue_type=foursquare_type,
             ),

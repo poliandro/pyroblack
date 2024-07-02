@@ -138,9 +138,7 @@ class SendLocation:
             peer=await self.resolve_peer(chat_id),
             media=raw.types.InputMediaGeoPoint(
                 geo_point=raw.types.InputGeoPoint(
-                    lat=latitude,
-                    long=longitude,
-                    accuracy_radius=horizontal_accuracy
+                    lat=latitude, long=longitude, accuracy_radius=horizontal_accuracy
                 )
             ),
             message="",

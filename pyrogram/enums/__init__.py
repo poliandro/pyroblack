@@ -48,7 +48,7 @@ __all__ = [
     "ChatMembersFilter",
     "ChatType",
     "ClientPlatform",
-    'FolderColor',
+    "FolderColor",
     "ListenerTypes",
     "MessageEntityType",
     "MessageMediaType",

@@ -4304,7 +4304,7 @@ class Message(Object, Update):
             disable_web_page_preview=disable_web_page_preview,
             invert_media=invert_media,
             reply_markup=reply_markup,
-            business_connection_id=self.business_connection_id
+            business_connection_id=self.business_connection_id,
         )
 
     edit = edit_text
@@ -4412,7 +4412,7 @@ class Message(Object, Update):
             media=media,
             invert_media=invert_media,
             reply_markup=reply_markup,
-            business_connection_id=self.business_connection_id
+            business_connection_id=self.business_connection_id,
         )
 
     async def edit_reply_markup(
@@ -4450,7 +4450,7 @@ class Message(Object, Update):
             chat_id=self.chat.id,
             message_id=self.id,
             reply_markup=reply_markup,
-            business_connection_id=self.business_connection_id
+            business_connection_id=self.business_connection_id,
         )
 
     async def forward(
@@ -4727,10 +4727,8 @@ class Message(Object, Update):
                     chat_id,
                     question=self.poll.question,
                     options=[
-                        types.PollOption(
-                            text=opt.text,
-                            entities=opt.entities
-                        ) for opt in self.poll.options
+                        types.PollOption(text=opt.text, entities=opt.entities)
+                        for opt in self.poll.options
                     ],
                     disable_notification=disable_notification,
                     message_thread_id=message_thread_id,
