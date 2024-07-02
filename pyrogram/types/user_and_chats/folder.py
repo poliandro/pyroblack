@@ -259,6 +259,9 @@ class Folder(Object):
             exclude_muted (``bool``, *optional*):
                 Pass True if folder should exclude muted users.
 
+            exclude_read (``bool``, *optional*):
+                Pass True if folder should exclude read chats.
+
             exclude_archived (``bool``, *optional*):
                 Pass True if folder should exclude archived users.
 

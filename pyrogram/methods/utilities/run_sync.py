@@ -23,8 +23,9 @@ from typing import Any, Callable, TypeVar
 class RunSync:
     Result = TypeVar("Result")
 
+    @staticmethod
     async def run_sync(
-        self, func: Callable[..., Result], *args: Any, **kwargs: Any
+            func: Callable[..., Result], *args: Any, **kwargs: Any
     ) -> Result:
         """Runs the given sync function (optionally with arguments) on a separate thread.
 

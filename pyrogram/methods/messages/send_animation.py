@@ -159,6 +159,9 @@ class SendAnimation:
             protect_content (``bool``, *optional*):
                 Protects the contents of the sent message from forwarding and saving.
 
+            message_effect_id (``int``, *optional*):
+                The ID of the message animation effect to send.
+
             invert_media (``bool``, *optional*):
                 Inverts the position of the animation and caption.
 

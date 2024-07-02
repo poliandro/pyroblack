@@ -85,6 +85,12 @@ class SendVenue:
                 Foursquare type of the venue, if known.
                 (For example, "arts_entertainment/default", "arts_entertainment/aquarium" or "food/icecream".)
 
+            google_place_id (``str``, *optional*):
+                Google Place ID of the venue.
+
+            google_place_type (``str``, *optional*):
+                Google Place type of the venue.
+
             disable_notification (``bool``, *optional*):
                 Sends the message silently.
                 Users will receive a notification with no sound.

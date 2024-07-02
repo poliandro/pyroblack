@@ -33,7 +33,7 @@ class GetBotInfo:
 
         Note:
             For normal bot you can only use this method to self.
-            For userbot you can only use this method if you are the owner of target bot.
+            For userbot you can only use this method if you are the owner of the target bot.
 
         Parameters:
             lang_code ``str``:

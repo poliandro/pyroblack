@@ -27,7 +27,8 @@ from pyrogram.file_id import FileType
 
 
 class SendStory:
-    def _split(self, message, entities, *args, **kwargs):
+    @staticmethod
+    def _split(message, entities, *args, **kwargs):
         return message, entities
 
     async def _upload_video(

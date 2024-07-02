@@ -24,7 +24,8 @@ from pyrogram import enums, types
 
 
 class ForwardStory:
-    def _split(self, message, entities, *args, **kwargs):
+    @staticmethod
+    def _split(message, entities, *args, **kwargs):
         return message, entities
 
     async def forward_story(

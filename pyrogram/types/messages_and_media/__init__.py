@@ -78,7 +78,6 @@ __all__ = [
     "Document",
     "ExtendedMediaPreview",
     "Game",
-    "GiftedPremium",
     "Giveaway",
     "GiveawayLaunched",
     "GiveawayResult",

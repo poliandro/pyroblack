@@ -69,7 +69,8 @@ class Markdown:
     def __init__(self, client: Optional["pyrogram.Client"]):
         self.html = HTML(client)
 
-    def blockquote_parser(self, text):
+    @staticmethod
+    def blockquote_parser(text):
         text = re.sub(r"\n&gt;", "\n>", re.sub(r"^&gt;", ">", text))
         lines = text.split("\n")
         result = []
@@ -218,7 +219,7 @@ class Markdown:
                     if len(line) == 0 and last_length == end:
                         continue
                     start_offset = start + last_length
-                    last_length = last_length + len(line)
+                    last_length += len(line)
                     end_offset = start_offset + last_length
                     entities_offsets.append(
                         (
@@ -232,7 +233,7 @@ class Markdown:
                             end_offset,
                         )
                     )
-                    last_length = last_length + 1
+                    last_length += 1
                 continue
             elif entity_type == MessageEntityType.SPOILER:
                 start_tag = end_tag = SPOILER_DELIM

@@ -136,6 +136,9 @@ class SendPhoto:
             protect_content (``bool``, *optional*):
                 Protects the contents of the sent message from forwarding and saving.
 
+            message_effect_id (``int``, *optional*):
+                The ID of the message animation effect to send.
+
             view_once (``bool``, *optional*):
                 Self-Destruct Timer.
                 If True, the photo will self-destruct after it was viewed.
@@ -224,7 +227,6 @@ class SendPhoto:
                         photo,
                         FileType.PHOTO,
                         ttl_seconds=(1 << 31) - 1 if view_once else ttl_seconds,
-                        has_spoiler=has_spoiler,
                     )
             else:
                 file = await self.save_file(
