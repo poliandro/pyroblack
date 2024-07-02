@@ -4726,7 +4726,12 @@ class Message(Object, Update):
                 return await self._client.send_poll(
                     chat_id,
                     question=self.poll.question,
-                    options=[opt.text for opt in self.poll.options],
+                    options=[
+                        types.PollOption(
+                            text=opt.text,
+                            entities=opt.entities
+                        ) for opt in self.poll.options
+                    ],
                     disable_notification=disable_notification,
                     message_thread_id=message_thread_id,
                     schedule_date=schedule_date,
