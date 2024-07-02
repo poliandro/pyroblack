@@ -53,9 +53,7 @@ class MessageHandler(Handler):
         super().__init__(self.resolve_future_or_callback, filters)
 
     @staticmethod
-    async def check_if_has_matching_listener(
-            message: Message
-    ):
+    async def check_if_has_matching_listener(message: Message):
         """
         Checks if the message has a matching listener.
 
