@@ -18,7 +18,7 @@
 
 import inspect
 import re
-from typing import Callable, List, Pattern, Union
+from typing import Callable, Union, List, Pattern, Optional
 
 import pyrogram
 from pyrogram import enums
@@ -268,6 +268,16 @@ caption = create(caption_filter)
 
 # endregion
 
+# region self_destruction_filter
+async def self_destruction_filter(_, __, m: Message):
+    return bool(m.media and getattr(getattr(m, m.media.value, None), "ttl_seconds", None))
+
+
+self_destruction = create(self_destruction_filter)
+"""Filter self-destruction media messages."""
+
+
+# endregion
 
 # region audio_filter
 async def audio_filter(_, __, m: Message):
@@ -1044,7 +1054,7 @@ class user(Filter, set):
             Defaults to None (no users).
     """
 
-    def __init__(self, users: Union[int, str, List[Union[int, str]]] = None):
+    def __init__(self, users: Optional[Union[int, str, List[Union[int, str]]]] = None):
         users = [] if users is None else users if isinstance(users, list) else [users]
 
         super().__init__(
@@ -1081,7 +1091,7 @@ class chat(Filter, set):
             Defaults to None (no chats).
     """
 
-    def __init__(self, chats: Union[int, str, List[Union[int, str]]] = None):
+    def __init__(self, chats: Optional[Union[int, str, List[Union[int, str]]]] = None):
         chats = [] if chats is None else chats if isinstance(chats, list) else [chats]
 
         super().__init__(
@@ -1140,9 +1150,11 @@ class topic(Filter, set):
             Defaults to None (no topics).
     """
 
-    def __init__(self, topics: Union[int, List[int]] = None):
-        topics = (
-            [] if topics is None else topics if isinstance(topics, list) else [topics]
+    def __init__(self, topics: Optional[Union[int, List[int]]] = None):
+        topics = [] if topics is None else topics if isinstance(topics, list) else [topics]
+
+        super().__init__(
+            t for t in topics
         )
 
         super().__init__(t for t in topics)
