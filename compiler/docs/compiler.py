@@ -388,6 +388,8 @@ def pyrogram_api():
             get_chat_menu_button
             answer_web_app_query
             answer_pre_checkout_query
+            answer_shipping_query
+            refund_star_payment
             get_bot_info
             set_bot_info
             get_collectible_item_info
