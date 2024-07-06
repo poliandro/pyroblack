@@ -18,6 +18,7 @@
 
 from ..object import Object
 
+from pyrogram import Client, raw
 
 class InlineKeyboardButtonBuy(Object):
     """One button of the inline keyboard.
@@ -38,4 +39,5 @@ class InlineKeyboardButtonBuy(Object):
     def read(b):
         return InlineKeyboardButtonBuy(text=b.text)
 
-    # TODO: Implement write method
+    async def write(self, _: "Client"):
+        return raw.types.KeyboardButtonBuy(text=self.text)
