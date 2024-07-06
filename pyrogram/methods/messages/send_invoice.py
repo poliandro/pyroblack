@@ -58,12 +58,14 @@ class SendInvoice:
 
             currency (``str``):
                 Three-letter ISO 4217 currency code.
+                `XTR` for Telegram Stars.
 
             prices (List of :obj:`~pyrogram.types.LabeledPrice`):
                 Price with label.
 
             provider (``str``, *optional*):
                 Payment provider.
+                Get this from botfather.
 
             provider_data (``str``, *optional*):
                 Provider data in json format.
@@ -107,13 +109,22 @@ class SendInvoice:
         Example:
             .. code-block:: python
 
+                # USD
                 app.send_invoice(chat_id, types.InputMediaInvoice(
                     title="Product Name",
                     description="Product Description",
                     currency="USD",
                     prices=[types.LabeledPrice("Product", 1000)],
-                    provider="Stripe",
+                    provider="Stripe_provider_codes",
                     provider_data="{}"
+                ))
+
+                # Telegram Stars
+                app.send_invoice(chat_id, types.InputMediaInvoice(
+                    title="Product Name",
+                    description="Product Description",
+                    currency="XTR",
+                    prices=[types.LabeledPrice("Product", 1000)]
                 ))
         """
 
