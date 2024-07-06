@@ -190,7 +190,7 @@ class SendInvoice:
             if isinstance(
                 i, (raw.types.UpdateNewMessage, raw.types.UpdateNewChannelMessage)
             ):
-                return types.Message._parse(
+                return await types.Message._parse(
                     self,
                     i.message,
                     users={i.id: i for i in r.users},
