@@ -571,6 +571,7 @@ def pyrogram_api():
             BotApp
             BotBusinessConnection
             PaymentInfo
+            PaymentRefunded
             ShippingAddress
             SuccessfulPayment
         """,

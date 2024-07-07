@@ -125,5 +125,8 @@ class MessageServiceType(AutoName):
     SUCCESSFUL_PAYMENT = auto()
     "Successful payment"
 
+    PAYMENT_REFUNDED = auto()
+    "Payment refunded"
+
     BOT_ALLOWED = auto()
     "Bot allowed"

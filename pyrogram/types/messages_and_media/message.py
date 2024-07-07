@@ -396,6 +396,9 @@ class Message(Object, Update):
         successful_payment (:obj:`~pyrogram.types.SuccessfulPayment`, *optional*):
             Service message: successful payment.
 
+        payment_refunded (:obj:`~pyrogram.types.PaymentRefunded`, *optional*):
+            Service message: payment refunded.
+
         gift_code (:obj:`~pyrogram.types.GiftCode`, *optional*):
             Service message: gift code information.
 
@@ -434,7 +437,7 @@ class Message(Object, Update):
             Message is a scheduled message and has been sent.
     """
 
-    # TODO: Add game missing field. Also invoice, successful_payment, connected_website
+    # TODO: Add game missing field, Also connected_website
 
     def __init__(
         self,
@@ -540,6 +543,7 @@ class Message(Object, Update):
         video_chat_members_invited: "types.VideoChatMembersInvited" = None,
         web_app_data: "types.WebAppData" = None,
         successful_payment: "types.SuccessfulPayment" = None,
+        payment_refunded: "types.PaymentRefunded" = None,
         gift_code: "types.GiftCode" = None,
         requested_chats: "types.RequestedChats" = None,
         chat_ttl_period: int = None,
@@ -656,6 +660,7 @@ class Message(Object, Update):
         self.video_chat_members_invited = video_chat_members_invited
         self.web_app_data = web_app_data
         self.successful_payment = successful_payment
+        self.payment_refunded = payment_refunded
         self.gift_code = gift_code
         self.requested_chats = requested_chats
         self.giveaway_launched = giveaway_launched
@@ -770,6 +775,7 @@ class Message(Object, Update):
             giveaway_launched = None
             gift_code = None
             successful_payment = None
+            payment_refunded = None
             giveaway_result = None
             requested_chats = None
             chat_ttl_period = None
@@ -915,6 +921,10 @@ class Message(Object, Update):
             ):
                 successful_payment = types.SuccessfulPayment._parse(client, action)
                 service_type = enums.MessageServiceType.SUCCESSFUL_PAYMENT
+            elif isinstance(action, raw.types.MessageActionPaymentRefunded):
+                payment_refunded = await types.PaymentRefunded._parse(client, action)
+                service_type = enums.MessageServiceType.PAYMENT_REFUNDED
+
             from_user = types.User._parse(client, users.get(user_id, None))
             sender_chat = (
                 types.Chat._parse(client, message, users, chats, is_chat=False)
@@ -973,6 +983,7 @@ class Message(Object, Update):
                 giveaway_result=giveaway_result,
                 gift_code=gift_code,
                 successful_payment=successful_payment,
+                payment_refunded=payment_refunded,
                 requested_chats=requested_chats,
                 chat_ttl_period=chat_ttl_period,
                 boosts_applied=boosts_applied,
