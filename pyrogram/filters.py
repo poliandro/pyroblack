@@ -268,9 +268,12 @@ caption = create(caption_filter)
 
 # endregion
 
+
 # region self_destruction_filter
 async def self_destruction_filter(_, __, m: Message):
-    return bool(m.media and getattr(getattr(m, m.media.value, None), "ttl_seconds", None))
+    return bool(
+        m.media and getattr(getattr(m, m.media.value, None), "ttl_seconds", None)
+    )
 
 
 self_destruction = create(self_destruction_filter)
@@ -278,6 +281,7 @@ self_destruction = create(self_destruction_filter)
 
 
 # endregion
+
 
 # region audio_filter
 async def audio_filter(_, __, m: Message):
@@ -1151,11 +1155,11 @@ class topic(Filter, set):
     """
 
     def __init__(self, topics: Optional[Union[int, List[int]]] = None):
-        topics = [] if topics is None else topics if isinstance(topics, list) else [topics]
-
-        super().__init__(
-            t for t in topics
+        topics = (
+            [] if topics is None else topics if isinstance(topics, list) else [topics]
         )
+
+        super().__init__(t for t in topics)
 
         super().__init__(t for t in topics)
 
