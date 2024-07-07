@@ -41,7 +41,7 @@ class SendInvoice:
         message_thread_id: int = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
-        reply_markup: "types.InlineKeyboardMarkup" = None
+        reply_markup: "types.InlineKeyboardMarkup" = None,
     ):
         """Use this method to send invoices.
 
@@ -146,7 +146,9 @@ class SendInvoice:
                     for price in prices:
                         prices_total += price.amount
                     text = f"Pay ⭐️{prices_total}"
-                reply_markup.inline_keyboard.insert(0, [types.InlineKeyboardButtonBuy(text=text)])
+                reply_markup.inline_keyboard.insert(
+                    0, [types.InlineKeyboardButtonBuy(text=text)]
+                )
 
         reply_to = await utils.get_reply_to(
             client=self,
@@ -191,7 +193,9 @@ class SendInvoice:
                 random_id=self.rnd_id(),
                 reply_to=reply_to,
                 message="",
-                reply_markup=await reply_markup.write(self) if reply_markup is not None else None,
+                reply_markup=(
+                    await reply_markup.write(self) if reply_markup is not None else None
+                ),
             )
         )
 

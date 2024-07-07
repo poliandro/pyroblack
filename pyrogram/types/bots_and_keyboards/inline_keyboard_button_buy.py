@@ -20,6 +20,7 @@ from ..object import Object
 
 from pyrogram import Client, raw
 
+
 class InlineKeyboardButtonBuy(Object):
     """One button of the inline keyboard.
     For simple invoice buttons.
