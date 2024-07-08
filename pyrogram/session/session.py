@@ -42,6 +42,7 @@ from pyrogram.errors import (
     ServiceUnavailable,
     BadMsgNotification,
     SecurityCheckMismatch,
+    Unauthorized,
 )
 from pyrogram.raw.core import TLObject, MsgContainer, Int, FutureSalts
 from .internals import MsgId, MsgFactory
@@ -416,9 +417,9 @@ class Session:
                     error_code = -Int.read(BytesIO(packet))
 
                     if error_code == 404:
-                        raise Exception(
-                            "Auth key not found in the system. You must delete your session file"
-                            "and log in again with your phone number or bot token"
+                        raise Unauthorized(
+                            "Auth key not found in the system. You must delete your session file "
+                            "and log in again with your phone number or bot token."
                         )
 
                     log.warning(
