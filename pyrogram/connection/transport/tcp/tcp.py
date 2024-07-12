@@ -140,6 +140,9 @@ class TCP:
     async def recv(self, length: int = 0) -> Optional[bytes]:
         data = b""
 
+        if self.reader is None:
+            return None
+
         while len(data) < length:
             try:
                 chunk = await asyncio.wait_for(
