@@ -191,16 +191,23 @@ class Session:
         self.ping_task_event.set()
         try:
             if self.ping_task is not None:
-                await self.ping_task
+                await asyncio.wait_for(self.ping_task, timeout=self.WAIT_TIMEOUT)
         except Exception:
             pass
         self.ping_task_event.clear()
 
-        await self.connection.close()
+        try:
+            await asyncio.wait_for(
+                self.connection.close(), timeout=self.WAIT_TIMEOUT
+            )
+        except Exception:
+            pass
 
         try:
             if self.recv_task:
-                await self.recv_task
+                await asyncio.wait_for(
+                    self.recv_task, timeout=self.WAIT_TIMEOUT
+                )
         except Exception:
             pass
 
@@ -222,7 +229,7 @@ class Session:
             and now - self.last_reconnect_attempt < self.RECONNECT_THRESHOLD
         ):
             log.warning(
-                f"[{self.client.name}] Reconnecting too frequently, sleeping for {self.RECONNECT_WAIT} seconds"
+                f"[pyroblack] Client [{self.client.name}] is reconnecting too frequently, sleeping for {self.RECONNECT_WAIT} seconds"
             )
             await asyncio.sleep(self.RECONNECT_WAIT)
 
@@ -483,10 +490,13 @@ class Session:
         if self.client.instant_stop:
             return  # stop instantly
 
-        try:
-            await asyncio.wait_for(self.is_started.wait(), self.WAIT_TIMEOUT)
-        except asyncio.TimeoutError:
-            pass
+        for _ in range(3):
+            try:
+                await asyncio.wait_for(self.is_started.wait(), self.WAIT_TIMEOUT)
+                break  # exit tries loop
+            except asyncio.TimeoutError:
+                continue  # next try
+
 
         if isinstance(
             query, (raw.functions.InvokeWithoutUpdates, raw.functions.InvokeWithTakeout)
@@ -529,15 +539,25 @@ class Session:
                     self.client.updates_invoke_error = e
                     raise
 
-                (log.warning if retries < 2 else log.info)(
-                    '[%s] [%s] Retrying "%s" due to: %s',
-                    self.client.name,
-                    Session.MAX_RETRIES - retries,
-                    query_name,
-                    str(e) or repr(e),
-                )
+                if isinstance(e, (OSError, RuntimeError)) and "handler is closed" in str(e):
+                    (log.warning if retries < 2 else log.info)(
+                        '[%s] [%s] ReConnecting session requesting "%s", due to: %s',
+                        self.client.name,
+                        Session.MAX_RETRIES - retries,
+                        query_name,
+                        str(e) or repr(e),
+                    )
+                    self.loop.create_task(self.restart())
+                else:
+                    (log.warning if retries < 2 else log.info)(
+                        '[%s] [%s] Retrying "%s" due to: %s',
+                        self.client.name,
+                        Session.MAX_RETRIES - retries,
+                        query_name,
+                        str(e) or repr(e),
+                    )
 
-                await asyncio.sleep(0.5)
+                await asyncio.sleep(1)
             except Exception as e:
                 self.client.updates_invoke_error = e
                 raise
