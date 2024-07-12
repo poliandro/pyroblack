@@ -197,17 +197,13 @@ class Session:
         self.ping_task_event.clear()
 
         try:
-            await asyncio.wait_for(
-                self.connection.close(), timeout=self.WAIT_TIMEOUT
-            )
+            await asyncio.wait_for(self.connection.close(), timeout=self.WAIT_TIMEOUT)
         except Exception:
             pass
 
         try:
             if self.recv_task:
-                await asyncio.wait_for(
-                    self.recv_task, timeout=self.WAIT_TIMEOUT
-                )
+                await asyncio.wait_for(self.recv_task, timeout=self.WAIT_TIMEOUT)
         except Exception:
             pass
 
@@ -497,7 +493,6 @@ class Session:
             except asyncio.TimeoutError:
                 continue  # next try
 
-
         if isinstance(
             query, (raw.functions.InvokeWithoutUpdates, raw.functions.InvokeWithTakeout)
         ):
@@ -539,7 +534,9 @@ class Session:
                     self.client.updates_invoke_error = e
                     raise
 
-                if isinstance(e, (OSError, RuntimeError)) and "handler is closed" in str(e):
+                if isinstance(
+                    e, (OSError, RuntimeError)
+                ) and "handler is closed" in str(e):
                     (log.warning if retries < 2 else log.info)(
                         '[%s] [%s] ReConnecting session requesting "%s", due to: %s',
                         self.client.name,
