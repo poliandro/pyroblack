@@ -553,9 +553,10 @@ class Session:
                     self.client.updates_invoke_error = e
                     raise
 
-                if (isinstance(
-                    e, (OSError, RuntimeError)
-                ) and "handler is closed" in str(e)) or (isinstance(e, TimeoutError)):
+                if (
+                    isinstance(e, (OSError, RuntimeError))
+                    and "handler is closed" in str(e)
+                ) or (isinstance(e, TimeoutError)):
                     (log.warning if retries < 2 else log.info)(
                         '[%s] [%s] ReConnecting session requesting "%s", due to: %s',
                         self.client.name,
