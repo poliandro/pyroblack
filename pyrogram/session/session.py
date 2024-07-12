@@ -383,6 +383,8 @@ class Session:
         while True:
             if self.client.instant_stop:
                 return  # stop instantly
+            if not self.is_started.is_set():
+                return  # not started, so don't process
 
             packet = await self.connection.recv()
 
