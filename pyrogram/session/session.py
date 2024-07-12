@@ -56,8 +56,9 @@ class Result:
 
 
 class Session:
-    START_TIMEOUT = 2
+    START_TIMEOUT = 5
     WAIT_TIMEOUT = 15
+    RECONN_TIMEOUT = 5
     SLEEP_THRESHOLD = 10
     MAX_RETRIES = 15
     ACKS_THRESHOLD = 10
@@ -113,6 +114,7 @@ class Session:
         self.loop = asyncio.get_event_loop()
 
         self.last_reconnect_attempt = None
+        self.currently_restarting = False
 
     async def start(self):
         while True:
@@ -189,23 +191,29 @@ class Session:
         self.stored_msg_ids.clear()
 
         self.ping_task_event.set()
-        try:
-            if self.ping_task is not None:
-                await asyncio.wait_for(self.ping_task, timeout=self.WAIT_TIMEOUT)
-        except Exception:
-            pass
+        for _ in range(2):
+            try:
+                if self.ping_task is not None:
+                    await asyncio.wait_for(self.ping_task, timeout=self.RECONN_TIMEOUT)
+                    break
+            except TimeoutError:
+                self.ping_task.cancel()
+                continue  # next stage
         self.ping_task_event.clear()
 
         try:
-            await asyncio.wait_for(self.connection.close(), timeout=self.WAIT_TIMEOUT)
+            await asyncio.wait_for(self.connection.close(), timeout=self.RECONN_TIMEOUT)
         except Exception:
             pass
 
-        try:
-            if self.recv_task:
-                await asyncio.wait_for(self.recv_task, timeout=self.WAIT_TIMEOUT)
-        except Exception:
-            pass
+        for _ in range(2):
+            try:
+                if self.recv_task:
+                    await asyncio.wait_for(self.recv_task, timeout=self.RECONN_TIMEOUT)
+                    break
+            except TimeoutError:
+                self.recv_task.cancel()
+                continue  # next stage
 
         if not self.is_media and callable(self.client.disconnect_handler):
             try:
@@ -216,22 +224,28 @@ class Session:
         log.info("Session stopped")
 
     async def restart(self):
+        if self.currently_restarting:
+            return  # don't restart twice
         if self.client.instant_stop:
             return  # stop instantly
 
-        now = datetime.now()
-        if (
-            self.last_reconnect_attempt
-            and now - self.last_reconnect_attempt < self.RECONNECT_THRESHOLD
-        ):
-            log.warning(
-                f"[pyroblack] Client [{self.client.name}] is reconnecting too frequently, sleeping for {self.RECONNECT_WAIT} seconds"
-            )
-            await asyncio.sleep(self.RECONNECT_WAIT)
+        try:
+            self.currently_restarting = True
+            now = datetime.now()
+            if (
+                self.last_reconnect_attempt
+                and now - self.last_reconnect_attempt < self.RECONNECT_THRESHOLD
+            ):
+                log.warning(
+                    f"[pyroblack] Client [{self.client.name}] is reconnecting too frequently, sleeping for {self.RECONNECT_WAIT} seconds"
+                )
+                await asyncio.sleep(self.RECONNECT_WAIT)
 
-        self.last_reconnect_attempt = now
-        await self.stop()
-        await self.start()
+            self.last_reconnect_attempt = now
+            await self.stop()
+            await self.start()
+        finally:
+            self.currently_restarting = False
 
     async def handle_packet(self, packet):
         if self.client.instant_stop:
@@ -364,9 +378,6 @@ class Session:
         log.info("PingTask stopped")
 
     async def recv_worker(self):
-        if self.client.instant_stop:
-            return  # stop instantly
-
         log.info("NetworkTask started")
 
         while True:
@@ -486,6 +497,14 @@ class Session:
         if self.client.instant_stop:
             return  # stop instantly
 
+        slept_restart = 0
+        if self.currently_restarting:
+            while self.currently_restarting:
+                if slept_restart >= 45:
+                    raise TimeoutError
+                await asyncio.sleep(1)
+                slept_restart += 1
+
         for _ in range(3):
             try:
                 await asyncio.wait_for(self.is_started.wait(), self.WAIT_TIMEOUT)
@@ -534,9 +553,9 @@ class Session:
                     self.client.updates_invoke_error = e
                     raise
 
-                if isinstance(
+                if (isinstance(
                     e, (OSError, RuntimeError)
-                ) and "handler is closed" in str(e):
+                ) and "handler is closed" in str(e)) or (isinstance(e, TimeoutError)):
                     (log.warning if retries < 2 else log.info)(
                         '[%s] [%s] ReConnecting session requesting "%s", due to: %s',
                         self.client.name,
