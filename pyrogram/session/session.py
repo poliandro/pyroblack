@@ -384,14 +384,6 @@ class Session:
             if self.client.instant_stop:
                 return  # stop instantly
 
-            if not self.is_started.is_set():
-                wait_start = 0
-                while not self.is_started.is_set():
-                    if wait_start >= 45:
-                        return  # seems not to be starting
-                    await asyncio.sleep(1)  # not started, so wait
-                    wait_start += 1
-
             packet = await self.connection.recv()
 
             if packet is None or len(packet) == 4:
