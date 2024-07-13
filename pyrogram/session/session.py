@@ -383,8 +383,14 @@ class Session:
         while True:
             if self.client.instant_stop:
                 return  # stop instantly
+
             if not self.is_started.is_set():
-                return  # not started, so don't process
+                wait_start = 0
+                while not self.is_started.is_set():
+                    if wait_start >= 45:
+                        return  # seems not to be starting
+                    await asyncio.sleep(1)  # not started, so wait
+                    wait_start += 1
 
             packet = await self.connection.recv()
 
@@ -499,8 +505,8 @@ class Session:
         if self.client.instant_stop:
             return  # stop instantly
 
-        slept_restart = 0
         if self.currently_restarting:
+            slept_restart = 0
             while self.currently_restarting:
                 if slept_restart >= 45:
                     raise TimeoutError
