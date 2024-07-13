@@ -204,7 +204,9 @@ class Session:
             for _ in range(2):
                 try:
                     if self.ping_task is not None:
-                        await asyncio.wait_for(self.ping_task, timeout=self.RECONN_TIMEOUT)
+                        await asyncio.wait_for(
+                            self.ping_task, timeout=self.RECONN_TIMEOUT
+                        )
                         break
                 except TimeoutError:
                     self.ping_task.cancel()
@@ -212,14 +214,18 @@ class Session:
             self.ping_task_event.clear()
 
             try:
-                await asyncio.wait_for(self.connection.close(), timeout=self.RECONN_TIMEOUT)
+                await asyncio.wait_for(
+                    self.connection.close(), timeout=self.RECONN_TIMEOUT
+                )
             except Exception:
                 pass
 
             for _ in range(2):
                 try:
                     if self.recv_task:
-                        await asyncio.wait_for(self.recv_task, timeout=self.RECONN_TIMEOUT)
+                        await asyncio.wait_for(
+                            self.recv_task, timeout=self.RECONN_TIMEOUT
+                        )
                         break
                 except TimeoutError:
                     self.recv_task.cancel()
@@ -567,10 +573,9 @@ class Session:
                     self.client.updates_invoke_error = e
                     raise
 
-                if (
-                    isinstance(e, (OSError, RuntimeError))
-                    and "handler" in str(e)
-                ) or (isinstance(e, TimeoutError)):
+                if (isinstance(e, (OSError, RuntimeError)) and "handler" in str(e)) or (
+                    isinstance(e, TimeoutError)
+                ):
                     (log.warning if retries < 2 else log.info)(
                         '[%s] [%s] ReConnecting session requesting "%s", due to: %s',
                         self.client.name,
