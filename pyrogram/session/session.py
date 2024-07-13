@@ -497,21 +497,6 @@ class Session:
         if self.client.instant_stop:
             return  # stop instantly
 
-        if self.currently_restarting:
-            slept_restart = 0
-            while self.currently_restarting:
-                if slept_restart >= 45:
-                    raise TimeoutError
-                await asyncio.sleep(1)
-                slept_restart += 1
-
-        for _ in range(3):
-            try:
-                await asyncio.wait_for(self.is_started.wait(), self.WAIT_TIMEOUT)
-                break  # exit tries loop
-            except asyncio.TimeoutError:
-                continue  # next try
-
         if isinstance(
             query, (raw.functions.InvokeWithoutUpdates, raw.functions.InvokeWithTakeout)
         ):
@@ -524,6 +509,16 @@ class Session:
         while retries > 0:
             if self.client.instant_stop:
                 return  # stop instantly
+
+            # sleep until the restart is performed
+            if self.currently_restarting:
+                while self.currently_restarting:
+                    if self.client.instant_stop:
+                        return  # stop instantly
+                    await asyncio.sleep(1)
+
+            if not self.is_started.is_set():
+                await self.is_started.wait()
 
             try:
                 return await self.send(query, timeout=timeout)
@@ -555,7 +550,7 @@ class Session:
 
                 if (
                     isinstance(e, (OSError, RuntimeError))
-                    and "handler is closed" in str(e)
+                    and "handler" in str(e)
                 ) or (isinstance(e, TimeoutError)):
                     (log.warning if retries < 2 else log.info)(
                         '[%s] [%s] ReConnecting session requesting "%s", due to: %s',
