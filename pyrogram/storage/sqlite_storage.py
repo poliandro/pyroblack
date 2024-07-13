@@ -145,11 +145,14 @@ class SQLiteStorage(Storage):
         raise NotImplementedError
 
     async def update_peers(self, peers: List[Tuple[int, int, str, str, str]]):
-        await self.conn.executemany(
-            "REPLACE INTO peers (id, access_hash, type, username, phone_number)"
-            "VALUES (?, ?, ?, ?, ?)",
-            peers,
-        )
+        try:
+            await self.conn.executemany(
+                "REPLACE INTO peers (id, access_hash, type, username, phone_number)"
+                "VALUES (?, ?, ?, ?, ?)",
+                peers,
+            )
+        except Exception:
+            pass
 
     async def update_usernames(self, usernames: List[Tuple[int, str]]):
         await self.conn.executescript(UNAME_SCHEMA)
