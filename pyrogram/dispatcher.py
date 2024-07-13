@@ -443,11 +443,15 @@ class Dispatcher:
                 update, users, chats = packet
                 parser = self.update_parsers.get(type(update), None)
 
-                parsed_update, handler_type = (
-                    await parser(update, users, chats)
-                    if parser is not None
-                    else (None, type(None))
-                )
+                try:
+                    parsed_update, handler_type = (
+                        await parser(update, users, chats)
+                        if parser is not None
+                        else (None, type(None))
+                    )
+                except Exception as e:
+                    logging.info("Parse exception: %s %s", type(e).__name__, e)
+                    parsed_update, handler_type = (None, type(None))
 
                 async with lock:
                     for group in self.groups.values():
