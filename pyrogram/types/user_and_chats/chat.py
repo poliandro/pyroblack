@@ -990,7 +990,10 @@ class Chat(Object):
     # Set None as privileges default due to issues with partially initialized module, because at the time Chat
     # is being initialized, ChatPrivileges would be required here, but was not initialized yet.
     async def promote_member(
-        self, user_id: Union[int, str], privileges: "types.ChatPrivileges" = None
+        self,
+        user_id: Union[int, str],
+        privileges: "types.ChatPrivileges" = None,
+        title: Optional[str] = "",
     ) -> bool:
         """Bound method *promote_member* of :obj:`~pyrogram.types.Chat`.
 
