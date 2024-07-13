@@ -60,7 +60,7 @@ class Session:
     WAIT_TIMEOUT = 15
     RECONN_TIMEOUT = 5
     SLEEP_THRESHOLD = 10
-    MAX_RETRIES = 15
+    MAX_RETRIES = 20
     ACKS_THRESHOLD = 10
     PING_INTERVAL = 5
     STORED_MSG_IDS_MAX_SIZE = 1000 * 2
@@ -115,10 +115,12 @@ class Session:
 
         self.last_reconnect_attempt = None
         self.currently_restarting = False
+        self.currently_stopping = False
 
     async def start(self):
         while True:
             if self.client.instant_stop:
+                log.info("Session init stopped")
                 return  # stop instantly
 
             self.connection = self.client.connection_factory(
@@ -183,45 +185,57 @@ class Session:
 
         log.info("Session started")
 
-    async def stop(self):
+    async def stop(self, restart: bool = False):
+        if self.currently_stopping:
+            return  # don't stop twice
         if self.client.instant_stop:
+            log.info("Session stop process stopped")
             return  # stop doing anything instantly, client is manually handling
 
-        self.is_started.clear()
-        self.stored_msg_ids.clear()
-
-        self.ping_task_event.set()
-        for _ in range(2):
-            try:
-                if self.ping_task is not None:
-                    await asyncio.wait_for(self.ping_task, timeout=self.RECONN_TIMEOUT)
-                    break
-            except TimeoutError:
-                self.ping_task.cancel()
-                continue  # next stage
-        self.ping_task_event.clear()
-
         try:
-            await asyncio.wait_for(self.connection.close(), timeout=self.RECONN_TIMEOUT)
-        except Exception:
-            pass
+            self.currently_stopping = True
+            self.is_started.clear()
+            self.stored_msg_ids.clear()
 
-        for _ in range(2):
+            if restart:
+                self.client.instant_stop = True  # tell all funcs that we want to stop
+
+            self.ping_task_event.set()
+            for _ in range(2):
+                try:
+                    if self.ping_task is not None:
+                        await asyncio.wait_for(self.ping_task, timeout=self.RECONN_TIMEOUT)
+                        break
+                except TimeoutError:
+                    self.ping_task.cancel()
+                    continue  # next stage
+            self.ping_task_event.clear()
+
             try:
-                if self.recv_task:
-                    await asyncio.wait_for(self.recv_task, timeout=self.RECONN_TIMEOUT)
-                    break
-            except TimeoutError:
-                self.recv_task.cancel()
-                continue  # next stage
+                await asyncio.wait_for(self.connection.close(), timeout=self.RECONN_TIMEOUT)
+            except Exception:
+                pass
 
-        if not self.is_media and callable(self.client.disconnect_handler):
-            try:
-                await self.client.disconnect_handler(self.client)
-            except Exception as e:
-                log.exception(e)
+            for _ in range(2):
+                try:
+                    if self.recv_task:
+                        await asyncio.wait_for(self.recv_task, timeout=self.RECONN_TIMEOUT)
+                        break
+                except TimeoutError:
+                    self.recv_task.cancel()
+                    continue  # next stage
 
-        log.info("Session stopped")
+            if not self.is_media and callable(self.client.disconnect_handler):
+                try:
+                    await self.client.disconnect_handler(self.client)
+                except Exception as e:
+                    log.exception(e)
+
+            log.info("Session stopped")
+        finally:
+            self.currently_stopping = False
+            if restart:
+                self.client.instant_stop = False  # reset
 
     async def restart(self):
         if self.currently_restarting:
@@ -236,19 +250,21 @@ class Session:
                 self.last_reconnect_attempt
                 and now - self.last_reconnect_attempt < self.RECONNECT_THRESHOLD
             ):
+                to_wait = self.RECONNECT_THRESHOLD - (now - self.last_reconnect_attempt)
                 log.warning(
-                    f"[pyroblack] Client [{self.client.name}] is reconnecting too frequently, sleeping for {self.RECONNECT_WAIT} seconds"
+                    f"[pyroblack] Client [{self.client.name}] is reconnecting too frequently, sleeping for {to_wait} seconds"
                 )
-                await asyncio.sleep(self.RECONNECT_WAIT)
+                await asyncio.sleep(to_wait)
 
             self.last_reconnect_attempt = now
-            await self.stop()
+            await self.stop(restart=True)
             await self.start()
         finally:
             self.currently_restarting = False
 
     async def handle_packet(self, packet):
         if self.client.instant_stop:
+            log.info("Stopped packet handler")
             return  # stop instantly
 
         data = await self.loop.run_in_executor(
@@ -347,12 +363,14 @@ class Session:
 
     async def ping_worker(self):
         if self.client.instant_stop:
+            log.info("PingTask force stopped")
             return  # stop instantly
 
         log.info("PingTask started")
 
         while True:
             if self.client.instant_stop:
+                log.info("PingTask force stopped (loop)")
                 return  # stop instantly
 
             try:
@@ -382,6 +400,7 @@ class Session:
 
         while True:
             if self.client.instant_stop:
+                log.info("NetworkTask force stopped (loop)")
                 return  # stop instantly
 
             packet = await self.connection.recv()
