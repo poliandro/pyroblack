@@ -993,7 +993,6 @@ class Chat(Object):
         self,
         user_id: Union[int, str],
         privileges: "types.ChatPrivileges" = None,
-        title: Optional[str] = "",
     ) -> bool:
         """Bound method *promote_member* of :obj:`~pyrogram.types.Chat`.
 
