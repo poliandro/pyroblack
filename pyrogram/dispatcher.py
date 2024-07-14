@@ -450,7 +450,7 @@ class Dispatcher:
                         else (None, type(None))
                     )
                 except Exception as e:
-                    logging.info("Parse exception: %s %s", type(e).__name__, e)
+                    log.info("Parse exception: %s %s", type(e).__name__, e)
                     parsed_update, handler_type = (None, type(None))
 
                 async with lock:
