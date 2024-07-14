@@ -22,7 +22,7 @@ import asyncio
 import bisect
 import logging
 import os
-from datetime import datetime, timedelta
+from time import time
 from hashlib import sha1
 from io import BytesIO
 from typing import Optional
@@ -65,8 +65,7 @@ class Session:
     ACKS_THRESHOLD = 10
     PING_INTERVAL = 5
     STORED_MSG_IDS_MAX_SIZE = 1000 * 2
-    RECONNECT_WAIT = 10
-    RECONNECT_THRESHOLD = timedelta(seconds=RECONNECT_WAIT)
+    RECONNECT_THRESHOLD = 12
 
     TRANSPORT_ERRORS = {
         404: "auth key not found",
@@ -252,12 +251,12 @@ class Session:
 
         try:
             self.currently_restarting = True
-            now = datetime.now()
+            now = time()
             if (
                 self.last_reconnect_attempt
-                and now - self.last_reconnect_attempt < self.RECONNECT_THRESHOLD
+                and (now - self.last_reconnect_attempt) < self.RECONNECT_THRESHOLD
             ):
-                to_wait = self.RECONNECT_WAIT - int(now - self.last_reconnect_attempt)
+                to_wait = int(self.RECONNECT_THRESHOLD - (now - self.last_reconnect_attempt))
                 log.warning(
                     f"[pyroblack] Client [{self.client.name}] is reconnecting too frequently, sleeping for {to_wait} seconds"
                 )
