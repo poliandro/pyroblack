@@ -256,7 +256,9 @@ class Session:
                 self.last_reconnect_attempt
                 and (now - self.last_reconnect_attempt) < self.RECONNECT_THRESHOLD
             ):
-                to_wait = int(self.RECONNECT_THRESHOLD - (now - self.last_reconnect_attempt))
+                to_wait = int(
+                    self.RECONNECT_THRESHOLD - (now - self.last_reconnect_attempt)
+                )
                 log.warning(
                     f"[pyroblack] Client [{self.client.name}] is reconnecting too frequently, sleeping for {to_wait} seconds"
                 )
