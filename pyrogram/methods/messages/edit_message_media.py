@@ -72,7 +72,8 @@ class EditMessageMedia:
                 Inverts the position of the media and caption.
 
             business_connection_id (``str``, *optional*):
-                Unique identifier of the business connection on behalf of which the message to be edited was sent
+                Unique identifier of the business connection.
+                for business bots only.
 
         Returns:
             :obj:`~pyrogram.types.Message`: On success, the edited message is returned.
