@@ -276,12 +276,24 @@ class Session:
                         await self.client.load_session()
                         log.info(
                             f"[pyroblack] Client [{self.client.name}] re-starting got SQLite error, connected to DB successfully. try %s; exc: %s %s",
-                            try_, type(e).__name__, e)
+                            try_,
+                            type(e).__name__,
+                            e,
+                        )
                     except Exception as e:
-                        log.warning(f"[pyroblack] Client [{self.client.name}] failed re-starting SQlite DB, try %s; exc: %s %s",
-                                    try_, type(e).__name__, e)
+                        log.warning(
+                            f"[pyroblack] Client [{self.client.name}] failed re-starting SQlite DB, try %s; exc: %s %s",
+                            try_,
+                            type(e).__name__,
+                            e,
+                        )
                 except Exception as e:
-                    log.warning(f"[pyroblack] Client [{self.client.name}] failed re-starting, try %s; exc: %s %s", try_, type(e).__name__, e)
+                    log.warning(
+                        f"[pyroblack] Client [{self.client.name}] failed re-starting, try %s; exc: %s %s",
+                        try_,
+                        type(e).__name__,
+                        e,
+                    )
                 break
         finally:
             self.currently_restarting = False
