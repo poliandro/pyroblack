@@ -65,7 +65,9 @@ class Session:
     ACKS_THRESHOLD = 10
     PING_INTERVAL = 5
     STORED_MSG_IDS_MAX_SIZE = 1000 * 2
-    RECONNECT_THRESHOLD = 12
+    RECONNECT_THRESHOLD = 13
+    STOP_RANGE = range(2)
+    RE_START_RANGE = range(4)
 
     TRANSPORT_ERRORS = {
         404: "auth key not found",
@@ -201,7 +203,7 @@ class Session:
                 self.client.instant_stop = True  # tell all funcs that we want to stop
 
             self.ping_task_event.set()
-            for _ in range(2):
+            for _ in self.STOP_RANGE:
                 try:
                     if self.ping_task is not None:
                         await asyncio.wait_for(
@@ -220,7 +222,7 @@ class Session:
             except Exception:
                 pass
 
-            for _ in range(2):
+            for _ in self.STOP_RANGE:
                 try:
                     if self.recv_task:
                         await asyncio.wait_for(
@@ -256,7 +258,7 @@ class Session:
                 self.last_reconnect_attempt
                 and (now - self.last_reconnect_attempt) < self.RECONNECT_THRESHOLD
             ):
-                to_wait = int(
+                to_wait = self.RECONNECT_THRESHOLD + int(
                     self.RECONNECT_THRESHOLD - (now - self.last_reconnect_attempt)
                 )
                 log.warning(
@@ -266,7 +268,12 @@ class Session:
 
             self.last_reconnect_attempt = now
             await self.stop(restart=True)
-            await self.start()
+            for try_ in self.RE_START_RANGE:  # sometimes, the DB says "no" 😬
+                try:
+                    await self.start()
+                except Exception as e:
+                    log.warning(f"[pyroblack] Client [{self.client.name}] failed re-starting, try %s; exc: %s %s", try_, type(e).__name__, e)
+                break
         finally:
             self.currently_restarting = False
 
