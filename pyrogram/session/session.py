@@ -271,6 +271,15 @@ class Session:
             for try_ in self.RE_START_RANGE:  # sometimes, the DB says "no" 😬
                 try:
                     await self.start()
+                except ValueError as e:  # SQLite error
+                    try:
+                        await self.client.load_session()
+                        log.info(
+                            f"[pyroblack] Client [{self.client.name}] re-starting got SQLite error, connected to DB successfully. try %s; exc: %s %s",
+                            try_, type(e).__name__, e)
+                    except Exception as e:
+                        log.warning(f"[pyroblack] Client [{self.client.name}] failed re-starting SQlite DB, try %s; exc: %s %s",
+                                    try_, type(e).__name__, e)
                 except Exception as e:
                     log.warning(f"[pyroblack] Client [{self.client.name}] failed re-starting, try %s; exc: %s %s", try_, type(e).__name__, e)
                 break
