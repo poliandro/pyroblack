@@ -4268,7 +4268,7 @@ class Message(Object, Update):
         disable_web_page_preview: bool = None,
         invert_media: bool = None,
         reply_markup: "types.InlineKeyboardMarkup" = None,
-        business_connection_id: str = None
+        business_connection_id: str = None,
     ) -> "Message":
         """Bound method *edit_text* of :obj:`~pyrogram.types.Message`.
 
@@ -4328,7 +4328,11 @@ class Message(Object, Update):
             disable_web_page_preview=disable_web_page_preview,
             invert_media=invert_media,
             reply_markup=reply_markup,
-            business_connection_id=self.business_connection_id if business_connection_id is None else business_connection_id
+            business_connection_id=(
+                self.business_connection_id
+                if business_connection_id is None
+                else business_connection_id
+            ),
         )
 
     edit = edit_text
@@ -4340,7 +4344,7 @@ class Message(Object, Update):
         caption_entities: List["types.MessageEntity"] = None,
         invert_media: bool = None,
         reply_markup: "types.InlineKeyboardMarkup" = None,
-        business_connection_id: str = None
+        business_connection_id: str = None,
     ) -> "Message":
         """Bound method *edit_caption* of :obj:`~pyrogram.types.Message`.
 
@@ -4394,7 +4398,11 @@ class Message(Object, Update):
             caption_entities=caption_entities,
             invert_media=invert_media,
             reply_markup=reply_markup,
-            business_connection_id=self.business_connection_id if business_connection_id is None else business_connection_id
+            business_connection_id=(
+                self.business_connection_id
+                if business_connection_id is None
+                else business_connection_id
+            ),
         )
 
     async def edit_media(
@@ -4402,7 +4410,7 @@ class Message(Object, Update):
         media: "types.InputMedia",
         invert_media: bool = None,
         reply_markup: "types.InlineKeyboardMarkup" = None,
-        business_connection_id: str = None
+        business_connection_id: str = None,
     ) -> "Message":
         """Bound method *edit_media* of :obj:`~pyrogram.types.Message`.
 
@@ -4447,13 +4455,17 @@ class Message(Object, Update):
             media=media,
             invert_media=invert_media,
             reply_markup=reply_markup,
-            business_connection_id=self.business_connection_id if business_connection_id is None else business_connection_id
+            business_connection_id=(
+                self.business_connection_id
+                if business_connection_id is None
+                else business_connection_id
+            ),
         )
 
     async def edit_reply_markup(
         self,
         reply_markup: "types.InlineKeyboardMarkup" = None,
-        business_connection_id: str = None
+        business_connection_id: str = None,
     ) -> "Message":
         """Bound method *edit_reply_markup* of :obj:`~pyrogram.types.Message`.
 
@@ -4491,7 +4503,11 @@ class Message(Object, Update):
             chat_id=self.chat.id,
             message_id=self.id,
             reply_markup=reply_markup,
-            business_connection_id=self.business_connection_id if business_connection_id is None else business_connection_id
+            business_connection_id=(
+                self.business_connection_id
+                if business_connection_id is None
+                else business_connection_id
+            ),
         )
 
     async def forward(
