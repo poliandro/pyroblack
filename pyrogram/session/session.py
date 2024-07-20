@@ -115,14 +115,15 @@ class Session:
 
         self.loop = asyncio.get_event_loop()
 
+        self.instant_stop = False
         self.last_reconnect_attempt = None
         self.currently_restarting = False
         self.currently_stopping = False
 
     async def start(self):
         while True:
-            if self.client.instant_stop:
-                log.info("Session init stopped")
+            if self.instant_stop:
+                log.info("Session init force stopped (loop)")
                 return  # stop instantly
 
             self.connection = self.client.connection_factory(
@@ -184,13 +185,12 @@ class Session:
                 break
 
         self.is_started.set()
-
         log.info("Session started")
 
     async def stop(self, restart: bool = False):
         if self.currently_stopping:
             return  # don't stop twice
-        if self.client.instant_stop:
+        if self.instant_stop:
             log.info("Session stop process stopped")
             return  # stop doing anything instantly, client is manually handling
 
@@ -200,7 +200,7 @@ class Session:
             self.stored_msg_ids.clear()
 
             if restart:
-                self.client.instant_stop = True  # tell all funcs that we want to stop
+                self.instant_stop = True  # tell all funcs that we want to stop
 
             self.ping_task_event.set()
             for _ in self.STOP_RANGE:
@@ -243,12 +243,12 @@ class Session:
         finally:
             self.currently_stopping = False
             if restart:
-                self.client.instant_stop = False  # reset
+                self.instant_stop = False  # reset
 
     async def restart(self):
         if self.currently_restarting:
             return  # don't restart twice
-        if self.client.instant_stop:
+        if self.instant_stop:
             return  # stop instantly
 
         try:
@@ -266,11 +266,12 @@ class Session:
                 )
                 await asyncio.sleep(to_wait)
 
-            self.last_reconnect_attempt = now
+            self.last_reconnect_attempt = time()
             await self.stop(restart=True)
             for try_ in self.RE_START_RANGE:  # sometimes, the DB says "no" 😬
                 try:
                     await self.start()
+                    break
                 except ValueError as e:  # SQLite error
                     try:
                         await self.client.load_session()
@@ -294,12 +295,11 @@ class Session:
                         type(e).__name__,
                         e,
                     )
-                break
         finally:
             self.currently_restarting = False
 
     async def handle_packet(self, packet):
-        if self.client.instant_stop:
+        if self.instant_stop:
             log.info("Stopped packet handler")
             return  # stop instantly
 
@@ -398,14 +398,10 @@ class Session:
                 self.pending_acks.clear()
 
     async def ping_worker(self):
-        if self.client.instant_stop:
-            log.info("PingTask force stopped")
-            return  # stop instantly
-
         log.info("PingTask started")
 
         while True:
-            if self.client.instant_stop:
+            if self.instant_stop:
                 log.info("PingTask force stopped (loop)")
                 return  # stop instantly
 
@@ -435,7 +431,7 @@ class Session:
         log.info("NetworkTask started")
 
         while True:
-            if self.client.instant_stop:
+            if self.instant_stop:
                 log.info("NetworkTask force stopped (loop)")
                 return  # stop instantly
 
@@ -474,7 +470,7 @@ class Session:
         timeout: float = WAIT_TIMEOUT,
         retry: int = 0,
     ):
-        if self.client.instant_stop:
+        if self.instant_stop:
             return  # stop instantly
 
         message = self.msg_factory(data)
@@ -568,11 +564,9 @@ class Session:
             # sleep until the restart is performed
             if self.currently_restarting:
                 while self.currently_restarting:
-                    if self.client.instant_stop:
-                        return  # stop instantly
                     await asyncio.sleep(1)
 
-            if self.client.instant_stop:
+            if self.instant_stop:
                 return  # stop instantly
 
             if not self.is_started.is_set():
