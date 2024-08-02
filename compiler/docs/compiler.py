@@ -411,6 +411,8 @@ def pyrogram_api():
             recover_password
             accept_terms_of_service
             log_out
+            get_active_sessions
+            reset_session
         """,
         advanced="""
         Advanced
@@ -664,6 +666,8 @@ def pyrogram_api():
         """,
         authorization="""
         Authorization
+            ActiveSession
+            ActiveSessions
             SentCode
             TermsOfService
         """,
@@ -815,6 +819,10 @@ def pyrogram_api():
         ChatJoinRequest
             ChatJoinRequest.approve
             ChatJoinRequest.decline
+        """,
+        active_session="""
+        ActiveSession
+            ActiveSession.reset
         """,
     )
 
