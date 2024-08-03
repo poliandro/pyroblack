@@ -26,11 +26,11 @@ from pyrogram import raw, types, errors
 
 class PromoteChatMember:
     async def promote_chat_member(
-        self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        user_id: Union[int, str],
-        privileges: "types.ChatPrivileges" = None,
-        title: Optional[str] = "",
+            self: "pyrogram.Client",
+            chat_id: Union[int, str],
+            user_id: Union[int, str],
+            privileges: "types.ChatPrivileges" = None,
+            title: Optional[str] = None,
     ) -> bool:
         """Promote or demote a user in a supergroup or a channel.
 
