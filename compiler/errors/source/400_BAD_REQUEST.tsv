@@ -63,6 +63,7 @@ CHANNEL_PARICIPANT_MISSING	The current user is not in the channel
 CHANNEL_PRIVATE	The channel/supergroup is not accessible
 CHANNEL_TOO_BIG	The channel too big
 CHANNEL_TOO_LARGE	The channel is too large
+CHATLISTS_TOO_MUCH	You have too much chatlists on your account
 CHAT_ABOUT_NOT_MODIFIED	The chat about text was not modified because you tried to edit it using the same content
 CHAT_ABOUT_TOO_LONG	The chat about text is too long
 CHAT_ADMIN_REQUIRED	The method requires chat admin privileges
@@ -301,6 +302,7 @@ PREMIUM_ACCOUNT_REQUIRED	The method requires a premium user account
 PRIVACY_KEY_INVALID	The privacy key is invalid
 PRIVACY_TOO_LONG	Your privacy exception list has exceeded the maximum capacity
 PRIVACY_VALUE_INVALID	The privacy value is invalid
+PUBLIC_BROADCAST_EXPECTED	A public channel was expected, but something else was provided
 PUBLIC_KEY_REQUIRED	A public key is required
 QUERY_ID_EMPTY	The query ID is empty
 QUERY_ID_INVALID	The callback query id is invalid
@@ -393,6 +395,7 @@ TITLE_INVALID	The specified stickerpack title is invalid
 TMP_PASSWORD_DISABLED	The temporary password is disabled
 TMP_PASSWORD_INVALID	The temporary password is invalid
 TOKEN_INVALID	The provided token is invalid
+TOKEN_SECRET_INVALID	The specified token secret is invalid
 TOPIC_CLOSED	The topic was closed
 TOPIC_DELETED	The topic was deleted
 TOPIC_ID_INVALID	The provided topic ID is invalid
