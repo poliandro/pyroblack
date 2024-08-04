@@ -18,6 +18,7 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with pyroblack.  If not, see <http://www.gnu.org/licenses/>.
 
+from .account import Account
 from .advanced import Advanced
 from .auth import Auth
 from .bots import Bots
@@ -36,6 +37,7 @@ from .utilities import Utilities
 
 
 class Methods(
+    Account,
     Advanced,
     Auth,
     Bots,

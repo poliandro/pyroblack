@@ -354,6 +354,7 @@ def pyrogram_api():
             import_contacts
             get_contacts
             get_contacts_count
+            search_contacts
         """,
         payments="""
         Payments
@@ -420,6 +421,11 @@ def pyrogram_api():
             invoke
             resolve_peer
             save_file
+        """,
+        account="""
+        Account
+            get_account_ttl
+            set_account_ttl
         """,
     )
 
@@ -493,6 +499,7 @@ def pyrogram_api():
             GroupCallMember
             ChatColor
             CollectibleItemInfo
+            FoundContacts
         """,
         messages_media="""
         Messages & Media

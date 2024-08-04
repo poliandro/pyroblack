@@ -190,6 +190,19 @@ Authorization
 
     {authorization}
 
+Account
+-------
+
+.. autosummary::
+    :nosignatures:
+
+    {account}
+
+.. toctree::
+    :hidden:
+
+    {account}
+
 Advanced
 --------
 

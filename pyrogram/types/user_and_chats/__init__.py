@@ -43,6 +43,7 @@ from .chat_reactions import ChatReactions
 from .dialog import Dialog
 from .emoji_status import EmojiStatus
 from .folder import Folder
+from .found_contacts import FoundContacts
 from .invite_link_importer import InviteLinkImporter
 from .restriction import Restriction
 from .user import User
@@ -55,12 +56,8 @@ from .forum_topic_edited import ForumTopicEdited
 from .forum_topic_reopened import ForumTopicReopened
 from .general_forum_topic_hidden import GeneralTopicHidden
 from .general_forum_topic_unhidden import GeneralTopicUnhidden
-from .invite_link_importer import InviteLinkImporter
 from .peer_channel import PeerChannel
 from .peer_user import PeerUser
-from .restriction import Restriction
-from .user import User
-from .username import Username
 from .video_chat_ended import VideoChatEnded
 from .video_chat_members_invited import VideoChatMembersInvited
 from .video_chat_scheduled import VideoChatScheduled
@@ -108,6 +105,7 @@ __all__ = [
     "ChatPrivileges",
     "ChatJoiner",
     "EmojiStatus",
+    "FoundContacts",
     "GroupCallMember",
     "ChatReactions",
 ]

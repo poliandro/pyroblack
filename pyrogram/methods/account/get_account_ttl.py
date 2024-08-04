@@ -16,20 +16,29 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from .add_contact import AddContact
-from .delete_contacts import DeleteContacts
-from .get_contacts import GetContacts
-from .get_contacts_count import GetContactsCount
-from .import_contacts import ImportContacts
-from .search_contacts import SearchContacts
+import pyrogram
+from pyrogram import raw
 
 
-class Contacts(
-    GetContacts,
-    DeleteContacts,
-    ImportContacts,
-    GetContactsCount,
-    AddContact,
-    SearchContacts
-):
-    pass
+class GetAccountTTL:
+    async def get_account_ttl(
+        self: "pyrogram.Client",
+    ):
+        """Get days to live of account.
+
+        .. include:: /_includes/usable-by/users.rst
+
+        Returns:
+            ``int``: Time to live in days of the current account.
+
+        Example:
+            .. code-block:: python
+
+                # Get ttl in days
+                await app.get_account_ttl()
+        """
+        r = await self.invoke(
+            raw.functions.account.GetAccountTTL()
+        )
+
+        return r.days
