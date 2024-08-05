@@ -25,8 +25,11 @@ from pyrogram.errors import ChannelPrivate
 
 class GetDialogs:
     async def get_dialogs(
-        self: "pyrogram.Client", limit: int = 0
-    ) -> Optional[AsyncGenerator["types.Dialog", None]]:
+        self: "pyrogram.Client",
+        limit: int = 0,
+        exclude_pinned: bool = None,
+        folder_id: bool = None
+    ) -> AsyncGenerator["types.Dialog", None]:
         """Get a user's dialogs sequentially.
 
         .. include:: /_includes/usable-by/users.rst
@@ -35,6 +38,12 @@ class GetDialogs:
             limit (``int``, *optional*):
                 Limits the number of dialogs to be retrieved.
                 By default, no limit is applied and all dialogs are returned.
+
+            exclude_pinned (``bool``, *optional*):
+                Exclude pinned dialogs.
+
+            folder_id (``int``, *optional*):
+                Unique identifier (int) of the target folder.
 
         Returns:
             ``Generator``: A generator yielding :obj:`~pyrogram.types.Dialog` objects.
@@ -62,6 +71,8 @@ class GetDialogs:
                     offset_peer=offset_peer,
                     limit=limit,
                     hash=0,
+                    exclude_pinned=exclude_pinned,
+                    folder_id=folder_id
                 ),
                 sleep_threshold=60,
             )
