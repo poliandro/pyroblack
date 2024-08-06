@@ -18,6 +18,7 @@
 
 from .copy_media_group import CopyMediaGroup
 from .copy_message import CopyMessage
+from .delete_chat_history import DeleteChatHistory
 from .delete_messages import DeleteMessages
 from .download_media import DownloadMedia
 from .edit_inline_caption import EditInlineCaption
@@ -125,6 +126,7 @@ class Messages(
     SearchGlobal,
     SearchGlobalHashtagMessages,
     CopyMessage,
+    DeleteChatHistory,
     CopyMediaGroup,
     SearchMessagesCount,
     SearchPosts,
