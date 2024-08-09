@@ -435,6 +435,10 @@ class Message(Object, Update):
 
         from_scheduled (``bool``, *optional*):
             Message is a scheduled message and has been sent.
+
+        chat_join_type (:obj:`~pyrogram.enums.ChatJoinType`, *optional*):
+            The message is a service message of the type :obj:`~pyrogram.enums.MessageServiceType.NEW_CHAT_MEMBERS`.
+            This field will contain the enumeration type of how the user had joined the chat.
     """
 
     # TODO: Add game missing field, Also connected_website
@@ -555,7 +559,8 @@ class Message(Object, Update):
             "types.ForceReply",
         ] = None,
         reactions: List["types.Reaction"] = None,
-        raw: "raw.types.Message" = None,
+        chat_join_type: "enums.ChatJoinType" = None,
+        raw: "raw.types.Message" = None
     ):
         super().__init__(client)
 
@@ -668,6 +673,7 @@ class Message(Object, Update):
         self.boosts_applied = boosts_applied
         self.join_request_approved = join_request_approved
         self.reactions = reactions
+        self.chat_join_type = chat_join_type
         self.raw = raw
 
     async def wait_for_click(
@@ -783,12 +789,14 @@ class Message(Object, Update):
             join_request_approved = None
 
             service_type = None
+            chat_join_type = None
 
             if isinstance(action, raw.types.MessageActionChatAddUser):
                 new_chat_members = [
                     types.User._parse(client, users[i]) for i in action.users
                 ]
                 service_type = enums.MessageServiceType.NEW_CHAT_MEMBERS
+                chat_join_type = enums.ChatJoinType.BY_ADD
             elif isinstance(action, raw.types.MessageActionChatJoinedByLink):
                 new_chat_members = [
                     types.User._parse(
@@ -796,9 +804,11 @@ class Message(Object, Update):
                     )
                 ]
                 service_type = enums.MessageServiceType.NEW_CHAT_MEMBERS
+                chat_join_type = enums.ChatJoinType.BY_LINK
             elif isinstance(action, raw.types.MessageActionChatJoinedByRequest):
                 chat_joined_by_request = types.ChatJoinedByRequest()
-                service_type = enums.MessageServiceType.CHAT_JOINED_BY_REQUEST
+                service_type = enums.MessageServiceType.NEW_CHAT_MEMBERS
+                chat_join_type = enums.ChatJoinType.BY_REQUEST
             elif isinstance(action, raw.types.MessageActionChatDeleteUser):
                 left_chat_member = types.User._parse(client, users[action.user_id])
                 service_type = enums.MessageServiceType.LEFT_CHAT_MEMBERS
@@ -1001,7 +1011,8 @@ class Message(Object, Update):
                 boosts_applied=boosts_applied,
                 join_request_approved=join_request_approved,
                 raw=message,
-                client=client,
+                chat_join_type=chat_join_type,
+                client=client
                 # TODO: supergroup_chat_created
             )
             if parsed_message.chat.type is not enums.ChatType.CHANNEL:
