@@ -1,6 +1,7 @@
 id	message
 AUTH_KEY_DUPLICATED	The same authorization key (session file) was used in more than one place simultaneously. You must delete your session file and log in again with your phone number or bot token
 BANNED_RIGHTS_INVALID	You provided some invalid flags in the banned rights.
+BOT_PRECHECKOUT_FAILED	Bot precheckout is failed
 CALL_PROTOCOL_COMPAT_LAYER_INVALID	The other side of the call does not support any of the VoIP protocols supported by the local client, as specified by the `protocol.layer` and `protocol.library_versions` fields.
 CHANNEL_PRIVATE	The channel/supergroup is not accessible
 CHANNEL_TOO_LARGE	Сhannel is too large to be deleted. Contact support for removal
