@@ -360,6 +360,8 @@ def pyrogram_api():
         payments="""
         Payments
             check_gift_code
+            get_payment_form
+            send_payment_form
         """,
         phone="""
         Phone
@@ -559,6 +561,7 @@ def pyrogram_api():
             SuccessfulPayment
             ExtendedMediaPreview
             PaidMedia
+            PaymentForm
         """,
         stories="""
         Stories
@@ -766,6 +769,7 @@ def pyrogram_api():
             Message.wait_for_click
             Message.read
             Message.view
+            Message.pay
         """,
         chat="""
         Chat

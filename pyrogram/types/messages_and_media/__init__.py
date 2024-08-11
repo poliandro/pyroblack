@@ -44,6 +44,7 @@ from .message_reactions import MessageReactions
 from .message_story import MessageStory
 from .message_invoice import MessageInvoice
 from .paid_media import PaidMedia
+from .payment_form import PaymentForm
 from .photo import Photo
 from .poll import Poll
 from .poll_option import PollOption
@@ -91,6 +92,7 @@ __all__ = [
     "Message",
     "MessageEntity",
     "PaidMedia",
+    "PaymentForm",
     "Photo",
     "Thumbnail",
     "StrippedThumbnail",

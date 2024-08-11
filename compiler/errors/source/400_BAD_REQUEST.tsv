@@ -22,6 +22,7 @@ AUTH_TOKEN_INVALID	An invalid authorization token was provided
 AUTH_TOKEN_INVALID2	An invalid authorization token was provided
 AUTH_TOKEN_INVALIDX	The specified auth token is invalid
 AUTOARCHIVE_NOT_AVAILABLE	This feature is not yet enabled for your account due to it not receiving too many private messages from strangers
+BALANCE_TOO_LOW	Your stars balance too low
 BANK_CARD_NUMBER_INVALID	The credit card number is invalid
 BANNED_RIGHTS_INVALID	You provided a set of restrictions that is invalid
 BASE_PORT_LOC_INVALID	The base port location is invalid
