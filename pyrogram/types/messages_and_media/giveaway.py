@@ -46,6 +46,9 @@ class Giveaway(Object):
         new_subscribers (``bool``):
             True, if the giveaway only for new subscribers.
 
+        additional_price (``str``, *optional*):
+            Additional prize for the giveaway winner(s).
+
         allowed_countries (List of ``str``, *optional*):
             List of ISO country codes which eligible to join the giveaway.
 
@@ -61,7 +64,8 @@ class Giveaway(Object):
         quantity: int,
         months: int,
         expire_date: datetime,
-        new_subscribers: bool,
+        new_subscribers : bool,
+        additional_price: str = None,
         allowed_countries: List[str] = None,
         private_channel_ids: List[int] = None,
     ):
@@ -72,6 +76,7 @@ class Giveaway(Object):
         self.months = months
         self.expire_date = expire_date
         self.new_subscribers = new_subscribers
+        self.additional_price = additional_price
         self.allowed_countries = allowed_countries
         self.private_channel_ids = private_channel_ids
 
@@ -101,9 +106,8 @@ class Giveaway(Object):
             months=giveaway.months,
             expire_date=utils.timestamp_to_datetime(giveaway.until_date),
             new_subscribers=giveaway.only_new_subscribers,
-            allowed_countries=(
-                giveaway.countries_iso2 if len(giveaway.countries_iso2) > 0 else None
-            ),
+            additional_price=giveaway.prize_description,
+            allowed_countries=giveaway.countries_iso2 if len(giveaway.countries_iso2) > 0 else None,
             private_channel_ids=private_ids if len(private_ids) > 0 else None,
             client=client,
         )
