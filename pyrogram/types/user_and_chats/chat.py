@@ -78,6 +78,9 @@ class Chat(Object):
             True, if Aggressive Anti-Spam is enabled in chat.
             Returned only in :meth:`~pyrogram.Client.get_chat`.
 
+        is_paid_reactions_available (``bool``, *optional*):
+            True, if paid reactions enabled in this chat.
+
         title (``str``, *optional*):
             Title, for supergroups, channels and basic group chats.
 
@@ -193,6 +196,9 @@ class Chat(Object):
         personal_chat (:obj:`~pyrogram.types.Chat`, *optional*):
             For private chats, the personal channel of the user.
             Returned only in :meth:`~pyrogram.Client.get_chat`.
+
+        subscription_until_date (:py:obj:`~datetime.datetime`, *optional*):
+            Date when the the subscription will end.
     """
 
     def __init__(
@@ -213,6 +219,7 @@ class Chat(Object):
         is_join_to_send: bool = None,
         is_antispam: bool = None,
         is_slowmode_enabled: bool = None,
+        is_paid_reactions_available: bool = None,
         title: str = None,
         username: str = None,
         first_name: str = None,
@@ -243,6 +250,7 @@ class Chat(Object):
         business_info: "types.BusinessInfo" = None,
         birthday: "types.Birthday" = None,
         personal_chat: "types.Chat" = None,
+            subscription_until_date: datetime = None,
     ):
         super().__init__(client)
 
@@ -260,6 +268,7 @@ class Chat(Object):
         self.is_join_to_send = is_join_to_send
         self.is_antispam = is_antispam
         self.is_slowmode_enabled = is_slowmode_enabled
+        self.is_paid_reactions_available = is_paid_reactions_available
         self.title = title
         self.username = username
         self.first_name = first_name
@@ -290,6 +299,7 @@ class Chat(Object):
         self.business_info = business_info
         self.birthday = birthday
         self.personal_chat = personal_chat
+        self.subscription_until_date = subscription_until_date
 
     @property
     def full_name(self) -> str:
@@ -411,6 +421,7 @@ class Chat(Object):
             dc_id=getattr(getattr(channel, "photo", None), "dc_id", None),
             has_protected_content=getattr(channel, "noforwards", None),
             reply_color=types.ChatColor._parse(getattr(channel, "color", None)),
+            subscription_until_date=utils.timestamp_to_datetime(getattr(channel, "subscription_until_date", None)),
             client=client,
         )
 
@@ -530,6 +541,7 @@ class Chat(Object):
                 parsed_chat.is_participants_hidden = full_chat.participants_hidden
                 parsed_chat.is_antispam = full_chat.antispam
                 parsed_chat.folder_id = getattr(full_chat, "folder_id", None)
+                parsed_chat.is_paid_reactions_available = getattr(full_chat, "paid_reactions_available", None)
 
                 linked_chat_raw = chats.get(full_chat.linked_chat_id, None)
 
