@@ -229,6 +229,7 @@ def pyrogram_api():
             get_discussion_replies_count
             get_custom_emoji_stickers
             delete_chat_history
+            send_paid_reaction
         """,
         chats="""
         Chats
