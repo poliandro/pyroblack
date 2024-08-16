@@ -38,10 +38,10 @@ class SendPaidReaction:
             chat_id (``int`` | ``str``):
                 Unique identifier (int) or username (str) of the target chat.
 
-            message_id (``int``, *optional*):
+            message_id (``int``):
                 Identifier of the message.
 
-            amount (``int``, *optional*):
+            amount (``int``):
                 Amount of stars to send.
 
             is_private (``bool``, *optional*):
@@ -54,7 +54,7 @@ class SendPaidReaction:
             .. code-block:: python
 
                 # Send paid reaction with 1 star
-                await app.send_paid_reaction(chat_id, message_id, count=1)
+                await app.send_paid_reaction(chat_id, message_id, amount=1)
         """
         rpc = raw.functions.messages.SendPaidReaction(
             peer=await self.resolve_peer(chat_id),
