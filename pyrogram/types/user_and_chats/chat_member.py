@@ -148,7 +148,9 @@ class ChatMember(Object):
                 status=enums.ChatMemberStatus.MEMBER,
                 user=types.User._parse(client, users[member.user_id]),
                 joined_date=utils.timestamp_to_datetime(member.date),
-                subscription_until_date=utils.timestamp_to_datetime(getattr(member, "subscription_until_date", None)),
+                subscription_until_date=utils.timestamp_to_datetime(
+                    getattr(member, "subscription_until_date", None)
+                ),
                 client=client,
             )
         elif isinstance(member, raw.types.ChannelParticipantAdmin):
@@ -231,6 +233,8 @@ class ChatMember(Object):
                 user=types.User._parse(client, users[member.user_id]),
                 joined_date=utils.timestamp_to_datetime(member.date),
                 invited_by=types.User._parse(client, users[member.inviter_id]),
-                subscription_until_date=utils.timestamp_to_datetime(getattr(member, "subscription_until_date", None)),
-                client=client
+                subscription_until_date=utils.timestamp_to_datetime(
+                    getattr(member, "subscription_until_date", None)
+                ),
+                client=client,
             )

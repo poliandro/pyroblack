@@ -28,7 +28,7 @@ class GetDialogs:
         self: "pyrogram.Client",
         limit: int = 0,
         exclude_pinned: Optional[bool] = None,
-        from_archive: Optional[bool] = None
+        from_archive: Optional[bool] = None,
     ) -> AsyncGenerator["types.Dialog", None]:
         """Get a user's dialogs sequentially.
 
@@ -76,7 +76,9 @@ class GetDialogs:
                     limit=limit,
                     hash=0,
                     exclude_pinned=exclude_pinned,
-                    folder_id=None if from_archive is None else 1 if from_archive else 0
+                    folder_id=(
+                        None if from_archive is None else 1 if from_archive else 0
+                    ),
                 ),
                 sleep_threshold=60,
             )

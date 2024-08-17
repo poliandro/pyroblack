@@ -240,7 +240,7 @@ class User(Object, Update):
         can_join_groups: bool = None,
         can_read_all_group_messages: bool = None,
         has_main_web_app: bool = None,
-        raw: Union["raw.base.User", "raw.base.UserStatus"] = None
+        raw: Union["raw.base.User", "raw.base.UserStatus"] = None,
     ):
         super().__init__(client)
 
@@ -342,9 +342,11 @@ class User(Object, Update):
             restrictions=types.List(
                 [types.Restriction._parse(r) for r in user.restriction_reason]
             )
-                         or None,
+            or None,
             reply_color=types.ChatColor._parse(getattr(user, "color", None)),
-            profile_color=types.ChatColor._parse_profile_color(getattr(user, "profile_color", None)),
+            profile_color=types.ChatColor._parse_profile_color(
+                getattr(user, "profile_color", None)
+            ),
             added_to_attachment_menu=getattr(user, "attach_menu_enabled", None),
             active_users_count=getattr(user, "bot_active_users", None),
             inline_need_location=getattr(user, "bot_inline_geo", None),

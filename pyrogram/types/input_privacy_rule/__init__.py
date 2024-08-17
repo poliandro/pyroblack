@@ -37,5 +37,5 @@ __all__ = [
     "InputPrivacyRuleDisallowAll",
     "InputPrivacyRuleDisallowChats",
     "InputPrivacyRuleDisallowContacts",
-    "InputPrivacyRuleDisallowUsers"
+    "InputPrivacyRuleDisallowUsers",
 ]

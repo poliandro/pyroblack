@@ -250,7 +250,7 @@ class Chat(Object):
         business_info: "types.BusinessInfo" = None,
         birthday: "types.Birthday" = None,
         personal_chat: "types.Chat" = None,
-            subscription_until_date: datetime = None,
+        subscription_until_date: datetime = None,
     ):
         super().__init__(client)
 
@@ -421,7 +421,9 @@ class Chat(Object):
             dc_id=getattr(getattr(channel, "photo", None), "dc_id", None),
             has_protected_content=getattr(channel, "noforwards", None),
             reply_color=types.ChatColor._parse(getattr(channel, "color", None)),
-            subscription_until_date=utils.timestamp_to_datetime(getattr(channel, "subscription_until_date", None)),
+            subscription_until_date=utils.timestamp_to_datetime(
+                getattr(channel, "subscription_until_date", None)
+            ),
             client=client,
         )
 
@@ -530,8 +532,12 @@ class Chat(Object):
             else:
                 parsed_chat = Chat._parse_channel_chat(client, chat_raw)
                 parsed_chat.members_count = full_chat.participants_count
-                parsed_chat.join_requests_count = getattr(full_chat, "requests_pending", None)
-                parsed_chat.slow_mode_delay = getattr(full_chat, "slowmode_seconds", None)
+                parsed_chat.join_requests_count = getattr(
+                    full_chat, "requests_pending", None
+                )
+                parsed_chat.slow_mode_delay = getattr(
+                    full_chat, "slowmode_seconds", None
+                )
                 parsed_chat.description = full_chat.about or None
                 # TODO: Add StickerSet type
                 parsed_chat.can_set_sticker_set = full_chat.can_set_stickers
@@ -541,7 +547,9 @@ class Chat(Object):
                 parsed_chat.is_participants_hidden = full_chat.participants_hidden
                 parsed_chat.is_antispam = full_chat.antispam
                 parsed_chat.folder_id = getattr(full_chat, "folder_id", None)
-                parsed_chat.is_paid_reactions_available = getattr(full_chat, "paid_reactions_available", None)
+                parsed_chat.is_paid_reactions_available = getattr(
+                    full_chat, "paid_reactions_available", None
+                )
 
                 linked_chat_raw = chats.get(full_chat.linked_chat_id, None)
 

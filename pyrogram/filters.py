@@ -716,14 +716,14 @@ def via_bot_filter(flt, *args):
         return bool(m.via_bot) and (
             len(flt) == 0
             or (
-                m.via_bot.id in flt or (
-                    m.via_bot.username and m.via_bot.username.lower() in flt
-                )
+                m.via_bot.id in flt
+                or (m.via_bot.username and m.via_bot.username.lower() in flt)
             )
         )
     bots = args[0] if isinstance(args[0], list) else [args[0]]
     flt = type(flt)(u.lower().lstrip("@") if isinstance(u, str) else u for u in bots)
     return flt
+
 
 via_bot: Filter = type(
     via_bot_filter.__name__,

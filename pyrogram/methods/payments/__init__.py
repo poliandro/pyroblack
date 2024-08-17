@@ -20,9 +20,6 @@ from .check_giftcode import CheckGiftCode
 from .get_payment_form import GetPaymentForm
 from .send_payment_form import SendPaymentForm
 
-class Payments(
-    CheckGiftCode,
-    GetPaymentForm,
-    SendPaymentForm
-):
+
+class Payments(CheckGiftCode, GetPaymentForm, SendPaymentForm):
     pass

@@ -58,7 +58,7 @@ __all__ = [
     "NextCodeType",
     "ParseMode",
     "PollType",
-    'PrivacyKey',
+    "PrivacyKey",
     "ProfileColor",
     "ReactionType",
     "ReplyColor",

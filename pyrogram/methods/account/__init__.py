@@ -21,10 +21,6 @@ from .get_privacy import GetPrivacy
 from .set_account_ttl import SetAccountTTL
 from .set_privacy import SetPrivacy
 
-class Account(
-    GetAccountTTL,
-    GetPrivacy,
-    SetAccountTTL,
-    SetPrivacy
-):
+
+class Account(GetAccountTTL, GetPrivacy, SetAccountTTL, SetPrivacy):
     pass

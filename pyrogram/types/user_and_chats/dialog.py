@@ -71,7 +71,7 @@ class Dialog(Object):
         is_pinned: bool,
         folder_id: int = None,
         ttl_period: int = None,
-        raw: "raw.types.Dialog" = None
+        raw: "raw.types.Dialog" = None,
     ):
         super().__init__(client)
 

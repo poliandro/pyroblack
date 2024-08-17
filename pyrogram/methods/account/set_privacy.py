@@ -26,17 +26,19 @@ class SetPrivacy:
     async def set_privacy(
         self: "pyrogram.Client",
         key: "enums.PrivacyKey",
-        rules: List[Union[
-            "types.InputPrivacyRuleAllowAll",
-            "types.InputPrivacyRuleAllowContacts",
-            "types.InputPrivacyRuleAllowPremium",
-            "types.InputPrivacyRuleAllowUsers",
-            "types.InputPrivacyRuleAllowChats",
-            "types.InputPrivacyRuleDisallowAll",
-            "types.InputPrivacyRuleDisallowContacts",
-            "types.InputPrivacyRuleDisallowUsers",
-            "types.InputPrivacyRuleDisallowChats",
-        ]],
+        rules: List[
+            Union[
+                "types.InputPrivacyRuleAllowAll",
+                "types.InputPrivacyRuleAllowContacts",
+                "types.InputPrivacyRuleAllowPremium",
+                "types.InputPrivacyRuleAllowUsers",
+                "types.InputPrivacyRuleAllowChats",
+                "types.InputPrivacyRuleDisallowAll",
+                "types.InputPrivacyRuleDisallowContacts",
+                "types.InputPrivacyRuleDisallowUsers",
+                "types.InputPrivacyRuleDisallowChats",
+            ]
+        ],
     ):
         """Set account privacy rules.
 
@@ -62,12 +64,13 @@ class SetPrivacy:
         """
         r = await self.invoke(
             raw.functions.account.SetPrivacy(
-                key=key.value(),
-                rules=[await rule.write(self) for rule in rules]
+                key=key.value(), rules=[await rule.write(self) for rule in rules]
             )
         )
 
         users = {i.id: i for i in r.users}
         chats = {i.id: i for i in r.chats}
 
-        return types.List(types.PrivacyRule._parse(self, rule, users, chats) for rule in r.rules)
+        return types.List(
+            types.PrivacyRule._parse(self, rule, users, chats) for rule in r.rules
+        )

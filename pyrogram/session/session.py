@@ -66,7 +66,6 @@ class Session:
     PING_INTERVAL = 5
     STORED_MSG_IDS_MAX_SIZE = 1000 * 2
     RECONNECT_THRESHOLD = 13
-    STOP_RANGE = range(2)
     RE_START_RANGE = range(4)
 
     TRANSPORT_ERRORS = {
@@ -203,16 +202,11 @@ class Session:
                 self.instant_stop = True  # tell all funcs that we want to stop
 
             self.ping_task_event.set()
-            for _ in self.STOP_RANGE:
-                try:
-                    if self.ping_task is not None:
-                        await asyncio.wait_for(
-                            self.ping_task, timeout=self.RECONN_TIMEOUT
-                        )
-                        break
-                except TimeoutError:
-                    self.ping_task.cancel()
-                    continue  # next stage
+            try:
+                if self.ping_task is not None:
+                    await asyncio.wait_for(self.ping_task, timeout=self.RECONN_TIMEOUT)
+            except TimeoutError:
+                self.ping_task.cancel()
             self.ping_task_event.clear()
 
             try:
@@ -222,16 +216,11 @@ class Session:
             except Exception:
                 pass
 
-            for _ in self.STOP_RANGE:
-                try:
-                    if self.recv_task:
-                        await asyncio.wait_for(
-                            self.recv_task, timeout=self.RECONN_TIMEOUT
-                        )
-                        break
-                except TimeoutError:
-                    self.recv_task.cancel()
-                    continue  # next stage
+            try:
+                if self.recv_task:
+                    await asyncio.wait_for(self.recv_task, timeout=self.RECONN_TIMEOUT)
+            except TimeoutError:
+                self.recv_task.cancel()
 
             if not self.is_media and callable(self.client.disconnect_handler):
                 try:

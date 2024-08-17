@@ -28,7 +28,7 @@ class SendPaidReaction:
         chat_id: Union[int, str],
         message_id: int,
         amount: int,
-        is_private: bool = None
+        is_private: bool = None,
     ) -> bool:
         """Send a paid reaction to a message.
 
@@ -61,7 +61,7 @@ class SendPaidReaction:
             msg_id=message_id,
             count=amount,
             random_id=self.rnd_id(),
-            private=is_private
+            private=is_private,
         )
 
         await self.invoke(rpc)

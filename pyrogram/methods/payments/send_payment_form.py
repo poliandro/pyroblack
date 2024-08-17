@@ -64,29 +64,26 @@ class SendPaymentForm:
 
         if isinstance(message_id, int):
             invoice = raw.types.InputInvoiceMessage(
-                peer=await self.resolve_peer(chat_id),
-                msg_id=message_id
+                peer=await self.resolve_peer(chat_id), msg_id=message_id
             )
         elif isinstance(message_id, str):
-            match = re.match(r"^(?:https?://)?(?:www\.)?(?:t(?:elegram)?\.(?:org|me|dog)/\$)([\w-]+)$", message_id)
+            match = re.match(
+                r"^(?:https?://)?(?:www\.)?(?:t(?:elegram)?\.(?:org|me|dog)/\$)([\w-]+)$",
+                message_id,
+            )
 
             if match:
                 slug = match.group(1)
             else:
                 slug = message_id
 
-            invoice = raw.types.InputInvoiceSlug(
-                slug=slug
-            )
+            invoice = raw.types.InputInvoiceSlug(slug=slug)
 
         form = await self.get_payment_form(chat_id=chat_id, message_id=message_id)
 
         # if form.invoice.currency == "XTR":
         await self.invoke(
-            raw.functions.payments.SendStarsForm(
-                form_id=form.id,
-                invoice=invoice
-            )
+            raw.functions.payments.SendStarsForm(form_id=form.id, invoice=invoice)
         )
         # TODO: Add support for regular invoices (credentials)
         # else:

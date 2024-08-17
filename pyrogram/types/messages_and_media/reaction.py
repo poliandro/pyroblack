@@ -54,7 +54,7 @@ class Reaction(Object):
         custom_emoji_id: Optional[int] = None,
         count: Optional[int] = None,
         chosen_order: Optional[int] = None,
-        is_paid: Optional[bool] = None
+        is_paid: Optional[bool] = None,
     ):
         super().__init__(client)
 
@@ -73,10 +73,7 @@ class Reaction(Object):
             return Reaction(client=client, custom_emoji_id=reaction.document_id)
 
         if isinstance(reaction, raw.types.ReactionPaid):
-            return Reaction(
-                client=client,
-                is_paid=True
-            )
+            return Reaction(client=client, is_paid=True)
 
     @staticmethod
     def _parse_count(

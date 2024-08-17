@@ -5481,6 +5481,5 @@ class Message(Object, Update):
             True on success.
         """
         return await self._client.send_payment_form(
-            chat_id=self.chat.id,
-            message_id=self.id
+            chat_id=self.chat.id, message_id=self.id
         )

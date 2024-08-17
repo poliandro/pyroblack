@@ -107,7 +107,7 @@ class ActiveSession(Object):
         is_unconfirmed: bool = None,
         can_accept_secret_chats: bool = None,
         can_accept_calls: bool = None,
-        is_official_application: bool = None
+        is_official_application: bool = None,
     ):
         super().__init__()
 
@@ -150,9 +150,11 @@ class ActiveSession(Object):
             is_current=getattr(session, "current", None),
             is_password_pending=getattr(session, "password_pending", None),
             is_unconfirmed=getattr(session, "unconfirmed", None),
-            can_accept_secret_chats=not getattr(session, "encrypted_requests_disabled", False),
+            can_accept_secret_chats=not getattr(
+                session, "encrypted_requests_disabled", False
+            ),
             can_accept_calls=not getattr(session, "call_requests_disabled", False),
-            is_official_application=getattr(session, "official_app", None)
+            is_official_application=getattr(session, "official_app", None),
         )
 
     async def reset(self):

@@ -30,6 +30,6 @@ class Contacts(
     ImportContacts,
     GetContactsCount,
     AddContact,
-    SearchContacts
+    SearchContacts,
 ):
     pass

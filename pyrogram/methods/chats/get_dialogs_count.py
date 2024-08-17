@@ -26,7 +26,7 @@ class GetDialogsCount:
     async def get_dialogs_count(
         self: "pyrogram.Client",
         pinned_only: bool = False,
-        from_archive: Optional[bool] = None
+        from_archive: Optional[bool] = None,
     ) -> int:
         """Get the total count of your dialogs.
 
@@ -66,7 +66,9 @@ class GetDialogsCount:
                     offset_peer=raw.types.InputPeerEmpty(),
                     limit=1,
                     hash=0,
-                    folder_id=None if from_archive is None else 1 if from_archive else 0
+                    folder_id=(
+                        None if from_archive is None else 1 if from_archive else 0
+                    ),
                 )
             )
 
