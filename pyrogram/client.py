@@ -329,7 +329,9 @@ class Client(Methods):
         if storage:
             self.storage = storage
         elif self.session_string:
-            self.storage = MemoryStorage(self.name, self.session_string, self.is_telethon_string)
+            self.storage = MemoryStorage(
+                self.name, self.session_string, self.is_telethon_string
+            )
         elif self.in_memory:
             self.storage = MemoryStorage(self.name)
         else:

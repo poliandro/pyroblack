@@ -28,7 +28,9 @@ log = logging.getLogger(__name__)
 
 
 class MemoryStorage(SQLiteStorage):
-    def __init__(self, name: str, session_string: str = None, is_telethon_string: bool = False):
+    def __init__(
+        self, name: str, session_string: str = None, is_telethon_string: bool = False
+    ):
         super().__init__(name)
 
         self.session_string = session_string
