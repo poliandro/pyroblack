@@ -88,3 +88,17 @@ login using the same session; the storage used will still be in-memory:
 
 Session strings are useful when you want to run authorized pyroblack clients on platforms where their ephemeral
 filesystems makes it harder for a file-based storage engine to properly work as intended.
+
+If you're coming from Telethon or work with both libraries, you might as well want to use your session string of
+the Telethon format in pyroblack. Here's an example on how to do it:
+
+.. code-block:: python
+
+    from pyrogram import Client
+
+    session_string = "...i1B2u_Hf2FSQap3B3oTxuShH24gH3iPIYInUyA96xLJyLEY..."
+
+    async with Client("my_account", session_string=session_string, is_telethon_string=True) as app:
+        print(await app.get_me())
+
+And as you can see, it's working perfectly fine, removing just another barrier between the libraries.

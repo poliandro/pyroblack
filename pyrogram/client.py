@@ -134,6 +134,10 @@ class Client(Methods):
             Pass a session string to load the session in-memory.
             Implies ``in_memory=True``.
 
+        is_telethon_string (``bool``, *optional*):
+            ``True`` if your provided session_string is in the telethon format.
+            Requires ``session_string`` to be filled.
+
         in_memory (``bool``, *optional*):
             Pass True to start an in-memory session that will be discarded as soon as the client stops.
             In order to reconnect again using an in-memory session without having to login again, you can use
@@ -260,6 +264,7 @@ class Client(Methods):
         test_mode: bool = False,
         bot_token: str = None,
         session_string: str = None,
+        is_telethon_string: bool = False,
         in_memory: bool = None,
         storage: Storage = None,
         phone_number: str = None,
@@ -298,6 +303,7 @@ class Client(Methods):
         self.test_mode = test_mode
         self.bot_token = bot_token
         self.session_string = session_string
+        self.is_telethon_string = is_telethon_string
         self.in_memory = in_memory
         self.phone_number = phone_number
         self.phone_code = phone_code
@@ -323,7 +329,7 @@ class Client(Methods):
         if storage:
             self.storage = storage
         elif self.session_string:
-            self.storage = MemoryStorage(self.name, self.session_string)
+            self.storage = MemoryStorage(self.name, self.session_string, self.is_telethon_string)
         elif self.in_memory:
             self.storage = MemoryStorage(self.name)
         else:
