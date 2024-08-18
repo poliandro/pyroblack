@@ -21,12 +21,15 @@ from typing import Union
 import pyrogram
 from pyrogram import raw
 from pyrogram import types
+from pyrogram import utils
 
 
 class ExportChatInviteLink:
     async def export_chat_invite_link(
         self: "pyrogram.Client",
         chat_id: Union[int, str],
+        subscription_period: int = None,
+        subscription_price: int = None
     ) -> "types.ChatInviteLink":
         """Generate a new primary invite link for a chat; any previously generated primary link is revoked.
 
@@ -47,6 +50,13 @@ class ExportChatInviteLink:
                 (in the format @username).
                 You can also use chat public link in form of *t.me/<username>* (str).
 
+            subscription_period (``int``, *optional*):
+                Date when the subscription will expire.
+                for now, only 30 days is supported (30*24*60*60).
+
+            subscription_price (``int``, *optional*):
+                Subscription price (stars).
+
         Returns:
             ``str``: On success, the new invite link as string is returned.
 
@@ -58,7 +68,12 @@ class ExportChatInviteLink:
         """
         r = await self.invoke(
             raw.functions.messages.ExportChatInvite(
-                peer=await self.resolve_peer(chat_id), legacy_revoke_permanent=True
+                peer=await self.resolve_peer(chat_id),
+                legacy_revoke_permanent=True,
+                subscription_pricing=raw.types.StarsSubscriptionPricing(
+                    period=subscription_period,
+                    amount=subscription_price
+                )
             )
         )
 
