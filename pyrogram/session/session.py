@@ -136,7 +136,16 @@ class Session:
             )
 
             try:
-                await self.connection.connect()
+                conn_success = False
+                while conn_success is False:
+                    try:
+                        await asyncio.wait_for(self.connection.connect(), timeout=20)
+                        conn_success = True
+                    except (TimeoutError, asyncio.TimeoutError):
+                        log.warning(
+                            f"[pyroblack] Client [{self.client.name}] timed out while connecting"
+                        )
+                        continue
 
                 self.recv_task = self.loop.create_task(self.recv_worker())
 
@@ -175,8 +184,9 @@ class Session:
             except AuthKeyDuplicated as e:
                 await self.stop()
                 raise e
-            except (OSError, RPCError):
+            except (OSError, RPCError) as e:
                 await self.stop()
+                raise e
             except Exception as e:
                 await self.stop()
                 raise e
@@ -257,30 +267,17 @@ class Session:
 
             self.last_reconnect_attempt = time()
             await self.stop(restart=True)
-            for try_ in self.RE_START_RANGE:  # sometimes, the DB says "no" 😬
+            restart_try = 0
+            while not self.is_started.is_set():
+                restart_try += 1
                 try:
                     await self.start()
-                    break
-                except ValueError as e:  # SQLite error
-                    try:
-                        await self.client.load_session()
-                        log.info(
-                            f"[pyroblack] Client [{self.client.name}] re-starting got SQLite error, connected to DB successfully. try %s; exc: %s %s",
-                            try_,
-                            type(e).__name__,
-                            e,
-                        )
-                    except Exception as e:
-                        log.warning(
-                            f"[pyroblack] Client [{self.client.name}] failed re-starting SQlite DB, try %s; exc: %s %s",
-                            try_,
-                            type(e).__name__,
-                            e,
-                        )
+                except AuthKeyDuplicated as e:
+                    raise e
                 except Exception as e:
                     log.warning(
-                        f"[pyroblack] Client [{self.client.name}] failed re-starting, try %s; exc: %s %s",
-                        try_,
+                        f"[pyroblack] Client [{self.client.name}] failed re-starting, try: %s; exc: %s %s",
+                        restart_try,
                         type(e).__name__,
                         e,
                     )
@@ -559,7 +556,10 @@ class Session:
                 return  # stop instantly
 
             if not self.is_started.is_set():
-                await self.is_started.wait()
+                if self.currently_restarting or self.currently_stopping:
+                    await self.is_started.wait()
+                else:  # need to start
+                    await self.start()
 
             try:
                 return await self.send(query, timeout=timeout)
