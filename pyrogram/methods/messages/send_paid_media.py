@@ -34,7 +34,13 @@ class SendPaidMedia:
         self: "pyrogram.Client",
         chat_id: Union[int, str],
         stars_amount: int,
-        media: List[Union["types.InputMediaAnimation", "types.InputMediaPhoto", "types.InputMediaVideo"]],
+        media: List[
+            Union[
+                "types.InputMediaAnimation",
+                "types.InputMediaPhoto",
+                "types.InputMediaVideo",
+            ]
+        ],
         business_connection_id: str = None,
         caption: str = "",
         caption_entities: List["types.MessageEntity"] = None,
@@ -304,8 +310,7 @@ class SendPaidMedia:
         if business_connection_id is not None:
             r = await self.invoke(
                 raw.functions.InvokeWithBusinessConnection(
-                    connection_id=business_connection_id,
-                    query=rpc
+                    connection_id=business_connection_id, query=rpc
                 )
             )
         else:

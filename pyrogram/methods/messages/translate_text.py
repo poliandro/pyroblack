@@ -31,7 +31,7 @@ class TranslateText:
         message_ids: Optional[Union[int, List[int]]] = None,
         text: Optional[str] = None,
         parse_mode: Optional["enums.ParseMode"] = None,
-        entities: Optional[List["types.MessageEntity"]] = None
+        entities: Optional[List["types.MessageEntity"]] = None,
     ) -> Union["types.TranslatedText", List["types.TranslatedText"]]:
         """Translates a text or message(s) to the given language. If the current user is a Telegram Premium user, then text formatting is preserved.
 
@@ -62,12 +62,7 @@ class TranslateText:
         """
         if text is not None:
             message, entities = (
-                await utils.parse_text_entities(
-                    self,
-                    text,
-                    parse_mode,
-                    entities
-                )
+                await utils.parse_text_entities(self, text, parse_mode, entities)
             ).values()
 
             r = await self.invoke(
@@ -75,10 +70,9 @@ class TranslateText:
                     to_lang=to_language_code,
                     text=[
                         raw.types.TextWithEntities(
-                            text=message,
-                            entities=entities or []
+                            text=message, entities=entities or []
                         )
-                    ]
+                    ],
                 )
             )
 
@@ -89,17 +83,16 @@ class TranslateText:
                 raw.functions.messages.TranslateText(
                     to_lang=to_language_code,
                     peer=await self.resolve_peer(chat_id),
-                    id=ids
+                    id=ids,
                 )
             )
         else:
-            raise ValueError("Either 'text' or both 'chat_id' and 'message_ids' must be provided.")
+            raise ValueError(
+                "Either 'text' or both 'chat_id' and 'message_ids' must be provided."
+            )
 
         return (
             types.TranslatedText._parse(self, r.result[0])
             if len(r.result) == 1
-            else [
-                types.TranslatedText._parse(self, i)
-                for i in r.result
-            ]
+            else [types.TranslatedText._parse(self, i) for i in r.result]
         )

@@ -79,6 +79,7 @@ from .view_messages import ViewMessages
 from .vote_poll import VotePoll
 from .translate_text import TranslateText
 
+
 class Messages(
     DeleteMessages,
     EditMessageCaption,

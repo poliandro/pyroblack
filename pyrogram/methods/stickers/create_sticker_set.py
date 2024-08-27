@@ -99,9 +99,11 @@ class CreateStickerSet:
                     user_id or "me",
                     sticker,
                     force_document=True,
-                    disable_notification=True
+                    disable_notification=True,
                 )
-                uploaded_media = utils.get_input_media_from_file_id(document.document.file_id, FileType.DOCUMENT)
+                uploaded_media = utils.get_input_media_from_file_id(
+                    document.document.file_id, FileType.DOCUMENT
+                )
                 media = uploaded_media.id
                 _ = await document.delete()
             else:
@@ -113,12 +115,11 @@ class CreateStickerSet:
                 )
         else:
             document = await self.send_document(
-                user_id or "me",
-                sticker,
-                force_document=True,
-                disable_notification=True
+                user_id or "me", sticker, force_document=True, disable_notification=True
             )
-            uploaded_media = utils.get_input_media_from_file_id(document.document.file_id, FileType.DOCUMENT)
+            uploaded_media = utils.get_input_media_from_file_id(
+                document.document.file_id, FileType.DOCUMENT
+            )
             media = uploaded_media.id
             _ = await document.delete()
 

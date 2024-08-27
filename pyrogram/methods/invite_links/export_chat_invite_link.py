@@ -29,7 +29,7 @@ class ExportChatInviteLink:
         self: "pyrogram.Client",
         chat_id: Union[int, str],
         subscription_period: int = None,
-        subscription_price: int = None
+        subscription_price: int = None,
     ) -> "types.ChatInviteLink":
         """Generate a new primary invite link for a chat; any previously generated primary link is revoked.
 
@@ -71,9 +71,8 @@ class ExportChatInviteLink:
                 peer=await self.resolve_peer(chat_id),
                 legacy_revoke_permanent=True,
                 subscription_pricing=raw.types.StarsSubscriptionPricing(
-                    period=subscription_period,
-                    amount=subscription_price
-                )
+                    period=subscription_period, amount=subscription_price
+                ),
             )
         )
 

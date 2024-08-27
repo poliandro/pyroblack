@@ -560,7 +560,7 @@ class Message(Object, Update):
         ] = None,
         reactions: List["types.Reaction"] = None,
         chat_join_type: "enums.ChatJoinType" = None,
-        raw: "raw.types.Message" = None
+        raw: "raw.types.Message" = None,
     ):
         super().__init__(client)
 
@@ -1012,7 +1012,7 @@ class Message(Object, Update):
                 join_request_approved=join_request_approved,
                 raw=message,
                 chat_join_type=chat_join_type,
-                client=client
+                client=client,
                 # TODO: supergroup_chat_created
             )
             if parsed_message.chat.type is not enums.ChatType.CHANNEL:
@@ -5495,10 +5495,7 @@ class Message(Object, Update):
             chat_id=self.chat.id, message_id=self.id
         )
 
-    async def translate(
-        self,
-        to_language_code: str
-    ) -> "types.TranslatedText":
+    async def translate(self, to_language_code: str) -> "types.TranslatedText":
         """Bound method *translate* of :obj:`~pyrogram.types.Message`.
         Use as a shortcut for:
         .. code-block:: python
@@ -5520,7 +5517,5 @@ class Message(Object, Update):
             RPCError: In case of a Telegram RPC error.
         """
         return await self._client.translate_message_text(
-            chat_id=self.chat.id,
-            message_ids=self.id,
-            to_language_code=to_language_code
+            chat_id=self.chat.id, message_ids=self.id, to_language_code=to_language_code
         )

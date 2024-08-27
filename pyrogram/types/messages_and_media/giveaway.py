@@ -64,7 +64,7 @@ class Giveaway(Object):
         quantity: int,
         months: int,
         expire_date: datetime,
-        new_subscribers : bool,
+        new_subscribers: bool,
         additional_price: str = None,
         allowed_countries: List[str] = None,
         private_channel_ids: List[int] = None,
@@ -107,7 +107,9 @@ class Giveaway(Object):
             expire_date=utils.timestamp_to_datetime(giveaway.until_date),
             new_subscribers=giveaway.only_new_subscribers,
             additional_price=giveaway.prize_description,
-            allowed_countries=giveaway.countries_iso2 if len(giveaway.countries_iso2) > 0 else None,
+            allowed_countries=(
+                giveaway.countries_iso2 if len(giveaway.countries_iso2) > 0 else None
+            ),
             private_channel_ids=private_ids if len(private_ids) > 0 else None,
             client=client,
         )
