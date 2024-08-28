@@ -141,7 +141,7 @@ class Session:
                 conn_success = False
                 while conn_success is False:
                     try:
-                        await asyncio.wait_for(self.connection.connect(), timeout=20)
+                        await asyncio.wait_for(self.connection.connect(), timeout=30)
                         conn_success = True
                     except (TimeoutError, asyncio.TimeoutError):
                         log.warning(
@@ -186,7 +186,7 @@ class Session:
             except AuthKeyDuplicated as e:
                 await self.stop()
                 raise e
-            except (OSError, RPCError) as e:
+            except (OSError, RPCError):
                 await self.stop()
                 continue  # next try
             except Exception as e:
@@ -286,6 +286,23 @@ class Session:
                 restart_try += 1
                 try:
                     await self.start()
+                    break
+                except ValueError as e:  # SQLite error
+                    try:
+                        await self.client.load_session()
+                        log.info(
+                            f"[pyroblack] Client [{self.client.name}] re-starting got SQLite error, connected to DB successfully. try %s; exc: %s %s",
+                            restart_try,
+                            type(e).__name__,
+                            e,
+                        )
+                    except Exception as e:
+                        log.warning(
+                            f"[pyroblack] Client [{self.client.name}] failed re-starting SQlite DB, try %s; exc: %s %s",
+                            restart_try,
+                            type(e).__name__,
+                            e,
+                        )
                 except AuthKeyDuplicated as e:
                     raise e
                 except Exception as e:
