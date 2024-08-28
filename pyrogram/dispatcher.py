@@ -318,7 +318,9 @@ class Dispatcher:
                             )
                         except (errors.ChannelPrivate, errors.ChannelInvalid):
                             break
-
+                        except errors.exceptions.bad_request_400.PersistentTimestampInvalid:
+                            log.warning("[pyroblack]-recover-updates- Client [%s] got PERSISTENT_TIMESTAMP_INVALID.", self.client.name)
+                            break
                         if isinstance(diff, raw.types.updates.DifferenceEmpty):
                             break
                         elif isinstance(diff, raw.types.updates.DifferenceTooLong):

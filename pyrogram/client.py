@@ -51,6 +51,7 @@ from pyrogram.errors import (
     AuthBytesInvalid,
     FloodWait,
     FloodPremiumWait,
+    PersistentTimestampInvalid,
 )
 from pyrogram.handlers.handler import Handler
 from pyrogram.methods import Methods
@@ -700,6 +701,8 @@ class Client(Methods):
                             )
                         except ChannelPrivate:
                             pass
+                        except PersistentTimestampInvalid:
+                            log.warning("[pyroblack] Client [%s] got PERSISTENT_TIMESTAMP_INVALID.", self.name)
                         else:
                             if not isinstance(
                                 diff, raw.types.updates.ChannelDifferenceEmpty
