@@ -61,7 +61,7 @@ class Session:
     WAIT_TIMEOUT = 15
     RECONN_TIMEOUT = 5
     SLEEP_THRESHOLD = 10
-    MAX_RETRIES = 20
+    MAX_RETRIES = 60
     ACKS_THRESHOLD = 10
     PING_INTERVAL = 5
     STORED_MSG_IDS_MAX_SIZE = 1000 * 2
@@ -116,6 +116,7 @@ class Session:
 
         self.instant_stop = False
         self.last_reconnect_attempt = None
+        self.currently_starting = False
         self.currently_restarting = False
         self.currently_stopping = False
 
@@ -136,6 +137,7 @@ class Session:
             )
 
             try:
+                self.currently_starting = True
                 conn_success = False
                 while conn_success is False:
                     try:
@@ -186,12 +188,14 @@ class Session:
                 raise e
             except (OSError, RPCError) as e:
                 await self.stop()
-                raise e
+                continue  # next try
             except Exception as e:
                 await self.stop()
                 raise e
             else:
                 break
+            finally:
+                self.currently_starting = False
 
         self.is_started.set()
         log.info("Session started")
@@ -244,9 +248,11 @@ class Session:
             if restart:
                 self.instant_stop = False  # reset
 
-    async def restart(self):
+    async def restart(self, stop: bool = True):
         if self.currently_restarting:
             return  # don't restart twice
+        if self.currently_starting:
+            return  # don't restart while starting
         if self.instant_stop:
             return  # stop instantly
 
@@ -266,7 +272,15 @@ class Session:
                 await asyncio.sleep(to_wait)
 
             self.last_reconnect_attempt = time()
-            await self.stop(restart=True)
+            if stop:
+                try:
+                    await self.stop(restart=True)
+                except Exception as e:
+                    log.warning(
+                        f"[pyroblack] Client [{self.client.name}] failed stopping; restarting anyways, exc: %s %s",
+                        type(e).__name__,
+                        e,
+                    )
             restart_try = 0
             while not self.is_started.is_set():
                 restart_try += 1
@@ -406,7 +420,10 @@ class Session:
                     False,
                 )
             except OSError:
-                self.loop.create_task(self.restart())
+                if self.is_started.is_set():
+                    self.loop.create_task(self.restart())
+                else:
+                    self.loop.create_task(self.restart(False))
                 break
             except RPCError:
                 pass
@@ -442,6 +459,8 @@ class Session:
 
                 if self.is_started.is_set():
                     self.loop.create_task(self.restart())
+                else:
+                    self.loop.create_task(self.restart(False))
 
                 break
 
@@ -556,7 +575,7 @@ class Session:
                 return  # stop instantly
 
             if not self.is_started.is_set():
-                if self.currently_restarting or self.currently_stopping:
+                if self.currently_restarting or self.currently_stopping or self.currently_starting:
                     await self.is_started.wait()
                 else:  # need to start
                     await self.start()
