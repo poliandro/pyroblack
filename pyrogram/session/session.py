@@ -575,7 +575,11 @@ class Session:
                 return  # stop instantly
 
             if not self.is_started.is_set():
-                if self.currently_restarting or self.currently_stopping or self.currently_starting:
+                if (
+                    self.currently_restarting
+                    or self.currently_stopping
+                    or self.currently_starting
+                ):
                     await self.is_started.wait()
                 else:  # need to start
                     await self.start()

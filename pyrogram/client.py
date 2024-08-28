@@ -702,7 +702,10 @@ class Client(Methods):
                         except ChannelPrivate:
                             pass
                         except PersistentTimestampInvalid:
-                            log.warning("[pyroblack] Client [%s] got PERSISTENT_TIMESTAMP_INVALID.", self.name)
+                            log.warning(
+                                "[pyroblack] Client [%s] got PERSISTENT_TIMESTAMP_INVALID.",
+                                self.name,
+                            )
                         else:
                             if not isinstance(
                                 diff, raw.types.updates.ChannelDifferenceEmpty
