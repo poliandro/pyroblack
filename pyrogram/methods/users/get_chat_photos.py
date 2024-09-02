@@ -80,15 +80,17 @@ class GetChatPhotos:
                 ),
             )
 
-            extra = [message.new_chat_photo for message in r]
+                extra = [message.new_chat_photo for message in r] if r else []
 
             if extra:
-                if current:
-                    photos = (
-                        ([current] + extra)
-                        if current.file_id != extra[0].file_id
-                        else extra
-                    )
+                if (
+                    current
+                    and
+                    len(current) > 0
+                    and
+                    isinstance(current[0], types.Photo)
+                ):
+                    photos = (current + extra) if current[0].file_id != extra[0].file_id else extra
                 else:
                     photos = extra
             else:
@@ -98,6 +100,9 @@ class GetChatPhotos:
                     photos = []
 
             current = 0
+
+            if len(photos) == 0 or (len(photos) == 1 and not isinstance(photos[0], types.Photo)):
+                return
 
             for photo in photos:
                 yield photo
