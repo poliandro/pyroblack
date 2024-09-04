@@ -80,7 +80,7 @@ class GetChatPhotos:
                 ),
             )
 
-                extra = [message.new_chat_photo for message in r] if r else []
+            extra = [message.new_chat_photo for message in r] if r else []
 
             if extra:
                 if (
