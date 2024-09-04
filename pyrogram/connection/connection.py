@@ -29,7 +29,7 @@ log = logging.getLogger(__name__)
 
 
 class Connection:
-    MAX_CONNECTION_ATTEMPTS = 60
+    MAX_CONNECTION_ATTEMPTS = 3
 
     def __init__(
         self,

@@ -57,11 +57,11 @@ class Result:
 
 
 class Session:
-    START_TIMEOUT = 5
+    START_TIMEOUT = 10
     WAIT_TIMEOUT = 15
     RECONN_TIMEOUT = 5
     SLEEP_THRESHOLD = 10
-    MAX_RETRIES = 60
+    MAX_RETRIES = 50
     ACKS_THRESHOLD = 10
     PING_INTERVAL = 5
     STORED_MSG_IDS_MAX_SIZE = 1000 * 2
@@ -115,205 +115,197 @@ class Session:
         self.loop = asyncio.get_event_loop()
 
         self.instant_stop = False
+        self.start_lock = asyncio.Lock()
+        self.stop_lock = asyncio.Lock()
+        self.restart_lock = asyncio.Lock()
         self.last_reconnect_attempt = None
-        self.currently_starting = False
-        self.currently_restarting = False
-        self.currently_stopping = False
 
     async def start(self):
-        while True:
-            if self.instant_stop:
-                log.warning("[pyroblack] Session init force stopped (loop)")
-                return  # stop instantly
+        if self.instant_stop:
+            log.warning("[pyroblack] Session init force stopped")
+            return  # stop instantly
 
-            self.connection = self.client.connection_factory(
-                dc_id=self.dc_id,
-                test_mode=self.test_mode,
-                ipv6=self.client.ipv6,
-                proxy=self.client.proxy,
-                alt_port=self.client.alt_port,
-                media=self.is_media,
-                protocol_factory=self.client.protocol_factory,
-            )
+        if self.start_lock.locked():
+            log.warning(f"[pyroblack] Client [{self.client.name}] called start while already starting")
+            return  # don't start 2 times at once
 
-            try:
-                self.currently_starting = True
-                conn_success = False
-                while conn_success is False:
-                    try:
-                        await asyncio.wait_for(self.connection.connect(), timeout=30)
-                        conn_success = True
-                    except (TimeoutError, asyncio.TimeoutError):
-                        log.warning(
-                            f"[pyroblack] Client [{self.client.name}] timed out while connecting"
-                        )
-                        continue
+        async with self.start_lock:
+            while True:
+                if self.instant_stop:
+                    log.warning("[pyroblack] Session init force stopped (loop)")
+                    return  # stop instantly
 
-                self.recv_task = self.loop.create_task(self.recv_worker())
-
-                await self.send(
-                    raw.functions.Ping(ping_id=0), timeout=self.START_TIMEOUT
+                self.connection = self.client.connection_factory(
+                    dc_id=self.dc_id,
+                    test_mode=self.test_mode,
+                    ipv6=self.client.ipv6,
+                    proxy=self.client.proxy,
+                    alt_port=self.client.alt_port,
+                    media=self.is_media,
+                    protocol_factory=self.client.protocol_factory,
                 )
 
-                if not self.is_cdn:
+                try:
+                    await self.connection.connect()
+                    self.recv_task = self.loop.create_task(self.recv_worker())
+
                     await self.send(
-                        raw.functions.InvokeWithLayer(
-                            layer=layer,
-                            query=raw.functions.InitConnection(
-                                api_id=await self.client.storage.api_id(),
-                                app_version=self.client.app_version,
-                                device_model=self.client.device_model,
-                                system_version=self.client.system_version,
-                                system_lang_code=self.client.system_lang_code,
-                                lang_code=self.client.lang_code,
-                                lang_pack=self.client.lang_pack,
-                                query=raw.functions.help.GetConfig(),
-                                params=self.client.init_params,
-                            ),
-                        ),
-                        timeout=self.START_TIMEOUT,
+                        raw.functions.Ping(ping_id=0), timeout=self.START_TIMEOUT
                     )
 
-                self.ping_task = self.loop.create_task(self.ping_worker())
+                    if not self.is_cdn:
+                        await self.send(
+                            raw.functions.InvokeWithLayer(
+                                layer=layer,
+                                query=raw.functions.InitConnection(
+                                    api_id=await self.client.storage.api_id(),
+                                    app_version=self.client.app_version,
+                                    device_model=self.client.device_model,
+                                    system_version=self.client.system_version,
+                                    system_lang_code=self.client.system_lang_code,
+                                    lang_code=self.client.lang_code,
+                                    lang_pack=self.client.lang_pack,
+                                    query=raw.functions.help.GetConfig(),
+                                    params=self.client.init_params,
+                                ),
+                            ),
+                            timeout=self.START_TIMEOUT,
+                        )
 
-                log.info("Session initialized: Layer %s", layer)
-                log.info(
-                    "Device: %s - %s", self.client.device_model, self.client.app_version
-                )
-                log.info(
-                    "System: %s (%s)", self.client.system_version, self.client.lang_code
-                )
-            except AuthKeyDuplicated as e:
-                await self.stop()
-                raise e
-            except (OSError, RPCError):
-                await self.stop()
-                continue  # next try
-            except Exception as e:
-                await self.stop()
-                raise e
-            else:
-                break
-            finally:
-                self.currently_starting = False
+                    self.ping_task = self.loop.create_task(self.ping_worker())
 
-        self.is_started.set()
-        log.info("Session started")
+                    log.info("Session initialized: Layer %s", layer)
+                    log.info(
+                        "Device: %s - %s", self.client.device_model, self.client.app_version
+                    )
+                    log.info(
+                        "System: %s (%s)", self.client.system_version, self.client.lang_code
+                    )
+                except AuthKeyDuplicated as e:
+                    await self.stop()
+                    raise e
+                except (OSError, RPCError):
+                    await self.stop()
+                    # next try
+                except Exception as e:
+                    await self.stop()
+                    raise e
+                else:
+                    break
+
+            self.is_started.set()
+            log.info("Session started")
 
     async def stop(self, restart: bool = False):
-        if self.currently_stopping:
-            return  # don't stop twice
         if self.instant_stop:
             log.info("Session stop process stopped")
-            return  # stop doing anything instantly, client is manually handling
+            return  # stop doing anything instantly, force stop
 
-        try:
-            self.currently_stopping = True
-            self.is_started.clear()
-            self.stored_msg_ids.clear()
+        if self.stop_lock.locked():
+            log.warning(f"[pyroblack] Client [{self.client.name}] called stop while already stopping")
+            return  # don't stop 2 times at once
 
-            if restart:
-                self.instant_stop = True  # tell all funcs that we want to stop
-
-            self.ping_task_event.set()
+        async with self.stop_lock:
             try:
-                if self.ping_task is not None:
-                    await asyncio.wait_for(self.ping_task, timeout=self.RECONN_TIMEOUT)
-            except TimeoutError:
-                self.ping_task.cancel()
-            self.ping_task_event.clear()
+                self.is_started.clear()
+                self.stored_msg_ids.clear()
 
-            try:
-                await asyncio.wait_for(
-                    self.connection.close(), timeout=self.RECONN_TIMEOUT
-                )
-            except Exception:
-                pass
+                if restart:
+                    self.instant_stop = True  # tell all funcs that we want to stop
 
-            try:
-                if self.recv_task:
-                    await asyncio.wait_for(self.recv_task, timeout=self.RECONN_TIMEOUT)
-            except TimeoutError:
-                self.recv_task.cancel()
-
-            if not self.is_media and callable(self.client.disconnect_handler):
+                self.ping_task_event.set()
                 try:
-                    await self.client.disconnect_handler(self.client)
-                except Exception as e:
-                    log.exception(e)
+                    if self.ping_task is not None:
+                        await asyncio.wait_for(self.ping_task, timeout=self.RECONN_TIMEOUT)
+                except TimeoutError:
+                    self.ping_task.cancel()
+                except Exception:
+                    pass
+                self.ping_task_event.clear()
 
-            log.info("Session stopped")
-        finally:
-            self.currently_stopping = False
-            if restart:
-                self.instant_stop = False  # reset
+                try:
+                    await asyncio.wait_for(
+                        self.connection.close(), timeout=self.RECONN_TIMEOUT
+                    )
+                except Exception:
+                    pass
+
+                try:
+                    if self.recv_task:
+                        await asyncio.wait_for(self.recv_task, timeout=self.RECONN_TIMEOUT)
+                except TimeoutError:
+                    self.recv_task.cancel()
+                except Exception:
+                    pass
+
+                if not self.is_media and callable(self.client.disconnect_handler):
+                    try:
+                        await self.client.disconnect_handler(self.client)
+                    except Exception as e:
+                        log.error(e)
+
+                log.info("Session stopped")
+            finally:
+                if restart:
+                    self.instant_stop = False  # reset
 
     async def restart(self, stop: bool = True):
-        if self.currently_restarting:
-            return  # don't restart twice
-        if self.currently_starting:
-            return  # don't restart while starting
         if self.instant_stop:
             return  # stop instantly
 
-        try:
-            self.currently_restarting = True
-            now = time()
-            if (
-                self.last_reconnect_attempt
-                and (now - self.last_reconnect_attempt) < self.RECONNECT_THRESHOLD
-            ):
-                to_wait = self.RECONNECT_THRESHOLD + int(
-                    self.RECONNECT_THRESHOLD - (now - self.last_reconnect_attempt)
-                )
-                log.warning(
-                    f"[pyroblack] Client [{self.client.name}] is reconnecting too frequently, sleeping for {to_wait} seconds"
-                )
-                await asyncio.sleep(to_wait)
+        if self.restart_lock.locked():
+            log.warning(f"[pyroblack] Client [{self.client.name}] called restart while already restarting")
+            return  # don't restart 2 times at once
 
-            self.last_reconnect_attempt = time()
-            if stop:
+        if self.start_lock.locked():
+            log.warning(f"[pyroblack] Client [{self.client.name}] called restart while starting")
+            return  # don't restart while starting
+
+        now = time()
+        if (
+            self.last_reconnect_attempt
+            and (now - self.last_reconnect_attempt) < self.RECONNECT_THRESHOLD
+        ):
+            to_wait = self.RECONNECT_THRESHOLD + int(
+                self.RECONNECT_THRESHOLD - (now - self.last_reconnect_attempt)
+            )
+            log.warning(
+                f"[pyroblack] Client [{self.client.name}] is reconnecting too frequently, sleeping for {to_wait} seconds"
+            )
+            await asyncio.sleep(to_wait)
+
+        self.last_reconnect_attempt = time()
+        if stop:
+            try:
+                await self.stop(restart=True)
+            except Exception as e:
+                log.warning(
+                    f"[pyroblack] Client [{self.client.name}] failed stopping; restarting anyways, exc: %s %s",
+                    type(e).__name__,
+                    e,
+                )
+
+        for try_ in self.RE_START_RANGE:
+            try_ += 1
+            try:
+                await self.start()
+                break
+            except ValueError as e:  # SQLite error
                 try:
-                    await self.stop(restart=True)
-                except Exception as e:
-                    log.warning(
-                        f"[pyroblack] Client [{self.client.name}] failed stopping; restarting anyways, exc: %s %s",
+                    await self.client.load_session()
+                    log.info(
+                        f"[pyroblack] Client [{self.client.name}] re-starting got SQLite error, connected to DB successfully. try %s; exc: %s %s",
+                        try_,
                         type(e).__name__,
                         e,
                     )
-            restart_try = 0
-            while not self.is_started.is_set():
-                restart_try += 1
-                try:
-                    await self.start()
-                    break
-                except ValueError as e:  # SQLite error
-                    try:
-                        await self.client.load_session()
-                        log.info(
-                            f"[pyroblack] Client [{self.client.name}] re-starting got SQLite error, connected to DB successfully. try %s; exc: %s %s",
-                            restart_try,
-                            type(e).__name__,
-                            e,
-                        )
-                    except Exception as e:
-                        log.warning(
-                            f"[pyroblack] Client [{self.client.name}] failed re-starting SQlite DB, try %s; exc: %s %s",
-                            restart_try,
-                            type(e).__name__,
-                            e,
-                        )
-                except AuthKeyDuplicated as e:
-                    raise e
                 except Exception as e:
                     log.warning(
-                        f"[pyroblack] Client [{self.client.name}] failed re-starting, try: %s; exc: %s %s",
-                        restart_try,
+                        f"[pyroblack] Client [{self.client.name}] failed re-starting SQlite DB, try %s; exc: %s %s",
+                        try_,
                         type(e).__name__,
                         e,
                     )
-        finally:
-            self.currently_restarting = False
 
     async def handle_packet(self, packet):
         if self.instant_stop:
@@ -437,10 +429,11 @@ class Session:
                     False,
                 )
             except OSError:
-                if self.is_started.is_set():
-                    self.loop.create_task(self.restart())
-                else:
-                    self.loop.create_task(self.restart(False))
+                if (not self.start_lock.locked()) and (not self.restart_lock.locked()):
+                    if self.is_started.is_set():
+                        self.loop.create_task(self.restart())
+                    else:
+                        self.loop.create_task(self.restart(stop=False))
                 break
             except RPCError:
                 pass
@@ -474,11 +467,11 @@ class Session:
                         Session.TRANSPORT_ERRORS.get(error_code, "unknown error"),
                     )
 
-                if self.is_started.is_set():
-                    self.loop.create_task(self.restart())
-                else:
-                    self.loop.create_task(self.restart(False))
-
+                if (not self.start_lock.locked()) and (not self.restart_lock.locked()):
+                    if self.is_started.is_set():
+                        self.loop.create_task(self.restart())
+                    else:
+                        self.loop.create_task(self.restart(stop=False))
                 break
 
             self.loop.create_task(self.handle_packet(packet))
@@ -584,19 +577,19 @@ class Session:
 
         while retries > 0:
             # sleep until the restart is performed
-            if self.currently_restarting:
-                while self.currently_restarting:
-                    await asyncio.sleep(1)
+            if self.restart_lock.locked():
+                # wait until the restart is done
+                await self.restart_lock.acquire()
+                self.restart_lock.release()
 
             if self.instant_stop:
                 return  # stop instantly
 
             if not self.is_started.is_set():
                 if (
-                    self.currently_restarting
-                    or self.currently_stopping
-                    or self.currently_starting
-                ):
+                    self.restart_lock.locked()
+                    or self.start_lock.locked()
+                ):  # restarting or starting, wait
                     await self.is_started.wait()
                 else:  # need to start
                     await self.start()
