@@ -858,7 +858,7 @@ class Client(Methods):
                             pass
             else:
                 for path, handlers in include:
-                    module_path = root + "." + path
+                    module_path = root.replace("/",".") + "." + path
                     warn_non_existent_functions = True
 
                     try:
@@ -913,7 +913,7 @@ class Client(Methods):
 
             if exclude:
                 for path, handlers in exclude:
-                    module_path = root + "." + path
+                    module_path = root.replace("/",".") + "." + path
                     warn_non_existent_functions = True
 
                     try:
