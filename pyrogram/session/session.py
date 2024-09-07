@@ -122,7 +122,6 @@ class Session:
 
     async def start(self):
         if self.instant_stop:
-            log.warning("[pyroblack] Session init force stopped")
             return  # stop instantly
 
         if self.start_lock.locked():
@@ -134,7 +133,6 @@ class Session:
         async with self.start_lock:
             while True:
                 if self.instant_stop:
-                    log.warning("[pyroblack] Session init force stopped (loop)")
                     return  # stop instantly
 
                 self.connection = self.client.connection_factory(
@@ -204,7 +202,6 @@ class Session:
 
     async def stop(self, restart: bool = False):
         if self.instant_stop:
-            log.info("Session stop process stopped")
             return  # stop doing anything instantly, force stop
 
         if self.stop_lock.locked():
@@ -326,7 +323,6 @@ class Session:
 
     async def handle_packet(self, packet):
         if self.instant_stop:
-            log.info("Stopped packet handler")
             return  # stop instantly
 
         try:
@@ -433,7 +429,6 @@ class Session:
 
         while True:
             if self.instant_stop:
-                log.info("[pyroblack] PingTask force stopped (loop)")
                 return  # stop instantly
 
             try:
@@ -464,7 +459,6 @@ class Session:
 
         while True:
             if self.instant_stop:
-                log.info("[pyroblack] NetworkTask force stopped (loop)")
                 return  # stop instantly
 
             packet = await self.connection.recv()
