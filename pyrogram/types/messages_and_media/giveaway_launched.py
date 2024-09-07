@@ -30,12 +30,7 @@ class GiveawayLaunched(Object):
             How many stars the giveaway winner(s) get.
     """
 
-    def __init__(
-        self,
-        *,
-        client: "pyrogram.Client" = None,
-        stars: int = None
-    ):
+    def __init__(self, *, client: "pyrogram.Client" = None, stars: int = None):
         super().__init__(client)
 
         self.stars = stars
@@ -43,9 +38,6 @@ class GiveawayLaunched(Object):
     @staticmethod
     def _parse(
         client: "pyrogram.Client",
-        giveaway_launched: "raw.types.MessageActionGiveawayLaunch"
+        giveaway_launched: "raw.types.MessageActionGiveawayLaunch",
     ) -> "GiveawayLaunched":
-        return GiveawayLaunched(
-            client=client,
-            stars=giveaway_launched.stars
-        )
+        return GiveawayLaunched(client=client, stars=giveaway_launched.stars)

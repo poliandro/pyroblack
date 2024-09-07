@@ -75,7 +75,7 @@ class Giveaway(Object):
         additional_price: str = None,
         allowed_countries: List[str] = None,
         private_channel_ids: List[int] = None,
-        is_winners_hidden: bool = None
+        is_winners_hidden: bool = None,
     ):
         super().__init__(client)
 

@@ -702,7 +702,11 @@ class Client(Methods):
                                     force=False,
                                 )
                             )
-                        except (ChannelPrivate, PersistentTimestampOutdated, PersistentTimestampInvalid):
+                        except (
+                            ChannelPrivate,
+                            PersistentTimestampOutdated,
+                            PersistentTimestampInvalid,
+                        ):
                             pass
                         else:
                             if not isinstance(
@@ -772,15 +776,19 @@ class Client(Methods):
                             filter=raw.types.ChannelMessagesFilterEmpty(),
                             pts=local_pts,
                             limit=10000,
-                            force=False
-                        ) if id < 0 else
-                        raw.functions.updates.GetDifference(
-                            pts=local_pts,
-                            date=local_date,
-                            qts=0
+                            force=False,
+                        )
+                        if id < 0
+                        else raw.functions.updates.GetDifference(
+                            pts=local_pts, date=local_date, qts=0
                         )
                     )
-                except (ChannelPrivate, ChannelInvalid, PersistentTimestampOutdated, PersistentTimestampInvalid):
+                except (
+                    ChannelPrivate,
+                    ChannelInvalid,
+                    PersistentTimestampOutdated,
+                    PersistentTimestampInvalid,
+                ):
                     break
 
                 if isinstance(diff, raw.types.updates.DifferenceEmpty):
@@ -812,27 +820,30 @@ class Client(Methods):
                     self.dispatcher.updates_queue.put_nowait(
                         (
                             raw.types.UpdateNewMessage(
-                                message=message,
-                                pts=local_pts,
-                                pts_count=-1
+                                message=message, pts=local_pts, pts_count=-1
                             ),
                             users,
-                            chats
+                            chats,
                         )
                     )
 
                 for update in diff.other_updates:
                     other_updates_counter += 1
-                    self.dispatcher.updates_queue.put_nowait(
-                        (update, users, chats)
-                    )
+                    self.dispatcher.updates_queue.put_nowait((update, users, chats))
 
-                if isinstance(diff, (raw.types.updates.Difference, raw.types.updates.ChannelDifference)):
+                if isinstance(
+                    diff,
+                    (raw.types.updates.Difference, raw.types.updates.ChannelDifference),
+                ):
                     break
 
             await self.storage.update_state(id)
 
-        log.info("Recovered %s messages and %s updates.", message_updates_counter, other_updates_counter)
+        log.info(
+            "Recovered %s messages and %s updates.",
+            message_updates_counter,
+            other_updates_counter,
+        )
         return (message_updates_counter, other_updates_counter)
 
     async def load_session(self):
@@ -942,7 +953,7 @@ class Client(Methods):
                             pass
             else:
                 for path, handlers in include:
-                    module_path = root.replace("/",".") + "." + path
+                    module_path = root.replace("/", ".") + "." + path
                     warn_non_existent_functions = True
 
                     try:
@@ -997,7 +1008,7 @@ class Client(Methods):
 
             if exclude:
                 for path, handlers in exclude:
-                    module_path = root.replace("/",".") + "." + path
+                    module_path = root.replace("/", ".") + "." + path
                     warn_non_existent_functions = True
 
                     try:

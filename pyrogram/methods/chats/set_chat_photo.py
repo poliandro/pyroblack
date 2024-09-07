@@ -122,17 +122,17 @@ class SetChatPhoto:
                     raise ValueError("You must provide a valid file path for the video")
             else:
                 photo = raw.types.InputChatUploadedPhoto(
-                    video=await self.save_file(video),
-                    video_start_ts=video_start_ts
+                    video=await self.save_file(video), video_start_ts=video_start_ts
                 )
         elif emoji is not None:
-            background_colors = emoji_background if emoji_background is not None else [0xFFFFFF]
+            background_colors = (
+                emoji_background if emoji_background is not None else [0xFFFFFF]
+            )
             if isinstance(background_colors, int):
                 background_colors = [background_colors]
             photo = raw.types.InputChatUploadedPhoto(
                 video_emoji_markup=raw.types.VideoSizeEmojiMarkup(
-                    emoji_id=emoji,
-                    background_colors=background_colors
+                    emoji_id=emoji, background_colors=background_colors
                 )
             )
         else:
@@ -147,21 +147,20 @@ class SetChatPhoto:
             )
         elif isinstance(peer, raw.types.InputPeerChannel):
             r = await self.invoke(
-                raw.functions.channels.EditPhoto(
-                    channel=peer,
-                    photo=photo
-                )
+                raw.functions.channels.EditPhoto(channel=peer, photo=photo)
             )
         else:
             raise ValueError(f'The chat_id "{chat_id}" belongs to a user')
 
         for i in r.updates:
-            if isinstance(i, (raw.types.UpdateNewMessage, raw.types.UpdateNewChannelMessage)):
+            if isinstance(
+                i, (raw.types.UpdateNewMessage, raw.types.UpdateNewChannelMessage)
+            ):
                 return await types.Message._parse(
                     self,
                     i.message,
                     {i.id: i for i in r.users},
-                    {i.id: i for i in r.chats}
+                    {i.id: i for i in r.chats},
                 )
         else:
             return True

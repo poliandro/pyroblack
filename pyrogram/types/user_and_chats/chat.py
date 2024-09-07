@@ -889,7 +889,7 @@ class Chat(Object):
             emoji=emoji,
             emoji_background=emoji_background,
             video=video,
-            video_start_ts=video_start_ts
+            video_start_ts=video_start_ts,
         )
 
     async def ban_member(

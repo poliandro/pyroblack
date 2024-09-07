@@ -143,7 +143,11 @@ class GiveawayResult(Object):
             unclaimed_quantity=getattr(giveaway_result, "unclaimed_count", None),
             winners=winners,
             months=getattr(giveaway_result, "months", None),
-            stars=stars if isinstance(giveaway_result, raw.types.MessageMediaGiveawayResults) else None,
+            stars=(
+                stars
+                if isinstance(giveaway_result, raw.types.MessageMediaGiveawayResults)
+                else None
+            ),
             expire_date=expired_date,
             new_subscribers=getattr(giveaway_result, "only_new_subscribers", None),
             is_refunded=getattr(giveaway_result, "refunded", None),

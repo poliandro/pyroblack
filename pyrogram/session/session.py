@@ -126,7 +126,9 @@ class Session:
             return  # stop instantly
 
         if self.start_lock.locked():
-            log.warning(f"[pyroblack] Client [{self.client.name}] called start while already starting")
+            log.warning(
+                f"[pyroblack] Client [{self.client.name}] called start while already starting"
+            )
             return  # don't start 2 times at once
 
         async with self.start_lock:
@@ -176,10 +178,14 @@ class Session:
 
                     log.info("Session initialized: Layer %s", layer)
                     log.info(
-                        "Device: %s - %s", self.client.device_model, self.client.app_version
+                        "Device: %s - %s",
+                        self.client.device_model,
+                        self.client.app_version,
                     )
                     log.info(
-                        "System: %s (%s)", self.client.system_version, self.client.lang_code
+                        "System: %s (%s)",
+                        self.client.system_version,
+                        self.client.lang_code,
                     )
                 except AuthKeyDuplicated as e:
                     await self.stop()
@@ -202,7 +208,9 @@ class Session:
             return  # stop doing anything instantly, force stop
 
         if self.stop_lock.locked():
-            log.warning(f"[pyroblack] Client [{self.client.name}] called stop while already stopping")
+            log.warning(
+                f"[pyroblack] Client [{self.client.name}] called stop while already stopping"
+            )
             return  # don't stop 2 times at once
 
         async with self.stop_lock:
@@ -216,7 +224,9 @@ class Session:
                 self.ping_task_event.set()
                 try:
                     if self.ping_task is not None:
-                        await asyncio.wait_for(self.ping_task, timeout=self.RECONN_TIMEOUT)
+                        await asyncio.wait_for(
+                            self.ping_task, timeout=self.RECONN_TIMEOUT
+                        )
                 except TimeoutError:
                     self.ping_task.cancel()
                 except Exception:
@@ -232,7 +242,9 @@ class Session:
 
                 try:
                     if self.recv_task:
-                        await asyncio.wait_for(self.recv_task, timeout=self.RECONN_TIMEOUT)
+                        await asyncio.wait_for(
+                            self.recv_task, timeout=self.RECONN_TIMEOUT
+                        )
                 except TimeoutError:
                     self.recv_task.cancel()
                 except Exception:
@@ -254,11 +266,15 @@ class Session:
             return  # stop instantly
 
         if self.start_lock.locked():
-            log.warning(f"[pyroblack] Client [{self.client.name}] called restart while starting")
+            log.warning(
+                f"[pyroblack] Client [{self.client.name}] called restart while starting"
+            )
             return  # don't restart while starting
 
         if self.restart_lock.locked():
-            log.warning(f"[pyroblack] Client [{self.client.name}] called restart while already restarting")
+            log.warning(
+                f"[pyroblack] Client [{self.client.name}] called restart while already restarting"
+            )
             return  # don't restart 2 times at once
 
         async with self.restart_lock:
@@ -587,8 +603,7 @@ class Session:
 
             if not self.is_started.is_set():
                 if (
-                    self.restart_lock.locked()
-                    or self.start_lock.locked()
+                    self.restart_lock.locked() or self.start_lock.locked()
                 ):  # restarting or starting, wait
                     await self.is_started.wait()
                 else:  # need to start
