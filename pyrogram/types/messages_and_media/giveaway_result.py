@@ -49,6 +49,9 @@ class GiveawayResult(Object):
         months (``int``, *optional*):
             How long the telegram premium last (in month).
 
+        stars (``int``, *optional*):
+            How many stars the giveaway winner(s) get.
+
         expire_date (:py:obj:`~datetime.datetime`, *optional*):
             Date the giveaway winner(s) choosen.
 
@@ -57,6 +60,9 @@ class GiveawayResult(Object):
 
         is_refunded (``bool``, *optional*):
             True, if the giveaway was refunded.
+
+        is_star_giveaway (``bool``, *optional*):
+            True, if the giveaway is a star giveaway.
 
         is_winners_hidden (``bool``):
             True, if the giveaway winners are hidden.
@@ -72,9 +78,11 @@ class GiveawayResult(Object):
         unclaimed_quantity: int,
         winners: List["types.User"] = None,
         months: int = None,
+        stars: int = None,
         expire_date: datetime = None,
         new_subscribers: bool = None,
         is_refunded: bool = None,
+        is_star_giveaway: bool = None,
         is_winners_hidden: bool,
     ):
         super().__init__(client)
@@ -85,9 +93,11 @@ class GiveawayResult(Object):
         self.unclaimed_quantity = unclaimed_quantity
         self.winners = winners
         self.months = months
+        self.stars = stars
         self.expire_date = expire_date
         self.new_subscribers = new_subscribers
         self.is_refunded = is_refunded
+        self.is_star_giveaway = is_star_giveaway
         self.is_winners_hidden = is_winners_hidden
 
     @staticmethod
@@ -124,6 +134,8 @@ class GiveawayResult(Object):
                 except Exception:
                     pass
 
+        stars = getattr(giveaway_result, "stars", None)
+
         return GiveawayResult(
             chat=chat,
             giveaway_message=giveaway_message,
@@ -131,9 +143,11 @@ class GiveawayResult(Object):
             unclaimed_quantity=getattr(giveaway_result, "unclaimed_count", None),
             winners=winners,
             months=getattr(giveaway_result, "months", None),
+            stars=stars if isinstance(giveaway_result, raw.types.MessageMediaGiveawayResults) else None,
             expire_date=expired_date,
             new_subscribers=getattr(giveaway_result, "only_new_subscribers", None),
             is_refunded=getattr(giveaway_result, "refunded", None),
+            is_star_giveaway=bool(stars),
             is_winners_hidden=hide_winners,
             client=client,
         )
