@@ -37,8 +37,11 @@ class Giveaway(Object):
         quantity (``int``):
             Quantity of the giveaway prize.
 
-        months (``int``):
+        months (``int``, *optional*):
             How long the telegram premium last (in month).
+
+        stars (``int``, *optional*):
+            How many stars the giveaway winner(s) get.
 
         expire_date (:py:obj:`~datetime.datetime`):
             Date the giveaway winner(s) will be choosen.
@@ -68,6 +71,7 @@ class Giveaway(Object):
         months: int,
         expire_date: datetime,
         new_subscribers: bool,
+        stars: int = None,
         additional_price: str = None,
         allowed_countries: List[str] = None,
         private_channel_ids: List[int] = None,
@@ -80,6 +84,7 @@ class Giveaway(Object):
         self.months = months
         self.expire_date = expire_date
         self.new_subscribers = new_subscribers
+        self.stars = stars
         self.additional_price = additional_price
         self.allowed_countries = allowed_countries
         self.private_channel_ids = private_channel_ids
@@ -111,6 +116,7 @@ class Giveaway(Object):
             months=giveaway.months,
             expire_date=utils.timestamp_to_datetime(giveaway.until_date),
             new_subscribers=giveaway.only_new_subscribers,
+            stars=giveaway.stars,
             additional_price=giveaway.prize_description,
             allowed_countries=(
                 giveaway.countries_iso2 if len(giveaway.countries_iso2) > 0 else None
