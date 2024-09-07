@@ -673,7 +673,6 @@ class Message(Object, Update):
         self.payment_refunded = payment_refunded
         self.gift_code = gift_code
         self.requested_chats = requested_chats
-        self.giveaway_launched = giveaway_launched
         self.chat_ttl_period = chat_ttl_period
         self.boosts_applied = boosts_applied
         self.join_request_approved = join_request_approved
@@ -905,7 +904,7 @@ class Message(Object, Update):
                 web_app_data = types.WebAppData._parse(action)
                 service_type = enums.MessageServiceType.WEB_APP_DATA
             elif isinstance(action, raw.types.MessageActionGiveawayLaunch):
-                giveaway_launched = True
+                giveaway_launched = types.GiveawayLaunched._parse(client, action)
                 service_type = enums.MessageServiceType.GIVEAWAY_LAUNCHED
             elif isinstance(action, raw.types.MessageActionGiftCode):
                 gift_code = types.GiftCode._parse(client, action, chats)
@@ -928,9 +927,6 @@ class Message(Object, Update):
             elif isinstance(action, raw.types.MessageActionChatJoinedByRequest):
                 join_request_approved = True
                 service_type = enums.MessageServiceType.JOIN_REQUEST_APPROVED
-
-                giveaway_launched = types.GiveawayLaunched()
-                service_type = enums.MessageServiceType.GIVEAWAY_LAUNCHED
             elif isinstance(action, raw.types.MessageActionGiveawayResults):
                 giveaway_result = await types.GiveawayResult._parse(
                     client, action, True
