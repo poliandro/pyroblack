@@ -65,7 +65,7 @@ class Session:
     ACKS_THRESHOLD = 10
     PING_INTERVAL = 5
     STORED_MSG_IDS_MAX_SIZE = 1000 * 2
-    RECONNECT_THRESHOLD = 13
+    RECONNECT_THRESHOLD = 5
     RE_START_RANGE = range(4)
 
     TRANSPORT_ERRORS = {
@@ -249,63 +249,64 @@ class Session:
                 if restart:
                     self.instant_stop = False  # reset
 
-    async def restart(self, stop: bool = True):
+    async def restart(self, stop: bool):
         if self.instant_stop:
             return  # stop instantly
-
-        if self.restart_lock.locked():
-            log.warning(f"[pyroblack] Client [{self.client.name}] called restart while already restarting")
-            return  # don't restart 2 times at once
 
         if self.start_lock.locked():
             log.warning(f"[pyroblack] Client [{self.client.name}] called restart while starting")
             return  # don't restart while starting
 
-        now = time()
-        if (
-            self.last_reconnect_attempt
-            and (now - self.last_reconnect_attempt) < self.RECONNECT_THRESHOLD
-        ):
-            to_wait = self.RECONNECT_THRESHOLD + int(
-                self.RECONNECT_THRESHOLD - (now - self.last_reconnect_attempt)
-            )
-            log.warning(
-                f"[pyroblack] Client [{self.client.name}] is reconnecting too frequently, sleeping for {to_wait} seconds"
-            )
-            await asyncio.sleep(to_wait)
+        if self.restart_lock.locked():
+            log.warning(f"[pyroblack] Client [{self.client.name}] called restart while already restarting")
+            return  # don't restart 2 times at once
 
-        self.last_reconnect_attempt = time()
-        if stop:
-            try:
-                await self.stop(restart=True)
-            except Exception as e:
-                log.warning(
-                    f"[pyroblack] Client [{self.client.name}] failed stopping; restarting anyways, exc: %s %s",
-                    type(e).__name__,
-                    e,
+        async with self.restart_lock:
+            now = time()
+            if (
+                self.last_reconnect_attempt
+                and (now - self.last_reconnect_attempt) < self.RECONNECT_THRESHOLD
+            ):
+                to_wait = self.RECONNECT_THRESHOLD + int(
+                    self.RECONNECT_THRESHOLD - (now - self.last_reconnect_attempt)
                 )
+                log.warning(
+                    f"[pyroblack] Client [{self.client.name}] is reconnecting too frequently, sleeping for {to_wait} seconds"
+                )
+                await asyncio.sleep(to_wait)
 
-        for try_ in self.RE_START_RANGE:
-            try_ += 1
-            try:
-                await self.start()
-                break
-            except ValueError as e:  # SQLite error
+            self.last_reconnect_attempt = time()
+            if stop:
                 try:
-                    await self.client.load_session()
-                    log.info(
-                        f"[pyroblack] Client [{self.client.name}] re-starting got SQLite error, connected to DB successfully. try %s; exc: %s %s",
-                        try_,
-                        type(e).__name__,
-                        e,
-                    )
+                    await self.stop(restart=True)
                 except Exception as e:
                     log.warning(
-                        f"[pyroblack] Client [{self.client.name}] failed re-starting SQlite DB, try %s; exc: %s %s",
-                        try_,
+                        f"[pyroblack] Client [{self.client.name}] failed stopping; restarting anyways, exc: %s %s",
                         type(e).__name__,
                         e,
                     )
+
+            for try_ in self.RE_START_RANGE:
+                try_ += 1
+                try:
+                    await self.start()
+                    break
+                except ValueError as e:  # SQLite error
+                    try:
+                        await self.client.load_session()
+                        log.info(
+                            f"[pyroblack] Client [{self.client.name}] re-starting got SQLite error, connected to DB successfully. try %s; exc: %s %s",
+                            try_,
+                            type(e).__name__,
+                            e,
+                        )
+                    except Exception as e:
+                        log.warning(
+                            f"[pyroblack] Client [{self.client.name}] failed re-starting SQlite DB, try %s; exc: %s %s",
+                            try_,
+                            type(e).__name__,
+                            e,
+                        )
 
     async def handle_packet(self, packet):
         if self.instant_stop:
@@ -321,9 +322,9 @@ class Session:
                 self.auth_key,
                 self.auth_key_id,
             )
-        except ValueError as e:
-            log.debug(e)
-            self.loop.create_task(self.restart())
+        except ValueError:
+            # unknown constructor
+            self.loop.create_task(self.restart(stop=True))
             return
 
         messages = data.body.messages if isinstance(data.body, MsgContainer) else [data]
@@ -435,10 +436,7 @@ class Session:
                 )
             except OSError:
                 if (not self.start_lock.locked()) and (not self.restart_lock.locked()):
-                    if self.is_started.is_set():
-                        self.loop.create_task(self.restart())
-                    else:
-                        self.loop.create_task(self.restart(stop=False))
+                    self.loop.create_task(self.restart(stop=self.is_started.is_set()))
                 break
             except RPCError:
                 pass
@@ -473,10 +471,7 @@ class Session:
                     )
 
                 if (not self.start_lock.locked()) and (not self.restart_lock.locked()):
-                    if self.is_started.is_set():
-                        self.loop.create_task(self.restart())
-                    else:
-                        self.loop.create_task(self.restart(stop=False))
+                    self.loop.create_task(self.restart(stop=self.is_started.is_set()))
                 break
 
             self.loop.create_task(self.handle_packet(packet))
@@ -637,7 +632,7 @@ class Session:
                         query_name,
                         str(e) or repr(e),
                     )
-                    self.loop.create_task(self.restart())
+                    self.loop.create_task(self.restart(stop=True))
                 else:
                     (log.warning if retries < 2 else log.info)(
                         '[%s] [%s] Retrying "%s" due to: %s',
