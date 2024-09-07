@@ -27,6 +27,8 @@ class SetProfilePhoto:
         self: "pyrogram.Client",
         *,
         photo: Optional[Union[str, BinaryIO]] = None,
+        emoji: int = None,
+        emoji_background: Union[int, list[int]] = None,
         video: Optional[Union[str, BinaryIO]] = None,
         is_public: Optional[bool] = None,
     ) -> bool:
@@ -47,6 +49,12 @@ class SetProfilePhoto:
                 Profile photo to set.
                 Pass a file path as string to upload a new photo that exists on your local machine or
                 pass a binary file-like object with its attribute ".name" set for in-memory uploads.
+
+            emoji (``int``, *optional*):
+                Unique identifier (int) of the emoji to be used as the profile photo.
+
+            emoji_background (``int`` | ``List[int]``, *optional*):
+                hexadecimal colors or List of hexadecimal colors to be used as the chat photo background.
 
             video (``str`` | ``BinaryIO``, *optional*):
                 Profile video to set.
@@ -74,12 +82,23 @@ class SetProfilePhoto:
                 await app.set_profile_photo(photo="new_photo.jpg", is_public=True)
         """
 
+        emoji_id = None
+        if emoji:
+            background_colors = emoji_background if emoji_background is not None else [0xFFFFFF]
+            if isinstance(background_colors, int):
+                background_colors = [background_colors]
+            emoji_id = raw.types.VideoSizeEmojiMarkup(
+                emoji_id=emoji,
+                background_colors=background_colors
+            )
+
         return bool(
             await self.invoke(
                 raw.functions.photos.UploadProfilePhoto(
                     fallback=is_public,
                     file=await self.save_file(photo),
-                    video=await self.save_file(video),
+                    video_emoji_markup=emoji_id,
+                    video=await self.save_file(video)
                 )
             )
         )
