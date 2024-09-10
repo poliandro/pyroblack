@@ -922,38 +922,98 @@ class Client(Methods):
             include = plugins.get("include", [])
             exclude = plugins.get("exclude", [])
 
+            exclude_plugins = []
+            exclude_handlers = {}
+
+            if exclude:
+                for path, handler in exclude:
+                    module_path = os.path.join(
+                        root.replace(".", "/"), path.replace(".", "/")
+                    )
+                    if handler is None:
+                        exclude_plugins.append(module_path.replace("/", "."))
+                    else:
+                        exclude_handlers[module_path.replace("/", ".")] = handler
+
             count = 0
 
             if not include:
-                for path in sorted(Path(root.replace(".", "/")).rglob("*.py")):
-                    module_path = ".".join(path.parent.parts + (path.stem,))
-                    module = import_module(module_path)
-
-                    for name in vars(module).keys():
-                        # noinspection PyBroadException
-                        try:
-                            for handler, group in getattr(module, name).handlers:
-                                if isinstance(handler, Handler) and isinstance(
-                                    group, int
-                                ):
-                                    self.add_handler(handler, group)
-
-                                    log.info(
-                                        '[{}] [LOAD] {}("{}") in group {} from "{}"'.format(
-                                            self.name,
-                                            type(handler).__name__,
-                                            name,
-                                            group,
-                                            module_path,
-                                        )
+                for current_root, dirnames, filenames in os.walk(root.replace(".", "/")):
+                    namespace = current_root.replace("/", ".")
+                    if "__pycache__" in namespace:
+                        continue
+                    if namespace in exclude_plugins:
+                        log.warning(
+                            '[%s] [LOAD] Ignoring namespace "%s"', self.name, namespace
+                        )
+                        continue
+                    else:
+                        for filename in filenames:
+                            if filename.endswith(".py"):
+                                module_path = namespace + "." + filename[:-3]
+                                if module_path in exclude_plugins:
+                                    log.warning(
+                                        '[%s] [LOAD] Ignoring namespace "%s"',
+                                        self.name,
+                                        module_path,
                                     )
+                                    continue
+                                else:
+                                    module = import_module(module_path)
 
-                                    count += 1
-                        except Exception:
-                            pass
+                                    for name in vars(module).keys():
+
+                                        # noinspection PyBroadException
+                                        try:
+                                            for handler, group in getattr(
+                                                module, name
+                                            ).handlers:
+                                                if isinstance(
+                                                    handler, Handler
+                                                ) and isinstance(group, int):
+
+                                                    if (
+                                                        module_path in exclude_handlers
+                                                        and name
+                                                        in exclude_handlers[module_path]
+                                                    ):
+                                                        exclude_handlers[
+                                                            module_path
+                                                        ].remove(name)
+                                                        log.warning(
+                                                            '[{}] [LOAD] Ignoring function "{}" from group {} in "{}"'.format(
+                                                                self.name,
+                                                                name,
+                                                                group,
+                                                                module_path,
+                                                            )
+                                                        )
+                                                        continue
+
+                                                    self.add_handler(handler, group)
+
+                                                    log.info(
+                                                        '[{}] [LOAD] {}("{}") in group {} from "{}"'.format(
+                                                            self.name,
+                                                            type(handler).__name__,
+                                                            name,
+                                                            group,
+                                                            module_path,
+                                                        )
+                                                    )
+
+                                                    count += 1
+                                        except Exception as e:
+                                            pass
             else:
                 for path, handlers in include:
                     module_path = root.replace("/", ".") + "." + path
+                    if module_path in exclude_plugins:
+                        log.warning(
+                            '[%s] [LOAD] Ignoring namespace "%s"', self.name, module_path
+                        )
+                        continue
+
                     warn_non_existent_functions = True
 
                     try:
@@ -968,9 +1028,7 @@ class Client(Methods):
 
                     if "__path__" in dir(module):
                         log.warning(
-                            '[%s] [LOAD] Ignoring namespace "%s"',
-                            self.name,
-                            module_path,
+                            '[%s] [LOAD] Ignoring namespace "%s"', self.name, module_path
                         )
                         continue
 
@@ -982,9 +1040,18 @@ class Client(Methods):
                         # noinspection PyBroadException
                         try:
                             for handler, group in getattr(module, name).handlers:
-                                if isinstance(handler, Handler) and isinstance(
-                                    group, int
-                                ):
+                                if isinstance(handler, Handler) and isinstance(group, int):
+                                    if (
+                                        module_path in exclude_handlers
+                                        and name in exclude_handlers[module_path]
+                                    ):
+                                        exclude_handlers[module_path].remove(name)
+                                        log.warning(
+                                            '[{}] [LOAD] Ignoring function "{}" from group {} in "{}"'.format(
+                                                self.name, name, group, module_path
+                                            )
+                                        )
+                                        continue
                                     self.add_handler(handler, group)
 
                                     log.info(
@@ -1006,60 +1073,13 @@ class Client(Methods):
                                     )
                                 )
 
-            if exclude:
-                for path, handlers in exclude:
-                    module_path = root.replace("/", ".") + "." + path
-                    warn_non_existent_functions = True
-
-                    try:
-                        module = import_module(module_path)
-                    except ImportError:
-                        log.warning(
-                            '[%s] [UNLOAD] Ignoring non-existent module "%s"',
-                            self.name,
-                            module_path,
+            for module in exclude_handlers:
+                for handler in exclude_handlers[module]:
+                    log.warning(
+                        '[{}] [LOAD] Ignoring non-existent function "{}" from "{}"'.format(
+                            self.name, handler, module
                         )
-                        continue
-
-                    if "__path__" in dir(module):
-                        log.warning(
-                            '[%s] [UNLOAD] Ignoring namespace "%s"',
-                            self.name,
-                            module_path,
-                        )
-                        continue
-
-                    if handlers is None:
-                        handlers = vars(module).keys()
-                        warn_non_existent_functions = False
-
-                    for name in handlers:
-                        # noinspection PyBroadException
-                        try:
-                            for handler, group in getattr(module, name).handlers:
-                                if isinstance(handler, Handler) and isinstance(
-                                    group, int
-                                ):
-                                    self.remove_handler(handler, group)
-
-                                    log.info(
-                                        '[{}] [UNLOAD] {}("{}") from group {} in "{}"'.format(
-                                            self.name,
-                                            type(handler).__name__,
-                                            name,
-                                            group,
-                                            module_path,
-                                        )
-                                    )
-
-                                    count -= 1
-                        except Exception:
-                            if warn_non_existent_functions:
-                                log.warning(
-                                    '[{}] [UNLOAD] Ignoring non-existent function "{}" from "{}"'.format(
-                                        self.name, name, module_path
-                                    )
-                                )
+                    )
 
             if count > 0:
                 log.info(
