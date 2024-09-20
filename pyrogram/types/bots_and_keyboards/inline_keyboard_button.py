@@ -72,6 +72,9 @@ class InlineKeyboardButton(Object):
 
         callback_data_with_password (``bytes``, *optional*):
             A button that asks for the 2-step verification password of the current user and then sends a callback query to a bot Data to be sent to the bot via a callback query.
+
+        copy_text (``str``, *optional*):
+            A button that copies the text to the clipboard.
     """
 
     def __init__(
@@ -84,8 +87,9 @@ class InlineKeyboardButton(Object):
         user_id: int = None,
         switch_inline_query: str = None,
         switch_inline_query_current_chat: str = None,
-        callback_game: "types.CallbackGame" = None,
+            callback_game: "types.CallbackGame" = None,
         requires_password: Optional[bool] = None,
+        copy_text: Optional[str] = None,
     ):
         super().__init__()
 
@@ -100,6 +104,7 @@ class InlineKeyboardButton(Object):
         self.callback_game = callback_game
         self.requires_password = requires_password
         # self.pay = pay
+        self.copy_text = copy_text
 
     @staticmethod
     def read(b: "raw.base.KeyboardButton"):
@@ -140,6 +145,12 @@ class InlineKeyboardButton(Object):
         if isinstance(b, raw.types.KeyboardButtonWebView):
             return InlineKeyboardButton(
                 text=b.text, web_app=types.WebAppInfo(url=b.url)
+            )
+
+        if isinstance(b, raw.types.KeyboardButtonCopy):
+            return types.InlineKeyboardButton(
+                text=b.text,
+                copy_text=b.copy_text
             )
 
         if isinstance(b, raw.types.KeyboardButtonBuy):
@@ -189,3 +200,9 @@ class InlineKeyboardButton(Object):
 
         if self.web_app is not None:
             return raw.types.KeyboardButtonWebView(text=self.text, url=self.web_app.url)
+
+        if self.copy_text is not None:
+            return raw.types.KeyboardButtonCopy(
+                text=self.text,
+                copy_text=self.copy_text
+            )
