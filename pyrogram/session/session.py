@@ -212,11 +212,11 @@ class Session:
 
         async with self.stop_lock:
             try:
-                self.is_started.clear()
-                self.stored_msg_ids.clear()
-
                 if restart:
                     self.instant_stop = True  # tell all funcs that we want to stop
+
+                self.is_started.clear()
+                self.stored_msg_ids.clear()
 
                 self.ping_task_event.set()
                 try:
