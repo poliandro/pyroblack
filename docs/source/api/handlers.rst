@@ -52,6 +52,7 @@ Index
     - :class:`StoryHandler`
     - :class:`PollHandler`
     - :class:`DisconnectHandler`
+    - :class:`InvokeErrHandler`
     - :class:`RawUpdateHandler`
 
 -----
@@ -77,4 +78,5 @@ Details
 .. autoclass:: StoryHandler()
 .. autoclass:: PollHandler()
 .. autoclass:: DisconnectHandler()
+.. autoclass:: InvokeErrHandler()
 .. autoclass:: RawUpdateHandler()

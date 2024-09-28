@@ -628,7 +628,11 @@ class Session:
             ) as e:
                 retries -= 1
                 if retries == 0:
-                    self.client.updates_invoke_error = e
+                    if callable(self.client.invoke_err_handler):
+                        try:
+                            await self.client.invoke_err_handler(self.client, e)
+                        except Exception as ex:
+                            log.error(ex)
                     raise
 
                 if (isinstance(e, (OSError, RuntimeError)) and "handler" in str(e)) or (
@@ -653,7 +657,11 @@ class Session:
 
                 await asyncio.sleep(1)
             except Exception as e:
-                self.client.updates_invoke_error = e
+                if callable(self.client.invoke_err_handler):
+                    try:
+                        await self.client.invoke_err_handler(self.client, e)
+                    except Exception as ex:
+                        log.error(ex)
                 raise
 
         raise TimeoutError("Exceeded maximum number of retries")

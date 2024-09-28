@@ -360,6 +360,7 @@ class Client(Methods):
         self.takeout_id = None
 
         self.disconnect_handler = None
+        self.invoke_err_handler = None
 
         self.me: Optional[User] = None
 
@@ -370,7 +371,6 @@ class Client(Methods):
         # after some idle time has been detected.
         self.updates_watchdog_task = None
         self.updates_watchdog_event = asyncio.Event()
-        self.updates_invoke_error = None
         self.last_update_time = datetime.now()
         self.listeners = {
             listener_type: [] for listener_type in pyrogram.enums.ListenerTypes

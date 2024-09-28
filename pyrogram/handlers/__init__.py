@@ -28,6 +28,7 @@ from .chosen_inline_result_handler import ChosenInlineResultHandler
 from .deleted_messages_handler import DeletedMessagesHandler
 from .deleted_bot_business_messages_handler import DeletedBotBusinessMessagesHandler
 from .disconnect_handler import DisconnectHandler
+from .invoke_err_handler import InvokeErrHandler
 from .edited_message_handler import EditedMessageHandler
 from .edited_bot_business_message_handler import EditedBotBusinessMessageHandler
 from .inline_query_handler import InlineQueryHandler
