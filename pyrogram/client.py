@@ -906,7 +906,7 @@ class Client(Methods):
 
     def is_excluded(self, exclude, module):
         for e in exclude:
-            if module == e or module.startswith(e + '.'):
+            if module == e or module.startswith(e + "."):
                 return True
         return False
 
@@ -944,7 +944,9 @@ class Client(Methods):
             count = 0
 
             if not include:
-                for current_root, dirnames, filenames in os.walk(root.replace(".", "/")):
+                for current_root, dirnames, filenames in os.walk(
+                    root.replace(".", "/")
+                ):
                     namespace = current_root.replace("/", ".")
                     if "__pycache__" in namespace:
                         continue
@@ -1016,7 +1018,9 @@ class Client(Methods):
                     module_path = root.replace("/", ".") + "." + path
                     if self.is_excluded(exclude_plugins, module_path):
                         log.warning(
-                            '[%s] [LOAD] Ignoring namespace "%s"', self.name, module_path
+                            '[%s] [LOAD] Ignoring namespace "%s"',
+                            self.name,
+                            module_path,
                         )
                         continue
 
@@ -1033,13 +1037,17 @@ class Client(Methods):
                         continue
 
                     if "__path__" in dir(module):
-                        for current_root, _, filenames in os.walk(module_path.replace(".", "/")):
+                        for current_root, _, filenames in os.walk(
+                            module_path.replace(".", "/")
+                        ):
                             namespace = current_root.replace("/", ".")
                             if "__pycache__" in namespace:
                                 continue
                             if namespace in exclude_plugins:
                                 log.warning(
-                                    '[%s] [LOAD] Ignoring namespace "%s"', self.name, namespace
+                                    '[%s] [LOAD] Ignoring namespace "%s"',
+                                    self.name,
+                                    namespace,
                                 )
                                 continue
                             else:
@@ -1068,9 +1076,12 @@ class Client(Methods):
                                                         ) and isinstance(group, int):
 
                                                             if (
-                                                                module_path in exclude_handlers
+                                                                module_path
+                                                                in exclude_handlers
                                                                 and name
-                                                                in exclude_handlers[module_path]
+                                                                in exclude_handlers[
+                                                                    module_path
+                                                                ]
                                                             ):
                                                                 exclude_handlers[
                                                                     module_path
@@ -1085,12 +1096,16 @@ class Client(Methods):
                                                                 )
                                                                 continue
 
-                                                            self.add_handler(handler, group)
+                                                            self.add_handler(
+                                                                handler, group
+                                                            )
 
                                                             log.info(
                                                                 '[{}] [LOAD] {}("{}") in group {} from "{}"'.format(
                                                                     self.name,
-                                                                    type(handler).__name__,
+                                                                    type(
+                                                                        handler
+                                                                    ).__name__,
                                                                     name,
                                                                     group,
                                                                     module_path,
@@ -1109,7 +1124,9 @@ class Client(Methods):
                         # noinspection PyBroadException
                         try:
                             for handler, group in getattr(module, name).handlers:
-                                if isinstance(handler, Handler) and isinstance(group, int):
+                                if isinstance(handler, Handler) and isinstance(
+                                    group, int
+                                ):
                                     if (
                                         module_path in exclude_handlers
                                         and name in exclude_handlers[module_path]

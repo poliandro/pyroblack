@@ -87,7 +87,7 @@ class InlineKeyboardButton(Object):
         user_id: int = None,
         switch_inline_query: str = None,
         switch_inline_query_current_chat: str = None,
-            callback_game: "types.CallbackGame" = None,
+        callback_game: "types.CallbackGame" = None,
         requires_password: Optional[bool] = None,
         copy_text: Optional[str] = None,
     ):
@@ -148,10 +148,7 @@ class InlineKeyboardButton(Object):
             )
 
         if isinstance(b, raw.types.KeyboardButtonCopy):
-            return types.InlineKeyboardButton(
-                text=b.text,
-                copy_text=b.copy_text
-            )
+            return types.InlineKeyboardButton(text=b.text, copy_text=b.copy_text)
 
         if isinstance(b, raw.types.KeyboardButtonBuy):
             return types.InlineKeyboardButtonBuy.read(b)
@@ -203,6 +200,5 @@ class InlineKeyboardButton(Object):
 
         if self.copy_text is not None:
             return raw.types.KeyboardButtonCopy(
-                text=self.text,
-                copy_text=self.copy_text
+                text=self.text, copy_text=self.copy_text
             )
