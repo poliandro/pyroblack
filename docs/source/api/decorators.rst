@@ -53,6 +53,7 @@ Index
     - :meth:`~Client.on_story`
     - :meth:`~Client.on_poll`
     - :meth:`~Client.on_disconnect`
+    - :meth:`~Client.on_invoke_err`
     - :meth:`~Client.on_raw_update`
 
 -----
@@ -79,4 +80,5 @@ Details
 .. autodecorator:: pyrogram.Client.on_story()
 .. autodecorator:: pyrogram.Client.on_poll()
 .. autodecorator:: pyrogram.Client.on_disconnect()
+.. autodecorator:: pyrogram.Client.on_invoke_err()
 .. autodecorator:: pyrogram.Client.on_raw_update()
