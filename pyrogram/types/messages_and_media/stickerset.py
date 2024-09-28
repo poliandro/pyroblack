@@ -83,7 +83,6 @@ class StickerSet(Object):
 
     @staticmethod
     def _parse(stickerset: "raw.types.StickerSet") -> "StickerSet":
-
         return StickerSet(
             id=getattr(stickerset, "id", None),
             title=getattr(stickerset, "title", None),

@@ -51,7 +51,6 @@ class ForumTopicCreated(Object):
 
     @staticmethod
     def _parse(message: "raw.base.Message") -> "ForumTopicCreated":
-
         return ForumTopicCreated(
             id=getattr(message, "id", None),
             title=getattr(message.action, "title", None),

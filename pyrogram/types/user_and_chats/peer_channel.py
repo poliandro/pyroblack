@@ -37,5 +37,4 @@ class PeerChannel(Object):
 
     @staticmethod
     def _parse(action: "raw.types.PeerChannel") -> "PeerChannel":
-
         return PeerChannel(channel_id=getattr(action, "channel_id", None))

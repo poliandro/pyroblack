@@ -78,7 +78,6 @@ BEGIN
 END;
 """
 
-
 UNAME_SCHEMA = """
 CREATE TABLE IF NOT EXISTS usernames
 (

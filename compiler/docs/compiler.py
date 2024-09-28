@@ -897,8 +897,10 @@ def pyrogram_api():
 
         f.write(template.format(**fmt_keys))
 
+
 page_template = None
 toctree = None
+
 
 def start():
     global page_template

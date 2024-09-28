@@ -45,7 +45,6 @@ class Username(Object):
 
     @staticmethod
     def _parse(action: "raw.types.Username") -> "Username":
-
         return Username(
             username=getattr(action, "username", None),
             editable=getattr(action, "editable", None),

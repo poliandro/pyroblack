@@ -3,11 +3,11 @@ name: Build-docs
 on:
   push:
     tags:
-    - "*"
+      - "*"
     branches:
-    - staging
+      - staging
   workflow_dispatch:
-    {}
+    { }
 
 jobs:
   build:
