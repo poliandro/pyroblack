@@ -518,6 +518,7 @@ def pyrogram_api():
             Audio
             AvailableEffect
             Document
+            AlternativeVideo
             Animation
             LabeledPrice
             Video

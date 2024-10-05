@@ -18,6 +18,7 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with pyroblack.  If not, see <http://www.gnu.org/licenses/>.
 
+from .alternative_video import AlternativeVideo
 from .animation import Animation
 from .audio import Audio
 from .checked_gift_code import CheckedGiftCode
@@ -74,6 +75,7 @@ from .web_page_preview import WebPagePreview
 from .translated_text import TranslatedText
 
 __all__ = [
+    "AlternativeVideo",
     "Animation",
     "Audio",
     "AvailableEffect",

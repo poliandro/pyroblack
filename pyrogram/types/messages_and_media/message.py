@@ -1245,7 +1245,7 @@ class Message(Object, Update):
 
                                         if altdoc_video_attribute:
                                             alternative_videos.append(
-                                                types.Video._parse(
+                                                types.AlternativeVideo._parse(
                                                     client,
                                                     altdoc,
                                                     altdoc_video_attribute,
