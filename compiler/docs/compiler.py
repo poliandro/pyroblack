@@ -202,6 +202,7 @@ def pyrogram_api():
             delete_messages
             get_available_effects
             get_messages
+            get_message_read_participants
             get_scheduled_messages
             get_stickers
             get_media_group
@@ -564,6 +565,7 @@ def pyrogram_api():
             ExtendedMediaPreview
             PaidMedia
             PaymentForm
+            ReadParticipant
         """,
         stories="""
         Stories
