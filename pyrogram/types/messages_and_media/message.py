@@ -1354,8 +1354,12 @@ class Message(Object, Update):
                 invoice=invoice,
                 story=story,
                 video=video,
-                video_processing_pending=getattr(message, "video_processing_pending", None),
-                alternative_videos=types.List(alternative_videos) if alternative_videos else None,
+                video_processing_pending=getattr(
+                    message, "video_processing_pending", None
+                ),
+                alternative_videos=(
+                    types.List(alternative_videos) if alternative_videos else None
+                ),
                 video_note=video_note,
                 web_page_preview=web_page_preview,
                 sticker=sticker,

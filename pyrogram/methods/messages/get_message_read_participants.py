@@ -21,11 +21,10 @@ import pyrogram
 from pyrogram import types
 from typing import Union
 
+
 class GetMessageReadParticipants:
     async def get_message_read_participants(
-        self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        message_id: int
+        self: "pyrogram.Client", chat_id: Union[int, str], message_id: int
     ):
         """Get the list of users who have read a message.
 
@@ -46,12 +45,10 @@ class GetMessageReadParticipants:
         peer = await self.resolve_peer(chat_id)
         r = await self.invoke(
             pyrogram.raw.functions.messages.GetMessageReadParticipants(
-                peer=peer,
-                msg_id=message_id
+                peer=peer, msg_id=message_id
             )
         )
         for read_participant in r:
             yield await types.ReadParticipant._parse(
-                client=self,
-                read_participant=read_participant
+                client=self, read_participant=read_participant
             )

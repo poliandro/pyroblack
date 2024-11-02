@@ -937,14 +937,20 @@ class Client(Methods):
                         root.replace(".", "/"), path.replace(".", "/")
                     )
                     if handler is None:
-                        exclude_plugins.append(module_path.replace("/", ".").replace("\\", "."))
+                        exclude_plugins.append(
+                            module_path.replace("/", ".").replace("\\", ".")
+                        )
                     else:
-                        exclude_handlers[module_path.replace("/", ".").replace("\\", ".")] = handler
+                        exclude_handlers[
+                            module_path.replace("/", ".").replace("\\", ".")
+                        ] = handler
 
             count = 0
 
             if not include:
-                for current_root, dirnames, filenames in os.walk(root.replace(".", "/")):
+                for current_root, dirnames, filenames in os.walk(
+                    root.replace(".", "/")
+                ):
                     namespace = current_root.replace("/", ".").replace("\\", ".")
                     if "__pycache__" in namespace:
                         continue
@@ -1035,8 +1041,12 @@ class Client(Methods):
                         continue
 
                     if "__path__" in dir(module):
-                        for current_root, _, filenames in os.walk(module_path.replace(".", "/")):
-                            namespace = current_root.replace("/", ".").replace("\\", ".")
+                        for current_root, _, filenames in os.walk(
+                            module_path.replace(".", "/")
+                        ):
+                            namespace = current_root.replace("/", ".").replace(
+                                "\\", "."
+                            )
                             if "__pycache__" in namespace:
                                 continue
                             if namespace in exclude_plugins:
