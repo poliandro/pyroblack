@@ -35,6 +35,8 @@ class SendGame:
         business_connection_id: str = None,
         reply_to_message_id: int = None,
         protect_content: bool = None,
+        allow_paid_broadcast: bool = None,
+        message_effect_id: int = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
@@ -74,6 +76,12 @@ class SendGame:
             protect_content (``bool``, *optional*):
                 Protects the contents of the sent message from forwarding and saving.
 
+            allow_paid_broadcast (``bool``, *optional*):
+                Pass True to allow the message to ignore regular broadcast limits for a small fee; for bots only
+
+            message_effect_id (``int`` ``64-bit``, *optional*):
+                Unique identifier of the message effect to be added to the message; for private chats only.
+
             reply_markup (:obj:`~pyrogram.types.InlineKeyboardMarkup`, *optional*):
                 An object for an inline keyboard. If empty, one ‘Play game_title’ button will be shown automatically.
                 If not empty, the first button must launch the game.
@@ -105,7 +113,9 @@ class SendGame:
             reply_to=reply_to,
             random_id=self.rnd_id(),
             noforwards=protect_content,
-            reply_markup=await reply_markup.write(self) if reply_markup else None,
+            allow_paid_floodskip=allow_paid_broadcast,
+            effect=message_effect_id,
+            reply_markup=await reply_markup.write(self) if reply_markup else None
         )
         if business_connection_id is not None:
             r = await self.invoke(
