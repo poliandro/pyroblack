@@ -1214,27 +1214,43 @@ class Message(Object, Update):
                                 )
                                 media_type = enums.MessageMediaType.VIDEO_NOTE
                             else:
-                                video = types.Video._parse(client, doc, video_attributes, file_name, media.ttl_seconds)
+                                video = types.Video._parse(
+                                    client,
+                                    doc,
+                                    video_attributes,
+                                    file_name,
+                                    media.ttl_seconds,
+                                )
                                 media_type = enums.MessageMediaType.VIDEO
                                 has_media_spoiler = media.spoiler
 
                                 altdocs = media.alt_documents or []
                                 for altdoc in altdocs:
                                     if isinstance(altdoc, raw.types.Document):
-                                        altdoc_attributes = {type(i): i for i in altdoc.attributes}
+                                        altdoc_attributes = {
+                                            type(i): i for i in altdoc.attributes
+                                        }
                                         altdoc_file_name = getattr(
                                             altdoc_attributes.get(
-                                                raw.types.DocumentAttributeFilename, None
-                                            ), "file_name", None
+                                                raw.types.DocumentAttributeFilename,
+                                                None,
+                                            ),
+                                            "file_name",
+                                            None,
                                         )
 
-                                        altdoc_video_attribute = altdoc_attributes.get(raw.types.DocumentAttributeVideo,
-                                                                                       None)
+                                        altdoc_video_attribute = altdoc_attributes.get(
+                                            raw.types.DocumentAttributeVideo, None
+                                        )
 
                                         if altdoc_video_attribute:
                                             alternative_videos.append(
-                                                types.Video._parse(client, altdoc, altdoc_video_attribute,
-                                                                   altdoc_file_name)
+                                                types.Video._parse(
+                                                    client,
+                                                    altdoc,
+                                                    altdoc_video_attribute,
+                                                    altdoc_file_name,
+                                                )
                                             )
                         elif raw.types.DocumentAttributeAudio in attributes:
                             audio_attributes = attributes[
