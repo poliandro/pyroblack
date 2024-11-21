@@ -33,6 +33,7 @@ class EditInlineText:
         parse_mode: Optional["enums.ParseMode"] = None,
         disable_web_page_preview: bool = None,
         reply_markup: "types.InlineKeyboardMarkup" = None,
+        invert_media: bool = None
     ) -> bool:
         """Edit the text of inline messages.
 
@@ -54,6 +55,10 @@ class EditInlineText:
 
             reply_markup (:obj:`~pyrogram.types.InlineKeyboardMarkup`, *optional*):
                 An InlineKeyboardMarkup object.
+
+            invert_media (``bool``, *optional*):
+                True, If the media position is inverted.
+                only animation, photo, video, and webpage preview messages.
 
         Returns:
             ``bool``: On success, True is returned.
@@ -85,4 +90,5 @@ class EditInlineText:
                 **await self.parser.parse(text, parse_mode),
             ),
             sleep_threshold=self.sleep_threshold,
+            invert_media=invert_media
         )

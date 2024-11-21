@@ -29,6 +29,7 @@ class EditInlineCaption:
         caption: str,
         parse_mode: Optional["enums.ParseMode"] = None,
         reply_markup: "types.InlineKeyboardMarkup" = None,
+        invert_media: bool = None
     ) -> bool:
         """Edit the caption of inline media messages.
 
@@ -48,6 +49,10 @@ class EditInlineCaption:
             reply_markup (:obj:`~pyrogram.types.InlineKeyboardMarkup`, *optional*):
                 An InlineKeyboardMarkup object.
 
+            invert_media (``bool``, *optional*):
+                True, If the media position is inverted.
+                only animation, photo, video, and webpage preview messages.
+
         Returns:
             ``bool``: On success, True is returned.
 
@@ -62,4 +67,5 @@ class EditInlineCaption:
             text=caption,
             parse_mode=parse_mode,
             reply_markup=reply_markup,
+            invert_media=invert_media
         )
