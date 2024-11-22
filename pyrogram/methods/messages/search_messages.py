@@ -51,7 +51,7 @@ async def get_chunk(
                 else None
             ),
             hash=0,
-            thread_id=thread_id
+            top_msg_id=thread_id
         ),
         sleep_threshold=60,
     )
