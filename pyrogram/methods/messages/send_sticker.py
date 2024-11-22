@@ -232,8 +232,10 @@ class SendSticker:
                         noforwards=protect_content,
                         allow_paid_floodskip=allow_paid_broadcast,
                         effect=message_effect_id,
-                        reply_markup=await reply_markup.write(self) if reply_markup else None,
-                        message=""
+                        reply_markup=(
+                            await reply_markup.write(self) if reply_markup else None
+                        ),
+                        message="",
                     )
                     if business_connection_id is not None:
                         r = await self.invoke(

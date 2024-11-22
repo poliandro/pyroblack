@@ -67,7 +67,7 @@ class ChatMemberUpdated(Object, Update):
         invite_link: "types.ChatInviteLink" = None,
         via_join_request: bool = None,
         via_chat_folder_invite_link: bool = False,
-        _raw: "raw.base.Update" = None
+        _raw: "raw.base.Update" = None,
     ):
         super().__init__(client)
 
@@ -123,5 +123,5 @@ class ChatMemberUpdated(Object, Update):
             via_join_request=via_join_request,
             via_chat_folder_invite_link=getattr(update, "via_chatlist", False),
             _raw=update,
-            client=client
+            client=client,
         )

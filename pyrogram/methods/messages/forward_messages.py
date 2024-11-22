@@ -37,8 +37,8 @@ class ForwardMessages:
         schedule_date: datetime = None,
         protect_content: bool = None,
         drop_media_captions: bool = None,
-            allow_paid_broadcast: bool = None,
-            drop_author: bool = None,
+        allow_paid_broadcast: bool = None,
+        drop_author: bool = None,
     ) -> Union["types.Message", List["types.Message"]]:
         """Forward messages of any kind.
 

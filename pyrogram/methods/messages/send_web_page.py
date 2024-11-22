@@ -174,7 +174,7 @@ class SendWebPage:
             entities=entities,
             noforwards=protect_content,
             allow_paid_floodskip=allow_paid_broadcast,
-            effect=message_effect_id
+            effect=message_effect_id,
         )
         if business_connection_id is not None:
             r = await self.invoke(

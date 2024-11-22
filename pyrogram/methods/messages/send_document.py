@@ -51,8 +51,8 @@ class SendDocument:
         reply_to_chat_id: Union[int, str] = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
-            message_effect_id: int = None,
-            schedule_date: datetime = None,
+        message_effect_id: int = None,
+        schedule_date: datetime = None,
         protect_content: bool = None,
         allow_paid_broadcast: bool = None,
         reply_markup: Union[
@@ -262,8 +262,12 @@ class SendDocument:
                         noforwards=protect_content,
                         allow_paid_floodskip=allow_paid_broadcast,
                         effect=message_effect_id,
-                        reply_markup=await reply_markup.write(self) if reply_markup else None,
-                        **await utils.parse_text_entities(self, caption, parse_mode, caption_entities)
+                        reply_markup=(
+                            await reply_markup.write(self) if reply_markup else None
+                        ),
+                        **await utils.parse_text_entities(
+                            self, caption, parse_mode, caption_entities
+                        ),
                     )
                     if business_connection_id is not None:
                         r = await self.invoke(

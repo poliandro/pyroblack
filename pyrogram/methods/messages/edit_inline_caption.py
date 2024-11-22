@@ -29,7 +29,7 @@ class EditInlineCaption:
         caption: str,
         parse_mode: Optional["enums.ParseMode"] = None,
         reply_markup: "types.InlineKeyboardMarkup" = None,
-        invert_media: bool = None
+        invert_media: bool = None,
     ) -> bool:
         """Edit the caption of inline media messages.
 
@@ -67,5 +67,5 @@ class EditInlineCaption:
             text=caption,
             parse_mode=parse_mode,
             reply_markup=reply_markup,
-            invert_media=invert_media
+            invert_media=invert_media,
         )

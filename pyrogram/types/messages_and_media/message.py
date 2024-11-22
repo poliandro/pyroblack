@@ -2233,7 +2233,7 @@ class Message(Object, Update):
             quote_text=quote_text,
             quote_entities=quote_entities,
             allow_paid_broadcast=allow_paid_broadcast,
-            reply_markup=reply_markup
+            reply_markup=reply_markup,
         )
 
     async def reply_chat_action(
@@ -2528,7 +2528,7 @@ class Message(Object, Update):
 
             message_effect_id (``int`` ``64-bit``, *optional*):
                 Unique identifier of the message effect to be added to the message; for private chats only.
-            
+
             schedule_date (:py:obj:`~datetime.datetime`, *optional*):
                 Date when the message will be automatically sent.
 
@@ -2698,7 +2698,7 @@ class Message(Object, Update):
             reply_to_message_id=reply_to_message_id,
             business_connection_id=business_connection_id,
             allow_paid_broadcast=allow_paid_broadcast,
-            reply_markup=reply_markup
+            reply_markup=reply_markup,
         )
 
     async def reply_inline_bot_result(
@@ -3038,7 +3038,7 @@ class Message(Object, Update):
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
             quote_entities=quote_entities,
-            invert_media=invert_media
+            invert_media=invert_media,
         )
 
     async def reply_photo(
@@ -4324,7 +4324,7 @@ class Message(Object, Update):
         protect_content: bool = None,
         allow_paid_broadcast: bool = None,
         message_effect_id: int = None,
-        reply_markup=None
+        reply_markup=None,
     ) -> "Message":
         """Bound method *reply_web_page* of :obj:`~pyrogram.types.Message`.
 
@@ -4452,7 +4452,7 @@ class Message(Object, Update):
             protect_content=protect_content,
             allow_paid_broadcast=allow_paid_broadcast,
             message_effect_id=message_effect_id,
-            reply_markup=reply_markup
+            reply_markup=reply_markup,
         )
 
     async def edit_text(
@@ -4713,8 +4713,8 @@ class Message(Object, Update):
         schedule_date: datetime = None,
         protect_content: bool = None,
         drop_media_captions: bool = None,
-            allow_paid_broadcast: bool = None,
-        drop_author: bool = None
+        allow_paid_broadcast: bool = None,
+        drop_author: bool = None,
     ) -> Union["types.Message", List["types.Message"]]:
         """Bound method *forward* of :obj:`~pyrogram.types.Message`.
 
@@ -4778,7 +4778,7 @@ class Message(Object, Update):
             protect_content=protect_content,
             drop_media_captions=drop_media_captions,
             allow_paid_broadcast=allow_paid_broadcast,
-            drop_author=drop_author
+            drop_author=drop_author,
         )
 
     async def copy(
@@ -4915,7 +4915,9 @@ class Message(Object, Update):
                 schedule_date=schedule_date,
                 protect_content=protect_content,
                 allow_paid_broadcast=allow_paid_broadcast,
-                reply_markup=self.reply_markup if reply_markup is object else reply_markup
+                reply_markup=(
+                    self.reply_markup if reply_markup is object else reply_markup
+                ),
             )
         elif self.media:
             send_media = partial(
@@ -4970,7 +4972,7 @@ class Message(Object, Update):
                     disable_notification=disable_notification,
                     message_thread_id=message_thread_id,
                     schedule_date=schedule_date,
-                    allow_paid_broadcast=allow_paid_broadcast
+                    allow_paid_broadcast=allow_paid_broadcast,
                 )
             elif self.venue:
                 return await self._client.send_venue(
@@ -4984,7 +4986,7 @@ class Message(Object, Update):
                     disable_notification=disable_notification,
                     message_thread_id=message_thread_id,
                     schedule_date=schedule_date,
-                    allow_paid_broadcast=allow_paid_broadcast
+                    allow_paid_broadcast=allow_paid_broadcast,
                 )
             elif self.poll:
                 return await self._client.send_poll(
@@ -4997,7 +4999,7 @@ class Message(Object, Update):
                     disable_notification=disable_notification,
                     message_thread_id=message_thread_id,
                     schedule_date=schedule_date,
-                    allow_paid_broadcast=allow_paid_broadcast
+                    allow_paid_broadcast=allow_paid_broadcast,
                 )
             elif self.game:
                 return await self._client.send_game(
@@ -5005,7 +5007,7 @@ class Message(Object, Update):
                     game_short_name=self.game.short_name,
                     disable_notification=disable_notification,
                     message_thread_id=message_thread_id,
-                    allow_paid_broadcast=allow_paid_broadcast
+                    allow_paid_broadcast=allow_paid_broadcast,
                 )
             elif self.web_page_preview:
                 return await self._client.send_web_page(
@@ -5024,7 +5026,9 @@ class Message(Object, Update):
                     schedule_date=schedule_date,
                     protect_content=protect_content,
                     allow_paid_broadcast=allow_paid_broadcast,
-                    reply_markup=self.reply_markup if reply_markup is object else reply_markup
+                    reply_markup=(
+                        self.reply_markup if reply_markup is object else reply_markup
+                    ),
                 )
             else:
                 raise ValueError("Unknown media type")
@@ -5035,7 +5039,7 @@ class Message(Object, Update):
                 return await send_media(
                     file_id=file_id,
                     message_thread_id=message_thread_id,
-                    allow_paid_broadcast=allow_paid_broadcast
+                    allow_paid_broadcast=allow_paid_broadcast,
                 )
             else:
                 if caption is None:
@@ -5049,7 +5053,7 @@ class Message(Object, Update):
                     caption_entities=caption_entities,
                     has_spoiler=has_spoiler,
                     message_thread_id=message_thread_id,
-                    allow_paid_broadcast=allow_paid_broadcast
+                    allow_paid_broadcast=allow_paid_broadcast,
                 )
         else:
             raise ValueError("Can't copy this message")

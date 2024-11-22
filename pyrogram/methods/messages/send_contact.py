@@ -161,7 +161,7 @@ class SendContact:
             noforwards=protect_content,
             allow_paid_floodskip=allow_paid_broadcast,
             reply_markup=await reply_markup.write(self) if reply_markup else None,
-            effect=message_effect_id
+            effect=message_effect_id,
         )
         if business_connection_id is not None:
             r = await self.invoke(
