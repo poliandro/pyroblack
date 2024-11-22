@@ -37,7 +37,8 @@ class ForwardMessages:
         schedule_date: datetime = None,
         protect_content: bool = None,
         drop_media_captions: bool = None,
-        drop_author: bool = None,
+            allow_paid_broadcast: bool = None,
+            drop_author: bool = None,
     ) -> Union["types.Message", List["types.Message"]]:
         """Forward messages of any kind.
 
@@ -76,6 +77,9 @@ class ForwardMessages:
             drop_media_captions (``bool``, *optional*):
                 If True, the original media captions will be removed.
 
+            allow_paid_broadcast (``bool``, *optional*):
+                Pass True to allow the message to ignore regular broadcast limits for a small fee; for bots only.
+
             drop_author (``bool``, *optional*):
                 If True, the original author of the message will not be shown.
 
@@ -107,6 +111,7 @@ class ForwardMessages:
                 schedule_date=utils.datetime_to_timestamp(schedule_date),
                 noforwards=protect_content,
                 drop_media_captions=drop_media_captions,
+                allow_paid_floodskip=allow_paid_broadcast,
                 drop_author=drop_author,
             )
         )
