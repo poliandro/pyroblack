@@ -16,7 +16,7 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union, BinaryIO, Optional
+from typing import Union, BinaryIO, List, Optional
 
 import pyrogram
 from pyrogram import raw
@@ -28,9 +28,9 @@ class SetProfilePhoto:
         *,
         photo: Optional[Union[str, BinaryIO]] = None,
         emoji: int = None,
-        emoji_background: Union[int, list[int]] = None,
-        video: Optional[Union[str, BinaryIO]] = None,
-        is_public: Optional[bool] = None,
+        emoji_background: Union[int, List[int]] = None,
+        video: Union[str, BinaryIO] = None,
+            is_public: Optional[bool] = None,
     ) -> bool:
         """Set a new profile photo or video (H.264/MPEG-4 AVC video, max 5 seconds).
 
