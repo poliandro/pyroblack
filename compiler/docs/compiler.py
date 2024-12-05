@@ -399,6 +399,7 @@ def pyrogram_api():
             get_bot_info
             set_bot_info
             get_collectible_item_info
+            get_owned_bots
         """,
         authorization="""
         Authorization

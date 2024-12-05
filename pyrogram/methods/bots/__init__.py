@@ -37,6 +37,7 @@ from .set_bot_default_privileges import SetBotDefaultPrivileges
 from .set_bot_info import SetBotInfo
 from .set_chat_menu_button import SetChatMenuButton
 from .set_game_score import SetGameScore
+from .get_owned_bots import GetOwnedBots
 
 
 class Bots(
@@ -61,5 +62,6 @@ class Bots(
     AnswerPreCheckoutQuery,
     RefundStarPayment,
     GetCollectibleItemInfo,
+    GetOwnedBots,
 ):
     pass
