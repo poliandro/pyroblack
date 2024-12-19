@@ -511,6 +511,7 @@ class Message(Object, Update):
         boosts_applied: int = None,
         invoice: "types.MessageInvoice" = None,
         story: Union["types.MessageStory", "types.Story"] = None,
+        alternative_videos: List["types.AlternativeVideo"] = None,
         video: "types.Video" = None,
         video_processing_pending: bool = None,
         alternative_videos: List["types.Video"] = None,
