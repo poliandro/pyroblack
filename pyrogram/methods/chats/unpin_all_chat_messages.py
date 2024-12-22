@@ -53,8 +53,7 @@ class UnpinAllChatMessages:
         """
         r = await self.invoke(
             raw.functions.messages.UnpinAllMessages(
-                peer=await self.resolve_peer(chat_id),
-                top_msg_id=message_thread_id
+                peer=await self.resolve_peer(chat_id), top_msg_id=message_thread_id
             )
         )
         return r.pts_count

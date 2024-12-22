@@ -40,7 +40,4 @@ class GetOwnedBots:
         """
 
         bots = await self.invoke(raw.functions.bots.GetAdminedBots())
-        return types.List([
-            types.User._parse(self, b)
-            for b in bots
-        ])
+        return types.List([types.User._parse(self, b) for b in bots])

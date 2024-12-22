@@ -36,26 +36,32 @@ PRE_DELIM = "```"
 BLOCKQUOTE_DELIM = ">"
 BLOCKQUOTE_EXPANDABLE_DELIM = "**>"
 
-MARKDOWN_RE = re.compile(r"({d})|(!?)\[(.+?)\]\((.+?)\)".format(
-    d="|".join(
-        ["".join(i) for i in [
-            [rf"\{j}" for j in i]
-            for i in [
-                PRE_DELIM,
-                CODE_DELIM,
-                STRIKE_DELIM,
-                UNDERLINE_DELIM,
-                ITALIC_DELIM,
-                BOLD_DELIM,
-                SPOILER_DELIM
+MARKDOWN_RE = re.compile(
+    r"({d})|(!?)\[(.+?)\]\((.+?)\)".format(
+        d="|".join(
+            [
+                "".join(i)
+                for i in [
+                    [rf"\{j}" for j in i]
+                    for i in [
+                        PRE_DELIM,
+                        CODE_DELIM,
+                        STRIKE_DELIM,
+                        UNDERLINE_DELIM,
+                        ITALIC_DELIM,
+                        BOLD_DELIM,
+                        SPOILER_DELIM,
+                    ]
+                ]
             ]
-        ]]
-    )))
+        )
+    )
+)
 
 OPENING_TAG = "<{}>"
 CLOSING_TAG = "</{}>"
 URL_MARKUP = '<a href="{}">{}</a>'
-EMOJI_MARKUP = '<emoji id={}>{}</emoji>'
+EMOJI_MARKUP = "<emoji id={}>{}</emoji>"
 FIXED_WIDTH_DELIMS = [CODE_DELIM, PRE_DELIM]
 CODE_TAG_RE = re.compile(r"<code>.*?</code>")
 
@@ -132,13 +138,17 @@ class Markdown:
                 continue
 
             if not is_emoji and text_url:
-                text = utils.replace_once(text, full, URL_MARKUP.format(url, text_url), start)
+                text = utils.replace_once(
+                    text, full, URL_MARKUP.format(url, text_url), start
+                )
                 continue
 
             if is_emoji:
                 emoji = text_url
                 emoji_id = url.lstrip("tg://emoji?id=")
-                text = utils.replace_once(text, full, EMOJI_MARKUP.format(emoji_id, emoji), start)
+                text = utils.replace_once(
+                    text, full, EMOJI_MARKUP.format(emoji_id, emoji), start
+                )
                 continue
 
             if delim == BOLD_DELIM:

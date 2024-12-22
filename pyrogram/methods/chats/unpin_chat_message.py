@@ -58,27 +58,25 @@ class UnpinChatMessage:
                 await app.unpin_chat_message(chat_id, message_id)
         """
         rpc = raw.functions.messages.UpdatePinnedMessage(
-            peer=await self.resolve_peer(chat_id),
-            id=message_id,
-            unpin=True
+            peer=await self.resolve_peer(chat_id), id=message_id, unpin=True
         )
 
         session = None
         business_connection = None
         if business_connection_id:
-            business_connection = self.business_user_connection_cache[business_connection_id]
+            business_connection = self.business_user_connection_cache[
+                business_connection_id
+            ]
             if not business_connection:
-                business_connection = await self.get_business_connection(business_connection_id)
-            session = await get_session(
-                self,
-                business_connection._raw.connection.dc_id
-            )
+                business_connection = await self.get_business_connection(
+                    business_connection_id
+                )
+            session = await get_session(self, business_connection._raw.connection.dc_id)
 
         if business_connection_id:
             await session.invoke(
                 raw.functions.InvokeWithBusinessConnection(
-                    query=rpc,
-                    connection_id=business_connection_id
+                    query=rpc, connection_id=business_connection_id
                 )
             )
         else:

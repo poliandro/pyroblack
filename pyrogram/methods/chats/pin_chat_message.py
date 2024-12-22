@@ -74,25 +74,25 @@ class PinChatMessage:
             peer=await self.resolve_peer(chat_id),
             id=message_id,
             silent=disable_notification or None,
-            pm_oneside=not both_sides or None
+            pm_oneside=not both_sides or None,
         )
 
         session = None
         business_connection = None
         if business_connection_id:
-            business_connection = self.business_user_connection_cache[business_connection_id]
+            business_connection = self.business_user_connection_cache[
+                business_connection_id
+            ]
             if not business_connection:
-                business_connection = await self.get_business_connection(business_connection_id)
-            session = await get_session(
-                self,
-                business_connection._raw.connection.dc_id
-            )
+                business_connection = await self.get_business_connection(
+                    business_connection_id
+                )
+            session = await get_session(self, business_connection._raw.connection.dc_id)
 
         if business_connection_id:
             r = await session.invoke(
                 raw.functions.InvokeWithBusinessConnection(
-                    query=rpc,
-                    connection_id=business_connection_id
+                    query=rpc, connection_id=business_connection_id
                 )
             )
         else:
@@ -102,7 +102,18 @@ class PinChatMessage:
         chats = {c.id: c for c in r.chats}
 
         for i in r.updates:
-            if isinstance(i, (raw.types.UpdateNewMessage,
-                              raw.types.UpdateNewChannelMessage,
-                              raw.types.UpdateBotNewBusinessMessage)):
-                return await types.Message._parse(self, i.message, users, chats, business_connection_id=business_connection_id)
+            if isinstance(
+                i,
+                (
+                    raw.types.UpdateNewMessage,
+                    raw.types.UpdateNewChannelMessage,
+                    raw.types.UpdateBotNewBusinessMessage,
+                ),
+            ):
+                return await types.Message._parse(
+                    self,
+                    i.message,
+                    users,
+                    chats,
+                    business_connection_id=business_connection_id,
+                )
