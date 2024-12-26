@@ -77,20 +77,8 @@ class PinChatMessage:
             pm_oneside=not both_sides or None,
         )
 
-        session = None
-        business_connection = None
         if business_connection_id:
-            business_connection = self.business_user_connection_cache[
-                business_connection_id
-            ]
-            if not business_connection:
-                business_connection = await self.get_business_connection(
-                    business_connection_id
-                )
-            session = await get_session(self, business_connection._raw.connection.dc_id)
-
-        if business_connection_id:
-            r = await session.invoke(
+            r = await self.invoke(
                 raw.functions.InvokeWithBusinessConnection(
                     query=rpc, connection_id=business_connection_id
                 )
