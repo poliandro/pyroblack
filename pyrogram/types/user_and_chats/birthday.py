@@ -42,10 +42,9 @@ class Birthday(Object):
         self.year = year
 
     @staticmethod
-    def _parse(birthday: "raw.types.Birthday" = None) -> Optional["Birthday"]:
+    def _parse(birthday: "raw.types.Birthday" = None) -> "Birthday":
         if not birthday:
             return
-
         return Birthday(
             day=birthday.day, month=birthday.month, year=getattr(birthday, "year", None)
         )
