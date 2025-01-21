@@ -1176,6 +1176,7 @@ class topic(Filter, set):
     Parameters:
         topics (``int`` | ``list``):
             Pass one or more topic ids to filter messages in specific topics.
+            Pass 1 for general topic.
             Defaults to None (no topics).
     """
 
@@ -1189,4 +1190,6 @@ class topic(Filter, set):
         super().__init__(t for t in topics)
 
     async def __call__(self, _, message: Message):
+        if message.is_topic_message and not message.topic:
+            return 1 in self
         return message.topic and message.topic.id in self
