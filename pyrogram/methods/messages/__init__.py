@@ -79,6 +79,7 @@ from .stop_poll import StopPoll
 from .stream_media import StreamMedia
 from .view_messages import ViewMessages
 from .vote_poll import VotePoll
+from .transcribe_audio import TranscribeAudio
 from .translate_text import TranslateText
 
 
@@ -146,6 +147,7 @@ class Messages(
     GetDiscussionRepliesCount,
     StreamMedia,
     GetCustomEmojiStickers,
+    TranscribeAudio,
     TranslateText,
 ):
     pass

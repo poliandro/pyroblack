@@ -72,6 +72,7 @@ from .gift_code import GiftCode
 from .web_page import WebPage
 from .web_page_empty import WebPageEmpty
 from .web_page_preview import WebPagePreview
+from .transcribed_audio import TranscribedAudio
 from .translated_text import TranslatedText
 
 __all__ = [
@@ -129,5 +130,6 @@ __all__ = [
     "StoryForwardHeader",
     "StoriesPrivacyRules",
     "ExportedStoryLink",
+    "TranscribedAudio",
     "TranslatedText",
 ]

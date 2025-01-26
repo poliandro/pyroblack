@@ -232,6 +232,7 @@ def pyrogram_api():
             get_custom_emoji_stickers
             delete_chat_history
             send_paid_reaction
+            transcribe_audio
             translate_message_text
         """,
         chats="""
@@ -541,6 +542,7 @@ def pyrogram_api():
             WebPage
             WebPageEmpty
             WebPagePreview
+            TranscribedAudio
             TranslatedText
             Poll
             PollOption
@@ -774,6 +776,7 @@ def pyrogram_api():
             Message.reply_web_page
             Message.get_media_group
             Message.react
+            Message.transcribe
             Message.translate
             Message.wait_for_click
             Message.read
