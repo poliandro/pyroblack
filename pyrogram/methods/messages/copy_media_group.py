@@ -37,9 +37,12 @@ class CopyMediaGroup:
         captions: Union[List[str], str] = None,
         disable_notification: bool = None,
         message_thread_id: int = None,
+        send_as: Union[int, str] = None,
         reply_to_message_id: int = None,
         schedule_date: datetime = None,
         protect_content: bool = None,
+        allow_paid_broadcast: bool = None,
+        message_effect_id: int = None,
     ) -> List["types.Message"]:
         """Copy a media group by providing one of the message ids.
 
@@ -70,6 +73,9 @@ class CopyMediaGroup:
                 If a list of ``string`` passed, each element becomes caption for each media element.
                 You can pass ``None`` in list to keep the original caption (see examples below).
 
+            has_spoilers (``bool``, *optional*):
+                Pass True if the photo needs to be covered with a spoiler animation.
+
             disable_notification (``bool``, *optional*):
                 Sends the message silently.
                 Users will receive a notification with no sound.
@@ -77,6 +83,10 @@ class CopyMediaGroup:
             message_thread_id (``int``, *optional*):
                 Unique identifier for the target message thread (topic) of the forum.
                 for forum supergroups only.
+
+            send_as (``int`` | ``str``):
+                Unique identifier (int) or username (str) of the chat or channel to send the message as.
+                You can use this to send the message on behalf of a chat or channel where you have appropriate permissions.
 
             reply_to_message_id (``int``, *optional*):
                 If the message is a reply, ID of the original message.
@@ -86,6 +96,12 @@ class CopyMediaGroup:
 
             protect_content (``bool``, *optional*):
                 Protects the contents of the sent message from forwarding and saving
+
+            allow_paid_broadcast (``bool``, *optional*):
+                Pass True to allow the message to ignore regular broadcast limits for a small fee; for bots only
+
+            message_effect_id (``int`` ``64-bit``, *optional*):
+                Unique identifier of the message effect to be added to the message; for private chats only.
 
         Returns:
             List of :obj:`~pyrogram.types.Message`: On success, a list of copied messages is returned.
@@ -168,8 +184,11 @@ class CopyMediaGroup:
                 multi_media=multi_media,
                 silent=disable_notification or None,
                 reply_to=reply_to,
-                noforwards=protect_content,
+                send_as=await self.resolve_peer(send_as) if send_as else None,
                 schedule_date=utils.datetime_to_timestamp(schedule_date),
+                noforwards=protect_content,
+                allow_paid_floodskip=allow_paid_broadcast,
+                effect=message_effect_id,
             ),
             sleep_threshold=60,
         )
