@@ -65,7 +65,7 @@ class Session:
     ACKS_THRESHOLD = 10
     PING_INTERVAL = 5
     STORED_MSG_IDS_MAX_SIZE = 1000 * 2
-    RECONNECT_THRESHOLD = 5
+    RECONNECT_THRESHOLD = 4
     RE_START_RANGE = range(4)
 
     TRANSPORT_ERRORS = {
@@ -283,7 +283,7 @@ class Session:
                 to_wait = self.RECONNECT_THRESHOLD + int(
                     self.RECONNECT_THRESHOLD - (now - self.last_reconnect_attempt)
                 )
-                log.warning(
+                log.info(
                     f"[pyroblack] Client [{self.client.name}] is reconnecting too frequently, sleeping for {to_wait} seconds"
                 )
                 await asyncio.sleep(to_wait)
