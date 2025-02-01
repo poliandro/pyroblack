@@ -3044,7 +3044,7 @@ class Message(Object, Update):
             quote_entities=quote_entities,
             allow_paid_broadcast=allow_paid_broadcast,
             message_effect_id=message_effect_id,
-            invert_media=invert_media
+            invert_media=invert_media,
         )
 
     async def reply_photo(
@@ -5738,8 +5738,7 @@ class Message(Object, Update):
             RPCError: In case of a Telegram RPC error.
         """
         return await self._client.transcribe_audio(
-            chat_id=self.chat.id,
-            message_id=self.id
+            chat_id=self.chat.id, message_id=self.id
         )
 
     async def translate(self, to_language_code: str) -> "types.TranslatedText":

@@ -55,7 +55,7 @@ def get_input_media_from_file_id(
     file_id: str,
     expected_file_type: FileType = None,
     ttl_seconds: int = None,
-    has_spoiler: bool = None
+    has_spoiler: bool = None,
 ) -> Union["raw.types.InputMediaPhoto", "raw.types.InputMediaDocument"]:
     try:
         decoded = FileId.decode(file_id)
@@ -83,7 +83,7 @@ def get_input_media_from_file_id(
                 file_reference=decoded.file_reference,
             ),
             spoiler=has_spoiler,
-            ttl_seconds=ttl_seconds
+            ttl_seconds=ttl_seconds,
         )
 
     if file_type in DOCUMENT_TYPES:
@@ -94,7 +94,7 @@ def get_input_media_from_file_id(
                 file_reference=decoded.file_reference,
             ),
             spoiler=has_spoiler,
-            ttl_seconds=ttl_seconds
+            ttl_seconds=ttl_seconds,
         )
 
     raise ValueError(f"Unknown file id: {file_id}")

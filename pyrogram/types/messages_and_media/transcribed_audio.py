@@ -17,12 +17,12 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrofork.  If not, see <http://www.gnu.org/licenses/>.
 
-from pyrogram import  raw
+from pyrogram import raw
 
 
 class TranscribedAudio:
     """Transcribes the audio of a voice message.
-    
+
     Parameters:
         transcription_id (``int``):
             Unique identifier of the transcription.
@@ -47,7 +47,7 @@ class TranscribedAudio:
         text: str,
         pending: bool = None,
         trial_remains_num: int = None,
-        trial_remains_until_date: int = None
+        trial_remains_until_date: int = None,
     ):
         self.transcription_id = transcription_id
         self.text = text
@@ -56,11 +56,13 @@ class TranscribedAudio:
         self.trial_remains_until_date = trial_remains_until_date
 
     @staticmethod
-    def _parse(transcribe_result: "raw.types.messages.TranscribedAudio") -> "TranscribeAudio":
+    def _parse(
+        transcribe_result: "raw.types.messages.TranscribedAudio",
+    ) -> "TranscribeAudio":
         return TranscribedAudio(
             transcription_id=transcribe_result.id,
             text=transcribe_result.text,
             pending=transcribe_result.pending,
             trial_remains_num=transcribe_result.trial_remains_num,
-            trial_remains_until_date=transcribe_result.trial_remains_until_date
+            trial_remains_until_date=transcribe_result.trial_remains_until_date,
         )

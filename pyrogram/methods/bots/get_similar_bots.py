@@ -24,8 +24,7 @@ from pyrogram import raw
 
 class GetSimilarBots:
     async def get_similar_bots(
-        self: "pyrogram.Client",
-        bot: Union[int, str]
+        self: "pyrogram.Client", bot: Union[int, str]
     ) -> List["pyrogram.types.User"]:
         """Get a list of bots similar to the target bot.
 
@@ -40,7 +39,6 @@ class GetSimilarBots:
         """
         peer = await self.resolve_peer(bot)
         r = await self.invoke(raw.functions.bots.GetBotRecommendations(bot=peer))
-        return pyrogram.types.List([
-            pyrogram.types.User._parse(self, u)
-            for u in r.users
-        ])
+        return pyrogram.types.List(
+            [pyrogram.types.User._parse(self, u) for u in r.users]
+        )

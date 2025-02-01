@@ -54,7 +54,11 @@ class EmojiStatus(Object):
             return EmojiStatus(
                 client=client,
                 custom_emoji_id=emoji_status.document_id,
-                until_date=utils.timestamp_to_datetime(emoji_status.until) if emoji_status.until else None
+                until_date=(
+                    utils.timestamp_to_datetime(emoji_status.until)
+                    if emoji_status.until
+                    else None
+                ),
             )
 
         return None
@@ -62,5 +66,9 @@ class EmojiStatus(Object):
     def write(self):
         return raw.types.EmojiStatus(
             document_id=self.custom_emoji_id,
-            until=utils.datetime_to_timestamp(self.until_date) if self.until_date else None
+            until=(
+                utils.datetime_to_timestamp(self.until_date)
+                if self.until_date
+                else None
+            ),
         )
