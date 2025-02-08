@@ -29,6 +29,7 @@ import shutil
 import sys
 from concurrent.futures.thread import ThreadPoolExecutor
 from datetime import datetime, timedelta
+from functools import lru_cache
 from hashlib import sha256
 from importlib import import_module
 from io import StringIO, BytesIO
@@ -210,7 +211,7 @@ class Client(Methods):
         max_concurrent_transmissions (``int``, *optional*):
             Set the maximum amount of concurrent transmissions (uploads & downloads).
             A value that is too high may result in network related issues.
-            Defaults to 20.
+            Defaults to 500.
 
         init_params (``raw.types.JsonObject``, *optional*):
             Additional initConnection parameters.
@@ -244,7 +245,7 @@ class Client(Methods):
     # Interval of seconds in which the updates watchdog will kick in
     UPDATES_WATCHDOG_INTERVAL = 10 * 60
 
-    MAX_CONCURRENT_TRANSMISSIONS = 20
+    MAX_CONCURRENT_TRANSMISSIONS = 500
     MAX_MESSAGE_CACHE_SIZE = 10000
 
     mimetypes = MimeTypes()
@@ -1069,9 +1070,7 @@ class Client(Methods):
                                             continue
                                         else:
                                             module = import_module(module_path)
-
                                             for name in vars(module).keys():
-
                                                 # noinspection PyBroadException
                                                 try:
                                                     for handler, group in getattr(
@@ -1451,9 +1450,11 @@ class Client(Methods):
             finally:
                 await session.stop()
 
+    @lru_cache(maxsize=128)
     def guess_mime_type(self, filename: str) -> Optional[str]:
         return self.mimetypes.guess_type(filename)[0]
 
+    @lru_cache(maxsize=128)
     def guess_extension(self, mime_type: str) -> Optional[str]:
         return self.mimetypes.guess_extension(mime_type)
 
