@@ -31,6 +31,7 @@ import pyrogram
 from pyrogram import StopTransmission
 from pyrogram import raw
 from pyrogram.session import Session
+from pyrogram.utils import run_sync
 
 log = logging.getLogger(__name__)
 
@@ -110,7 +111,7 @@ class SaveFile:
                             break
                         except Exception as e:
                             log.warning(f"Retrying file part due to error: {e}")
-                            await asyncio.sleep(2**attempt)
+                            await asyncio.sleep(2 ** attempt)
 
             def create_rpc(chunk, file_part, is_big, file_id, file_total_parts):
                 if is_big:
@@ -250,4 +251,4 @@ class SaveFile:
                         await session.stop()
 
     async def preload(self, fp, part_size):
-        return fp.read(part_size)
+        return await run_sync(fp.read, part_size)
