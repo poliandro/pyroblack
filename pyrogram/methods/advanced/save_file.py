@@ -111,7 +111,7 @@ class SaveFile:
                             break
                         except Exception as e:
                             log.warning(f"Retrying file part due to error: {e}")
-                            await asyncio.sleep(2 ** attempt)
+                            await asyncio.sleep(2**attempt)
 
             def create_rpc(chunk, file_part, is_big, file_id, file_total_parts):
                 if is_big:
