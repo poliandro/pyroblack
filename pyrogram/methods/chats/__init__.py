@@ -47,6 +47,7 @@ from .get_dialogs_count import GetDialogsCount
 from .get_folders import GetFolders
 from .get_forum_topics import GetForumTopics
 from .get_forum_topics_by_id import GetForumTopicsByID
+from .get_forum_topics_count import GetForumTopicsCount
 from .get_send_as_chats import GetSendAsChats
 from .hide_general_topic import HideGeneralTopic
 from .join_chat import JoinChat
@@ -106,6 +107,7 @@ class Chats(
     GetFolders,
     GetForumTopics,
     GetForumTopicsByID,
+    GetForumTopicsCount,
     ArchiveChats,
     UnarchiveChats,
     CreateGroup,
