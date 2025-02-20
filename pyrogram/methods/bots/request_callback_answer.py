@@ -89,6 +89,6 @@ class RequestCallbackAnswer:
                 data=data,
                 password=password,
             ),
-            retries=0,
+            retries=1,
             timeout=timeout,
         )
