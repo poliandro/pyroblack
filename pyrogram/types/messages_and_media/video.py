@@ -43,6 +43,9 @@ class Video(Object):
         height (``int``):
             Video height as defined by sender.
 
+        codec (``str``):
+            Codec used for video file encoding, for example, "h264", "h265", or "av1".
+
         duration (``int``):
             Duration of the video in seconds as defined by sender.
 
@@ -66,6 +69,12 @@ class Video(Object):
 
         thumbs (List of :obj:`~pyrogram.types.Thumbnail`, *optional*):
             Video thumbnails.
+
+        video_cover (:obj:`~pyrogram.types.Photo`, *optional*):
+            Video cover.
+
+        video_start_timestamp (``int``, *optional*):
+            Video startpoint, in seconds.
     """
 
     def __init__(
@@ -76,6 +85,7 @@ class Video(Object):
         file_unique_id: str,
         width: int,
         height: int,
+        codec: str,
         duration: int,
         file_name: str = None,
         mime_type: str = None,
@@ -84,6 +94,8 @@ class Video(Object):
         ttl_seconds: int = None,
         date: datetime = None,
         thumbs: List["types.Thumbnail"] = None,
+        video_cover: "types.Photo" = None,
+        video_start_timestamp: int = None,
     ):
         super().__init__(client)
 
@@ -91,6 +103,7 @@ class Video(Object):
         self.file_unique_id = file_unique_id
         self.width = width
         self.height = height
+        self.codec = codec
         self.duration = duration
         self.file_name = file_name
         self.mime_type = mime_type
@@ -99,14 +112,18 @@ class Video(Object):
         self.ttl_seconds = ttl_seconds
         self.date = date
         self.thumbs = thumbs
+        self.video_cover = video_cover
+        self.video_start_timestamp = video_start_timestamp
 
     @staticmethod
     def _parse(
         client,
         video: "raw.types.Document",
         video_attributes: "raw.types.DocumentAttributeVideo",
-        file_name: str,
+        file_name: str = None,
         ttl_seconds: int = None,
+        video_cover = None,
+        video_start_timestamp: int = None
     ) -> "Video":
         return Video(
             file_id=FileId(
@@ -114,20 +131,24 @@ class Video(Object):
                 dc_id=video.dc_id,
                 media_id=video.id,
                 access_hash=video.access_hash,
-                file_reference=video.file_reference,
+                file_reference=video.file_reference
             ).encode(),
             file_unique_id=FileUniqueId(
-                file_unique_type=FileUniqueType.DOCUMENT, media_id=video.id
+                file_unique_type=FileUniqueType.DOCUMENT,
+                media_id=video.id
             ).encode(),
-            width=video_attributes.w,
-            height=video_attributes.h,
+            width=getattr(video_attributes, "w", None),
+            height=getattr(video_attributes, "h", None),
+            codec=getattr(video_attributes, "video_codec", None),
             duration=video_attributes.duration,
-            file_name=file_name,
+            file_name=file_name or f"video_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.mp4",
             mime_type=video.mime_type,
             supports_streaming=video_attributes.supports_streaming,
             file_size=video.size,
             date=utils.timestamp_to_datetime(video.date),
             ttl_seconds=ttl_seconds,
             thumbs=types.Thumbnail._parse(client, video),
-            client=client,
+            video_cover=types.Photo._parse(client, video_cover),
+            video_start_timestamp=video_start_timestamp,
+            client=client
         )
