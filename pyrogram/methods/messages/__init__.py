@@ -84,6 +84,7 @@ from .translate_text import TranslateText
 
 
 class Messages(
+    DeleteChatHistory,
     DeleteMessages,
     EditMessageCaption,
     EditMessageReplyMarkup,

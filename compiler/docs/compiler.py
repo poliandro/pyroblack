@@ -234,6 +234,7 @@ def pyrogram_api():
             send_paid_reaction
             transcribe_audio
             translate_message_text
+            delete_chat_history
         """,
         chats="""
         Chats
