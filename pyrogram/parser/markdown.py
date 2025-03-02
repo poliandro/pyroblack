@@ -36,27 +36,22 @@ PRE_DELIM = "```"
 BLOCKQUOTE_DELIM = ">"
 BLOCKQUOTE_EXPANDABLE_DELIM = "**>"
 
-MARKDOWN_RE = re.compile(
-    r"({d})|(!?)\[(.+?)\]\((.+?)\)".format(
-        d="|".join(
-            [
-                "".join(i)
-                for i in [
-                    [rf"\{j}" for j in i]
-                    for i in [
-                        PRE_DELIM,
-                        CODE_DELIM,
-                        STRIKE_DELIM,
-                        UNDERLINE_DELIM,
-                        ITALIC_DELIM,
-                        BOLD_DELIM,
-                        SPOILER_DELIM,
-                    ]
-                ]
+MARKDOWN_RE = re.compile(r"({d})".format(
+    d="|".join(
+        ["".join(i) for i in [
+            [rf"\{j}" for j in i]
+            for i in [
+                PRE_DELIM,
+                CODE_DELIM,
+                STRIKE_DELIM,
+                UNDERLINE_DELIM,
+                ITALIC_DELIM,
+                BOLD_DELIM,
+                SPOILER_DELIM
             ]
-        )
-    )
-)
+        ]]
+    )))
+URL_RE = re.compile(r"(!?)\[(.+?)\]\((.+?)\)")
 
 OPENING_TAG = "<{}>"
 CLOSING_TAG = "</{}>"
@@ -128,27 +123,13 @@ class Markdown:
 
         for i, match in enumerate(re.finditer(MARKDOWN_RE, text)):
             start, _ = match.span()
-            delim, is_emoji, text_url, url = match.groups()
+            delim = match.group(1)
             full = match.group(0)
 
             if delim in FIXED_WIDTH_DELIMS:
                 is_fixed_width = not is_fixed_width
 
             if is_fixed_width and delim not in FIXED_WIDTH_DELIMS:
-                continue
-
-            if not is_emoji and text_url:
-                text = utils.replace_once(
-                    text, full, URL_MARKUP.format(url, text_url), start
-                )
-                continue
-
-            if is_emoji:
-                emoji = text_url
-                emoji_id = url.lstrip("tg://emoji?id=")
-                text = utils.replace_once(
-                    text, full, EMOJI_MARKUP.format(emoji_id, emoji), start
-                )
                 continue
 
             if delim == BOLD_DELIM:
@@ -184,6 +165,21 @@ class Markdown:
                 continue
 
             text = utils.replace_once(text, delim, tag, start)
+
+        for i, match in enumerate(re.finditer(URL_RE, text)):
+            start, _ = match.span()
+            is_emoji, text_url, url = match.groups()
+            full = match.group(0)
+
+            if not is_emoji and text_url:
+                text = utils.replace_once(text, full, URL_MARKUP.format(url, text_url), start)
+                continue
+
+            if is_emoji:
+                emoji = text_url
+                emoji_id = url.lstrip("tg://emoji?id=")
+                text = utils.replace_once(text, full, EMOJI_MARKUP.format(emoji_id, emoji), start)
+                continue
 
         for placeholder, code_section in placeholders.items():
             text = text.replace(placeholder, code_section)
