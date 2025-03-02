@@ -213,6 +213,12 @@ class Client(Methods):
             A value that is too high may result in network related issues.
             Defaults to 500.
 
+        upload_boost (``bool``, *optional*):
+            Make pyroblack use more parallel connections for file uploads.
+            As far as your network allows it, you will get better upload speeds.
+            On slow networks, this may result in network related issues.
+            Default: False.
+
         init_params (``raw.types.JsonObject``, *optional*):
             Additional initConnection parameters.
             Defaults to None.
@@ -284,6 +290,7 @@ class Client(Methods):
         sleep_threshold: int = Session.SLEEP_THRESHOLD,
         hide_password: bool = False,
         max_concurrent_transmissions: int = MAX_CONCURRENT_TRANSMISSIONS,
+        upload_boost: bool = False,
         init_params: raw.types.JsonObject = None,
         max_message_cache_size: int = MAX_MESSAGE_CACHE_SIZE,
         client_platform: "enums.ClientPlatform" = enums.ClientPlatform.OTHER,
@@ -322,6 +329,7 @@ class Client(Methods):
         self.sleep_threshold = sleep_threshold
         self.hide_password = hide_password
         self.max_concurrent_transmissions = max_concurrent_transmissions
+        self.upload_boost = upload_boost
         self.init_params = init_params
         self.max_message_cache_size = max_message_cache_size
         self.client_platform = client_platform

@@ -263,13 +263,13 @@ class Session:
             return  # stop instantly
 
         if self.start_lock.locked():
-            log.warning(
+            log.info(
                 f"[pyroblack] Client [{self.client.name}] called restart while starting"
             )
             return  # don't restart while starting
 
         if self.restart_lock.locked():
-            log.warning(
+            log.info(
                 f"[pyroblack] Client [{self.client.name}] called restart while already restarting"
             )
             return  # don't restart 2 times at once
