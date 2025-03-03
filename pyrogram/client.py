@@ -61,7 +61,7 @@ from pyrogram.methods import Methods
 from pyrogram.session import Auth, Session
 from pyrogram.storage import FileStorage, MemoryStorage, Storage
 from pyrogram.types import User, TermsOfService
-from pyrogram.utils import ainput
+from pyrogram.utils import ainput, run_sync
 from .connection import Connection
 from .connection.transport import TCP, TCPAbridged
 from .dispatcher import Dispatcher
@@ -1212,11 +1212,11 @@ class Client(Methods):
             async for chunk in self.get_file(
                 file_id, file_size, 0, 0, progress, progress_args
             ):
-                file.write(chunk)
+                await run_sync(file.write, chunk)
         except BaseException as e:
             if not in_memory:
                 file.close()
-                os.remove(temp_file_path)
+                await run_sync(os.remove, temp_file_path)
 
             if isinstance(e, asyncio.CancelledError):
                 raise e
@@ -1232,7 +1232,7 @@ class Client(Methods):
             else:
                 file.close()
                 file_path = os.path.splitext(temp_file_path)[0]
-                shutil.move(temp_file_path, file_path)
+                await run_sync(shutil.move, temp_file_path, file_path)
                 return file_path
 
     async def get_file(
