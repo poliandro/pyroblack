@@ -342,9 +342,13 @@ class Client(Methods):
         if storage:
             self.storage = storage
         elif self.in_memory:
-            self.storage = MemoryStorage(self.name, self.session_string, self.is_telethon_string)
+            self.storage = MemoryStorage(
+                self.name, self.session_string, self.is_telethon_string
+            )
         else:
-            self.storage = FileStorage(self.name, self.workdir, self.session_string, self.is_telethon_string)
+            self.storage = FileStorage(
+                self.name, self.workdir, self.session_string, self.is_telethon_string
+            )
 
         self.dispatcher = Dispatcher(self)
 
