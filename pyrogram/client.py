@@ -135,8 +135,9 @@ class Client(Methods):
             Only applicable for new sessions.
 
         session_string (``str``, *optional*):
-            Pass a session string to load the session in-memory.
-            Implies ``in_memory=True``.
+            Pass a session string to load the session from a session string.
+            Do you want a .session file? Use ``in_memory=False``,
+            for in-memory use ``in_memory=True``.
 
         is_telethon_string (``bool``, *optional*):
             ``True`` if your provided session_string is in the telethon format.
@@ -340,14 +341,10 @@ class Client(Methods):
 
         if storage:
             self.storage = storage
-        elif self.session_string:
-            self.storage = MemoryStorage(
-                self.name, self.session_string, self.is_telethon_string
-            )
         elif self.in_memory:
-            self.storage = MemoryStorage(self.name)
+            self.storage = MemoryStorage(self.name, self.session_string, self.is_telethon_string)
         else:
-            self.storage = FileStorage(self.name, self.workdir)
+            self.storage = FileStorage(self.name, self.workdir, self.session_string, self.is_telethon_string)
 
         self.dispatcher = Dispatcher(self)
 
