@@ -122,8 +122,8 @@ class Video(Object):
         video_attributes: "raw.types.DocumentAttributeVideo",
         file_name: str = None,
         ttl_seconds: int = None,
-        video_cover = None,
-        video_start_timestamp: int = None
+        video_cover=None,
+        video_start_timestamp: int = None,
     ) -> "Video":
         return Video(
             file_id=FileId(
@@ -131,17 +131,17 @@ class Video(Object):
                 dc_id=video.dc_id,
                 media_id=video.id,
                 access_hash=video.access_hash,
-                file_reference=video.file_reference
+                file_reference=video.file_reference,
             ).encode(),
             file_unique_id=FileUniqueId(
-                file_unique_type=FileUniqueType.DOCUMENT,
-                media_id=video.id
+                file_unique_type=FileUniqueType.DOCUMENT, media_id=video.id
             ).encode(),
             width=getattr(video_attributes, "w", None),
             height=getattr(video_attributes, "h", None),
             codec=getattr(video_attributes, "video_codec", None),
             duration=video_attributes.duration,
-            file_name=file_name or f"video_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.mp4",
+            file_name=file_name
+            or f"video_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.mp4",
             mime_type=video.mime_type,
             supports_streaming=video_attributes.supports_streaming,
             file_size=video.size,
@@ -150,5 +150,5 @@ class Video(Object):
             thumbs=types.Thumbnail._parse(client, video),
             video_cover=types.Photo._parse(client, video_cover),
             video_start_timestamp=video_start_timestamp,
-            client=client
+            client=client,
         )

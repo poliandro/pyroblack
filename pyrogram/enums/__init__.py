@@ -59,7 +59,7 @@ __all__ = [
     "MessageServiceType",
     "MessagesFilter",
     "NextCodeType",
-    'PaidReactionPrivacy',
+    "PaidReactionPrivacy",
     "ParseMode",
     "PollType",
     "PrivacyKey",

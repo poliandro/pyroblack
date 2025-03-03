@@ -220,7 +220,7 @@ class SendVoice:
                                 voice=True, duration=duration
                             )
                         ],
-                        ttl_seconds=(1 << 31) - 1 if view_once else None
+                        ttl_seconds=(1 << 31) - 1 if view_once else None,
                     )
                 elif re.match("^https?://", voice):
                     media = raw.types.InputMediaDocumentExternal(url=voice)
@@ -239,7 +239,7 @@ class SendVoice:
                     attributes=[
                         raw.types.DocumentAttributeAudio(voice=True, duration=duration)
                     ],
-                    ttl_seconds=(1 << 31) - 1 if view_once else None
+                    ttl_seconds=(1 << 31) - 1 if view_once else None,
                 )
 
             while True:
