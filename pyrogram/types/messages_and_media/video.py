@@ -21,7 +21,13 @@ from typing import List
 
 import pyrogram
 from pyrogram import raw, types, utils
-from pyrogram.file_id import FileId, FileType, FileUniqueId, FileUniqueType, ThumbnailSource
+from pyrogram.file_id import (
+    FileId,
+    FileType,
+    FileUniqueId,
+    FileUniqueType,
+    ThumbnailSource,
+)
 from ..object import Object
 
 
@@ -121,8 +127,8 @@ class Video(Object):
         video_attributes: "raw.types.DocumentAttributeVideo",
         file_name: str,
         ttl_seconds: int = None,
-        cover = None,
-        start_timestamp: int = None
+        cover=None,
+        start_timestamp: int = None,
     ) -> "Video":
         return Video(
             file_id=FileId(
@@ -149,5 +155,5 @@ class Video(Object):
             thumbs=types.Thumbnail._parse(client, video),
             cover=types.Photo._parse(client, cover),
             start_timestamp=start_timestamp,
-            client=client
+            client=client,
         )

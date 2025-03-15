@@ -165,7 +165,7 @@ class SendVideo:
                 pass a HTTP URL as a string for Telegram to get a video from the Internet,
                 pass a file path as string to upload a new photo civer that exists on your local machine, or
                 pass a binary file-like object with its attribute ".name" set for in-memory uploads.
-            
+
             start_timestamp (``int``, *optional*):
                 Timestamp from which the video playing must start, in seconds.
 
@@ -261,27 +261,27 @@ class SendVideo:
                                 peer=peer,
                                 media=raw.types.InputMediaUploadedPhoto(
                                     file=await self.save_file(cover)
-                                )
+                                ),
                             )
                         )
                     elif re.match("^https?://", cover):
                         vidcover_media = await self.invoke(
                             raw.functions.messages.UploadMedia(
                                 peer=peer,
-                                media=raw.types.InputMediaPhotoExternal(
-                                    url=cover
-                                )
+                                media=raw.types.InputMediaPhotoExternal(url=cover),
                             )
                         )
                     else:
-                        vidcover_file = utils.get_input_media_from_file_id(cover, FileType.PHOTO).id
+                        vidcover_file = utils.get_input_media_from_file_id(
+                            cover, FileType.PHOTO
+                        ).id
                 else:
                     vidcover_media = await self.invoke(
                         raw.functions.messages.UploadMedia(
                             peer=peer,
                             media=raw.types.InputMediaUploadedPhoto(
                                 file=await self.save_file(cover)
-                            )
+                            ),
                         )
                     )
 
@@ -289,7 +289,7 @@ class SendVideo:
                     vidcover_file = raw.types.InputPhoto(
                         id=vidcover_media.photo.id,
                         access_hash=vidcover_media.photo.access_hash,
-                        file_reference=vidcover_media.photo.file_reference
+                        file_reference=vidcover_media.photo.file_reference,
                     )
 
             if isinstance(video, str):
@@ -316,7 +316,7 @@ class SendVideo:
                             ),
                         ],
                         video_cover=vidcover_file,
-                        video_timestamp=start_timestamp
+                        video_timestamp=start_timestamp,
                     )
                 elif re.match("^https?://", video):
                     media = raw.types.InputMediaDocumentExternal(
@@ -324,7 +324,7 @@ class SendVideo:
                         ttl_seconds=ttl_seconds,
                         spoiler=has_spoiler,
                         video_cover=vidcover_file,
-                        video_timestamp=start_timestamp
+                        video_timestamp=start_timestamp,
                     )
                 else:
                     media = utils.get_input_media_from_file_id(
@@ -355,7 +355,7 @@ class SendVideo:
                         ),
                     ],
                     video_cover=vidcover_file,
-                    video_timestamp=start_timestamp
+                    video_timestamp=start_timestamp,
                 )
 
             while True:

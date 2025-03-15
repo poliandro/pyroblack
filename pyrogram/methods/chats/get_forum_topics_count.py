@@ -29,8 +29,7 @@ log = logging.getLogger(__name__)
 
 class GetForumTopicsCount:
     async def get_forum_topics_count(
-        self: "pyrogram.Client",
-        chat_id: Union[int, str]
+        self: "pyrogram.Client", chat_id: Union[int, str]
     ) -> Optional[AsyncGenerator["types.ForumTopic", None]]:
         """Get forum topics count from a chat.
 
@@ -56,7 +55,9 @@ class GetForumTopicsCount:
 
         peer = await self.resolve_peer(chat_id)
 
-        rpc = raw.functions.channels.GetForumTopics(channel=peer, offset_date=0, offset_id=0, offset_topic=0, limit=0)
+        rpc = raw.functions.channels.GetForumTopics(
+            channel=peer, offset_date=0, offset_id=0, offset_topic=0, limit=0
+        )
 
         r = await self.invoke(rpc, sleep_threshold=-1)
 

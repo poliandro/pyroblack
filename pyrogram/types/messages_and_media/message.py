@@ -1547,7 +1547,7 @@ class Message(Object, Update):
     @property
     def content(self) -> str:
         return self.text or self.caption or Str("").init([])
-    
+
     async def get_media_group(self) -> List["types.Message"]:
         """Bound method *get_media_group* of :obj:`~pyrogram.types.Message`.
 
@@ -3885,7 +3885,7 @@ class Message(Object, Update):
                 pass a HTTP URL as a string for Telegram to get a video from the Internet,
                 pass a file path as string to upload a new photo civer that exists on your local machine, or
                 pass a binary file-like object with its attribute ".name" set for in-memory uploads.
-            
+
             start_timestamp (``int``, *optional*):
                 Timestamp from which the video playing must start, in seconds.
 

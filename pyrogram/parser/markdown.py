@@ -36,21 +36,27 @@ PRE_DELIM = "```"
 BLOCKQUOTE_DELIM = ">"
 BLOCKQUOTE_EXPANDABLE_DELIM = "**>"
 
-MARKDOWN_RE = re.compile(r"({d})".format(
-    d="|".join(
-        ["".join(i) for i in [
-            [rf"\{j}" for j in i]
-            for i in [
-                PRE_DELIM,
-                CODE_DELIM,
-                STRIKE_DELIM,
-                UNDERLINE_DELIM,
-                ITALIC_DELIM,
-                BOLD_DELIM,
-                SPOILER_DELIM
+MARKDOWN_RE = re.compile(
+    r"({d})".format(
+        d="|".join(
+            [
+                "".join(i)
+                for i in [
+                    [rf"\{j}" for j in i]
+                    for i in [
+                        PRE_DELIM,
+                        CODE_DELIM,
+                        STRIKE_DELIM,
+                        UNDERLINE_DELIM,
+                        ITALIC_DELIM,
+                        BOLD_DELIM,
+                        SPOILER_DELIM,
+                    ]
+                ]
             ]
-        ]]
-    )))
+        )
+    )
+)
 URL_RE = re.compile(r"(!?)\[(.+?)\]\((.+?)\)")
 
 OPENING_TAG = "<{}>"
@@ -172,13 +178,17 @@ class Markdown:
             full = match.group(0)
 
             if not is_emoji and text_url:
-                text = utils.replace_once(text, full, URL_MARKUP.format(url, text_url), start)
+                text = utils.replace_once(
+                    text, full, URL_MARKUP.format(url, text_url), start
+                )
                 continue
 
             if is_emoji:
                 emoji = text_url
                 emoji_id = url.lstrip("tg://emoji?id=")
-                text = utils.replace_once(text, full, EMOJI_MARKUP.format(emoji_id, emoji), start)
+                text = utils.replace_once(
+                    text, full, EMOJI_MARKUP.format(emoji_id, emoji), start
+                )
                 continue
 
         for placeholder, code_section in placeholders.items():
@@ -205,7 +215,7 @@ class Markdown:
             MessageEntityType.PRE: PRE_DELIM,
             MessageEntityType.BLOCKQUOTE: BLOCKQUOTE_DELIM,
             MessageEntityType.EXPANDABLE_BLOCKQUOTE: BLOCKQUOTE_EXPANDABLE_DELIM,
-            MessageEntityType.SPOILER: SPOILER_DELIM
+            MessageEntityType.SPOILER: SPOILER_DELIM,
         }
 
         text = utils.add_surrogates(text)
@@ -218,15 +228,19 @@ class Markdown:
             if delimiter:
                 if entity.type == MessageEntityType.PRE:
                     inside_blockquote = any(
-                        blk_entity.offset <= s < blk_entity.offset + blk_entity.length and
-                        blk_entity.offset < e <= blk_entity.offset + blk_entity.length
+                        blk_entity.offset <= s < blk_entity.offset + blk_entity.length
+                        and blk_entity.offset
+                        < e
+                        <= blk_entity.offset + blk_entity.length
                         for blk_entity in entities
                         if blk_entity.type == MessageEntityType.BLOCKQUOTE
                     )
                     is_expandable = any(
-                        blk_entity.offset <= s < blk_entity.offset + blk_entity.length and
-                        blk_entity.offset < e <= blk_entity.offset + blk_entity.length and
-                        blk_entity.collapsed
+                        blk_entity.offset <= s < blk_entity.offset + blk_entity.length
+                        and blk_entity.offset
+                        < e
+                        <= blk_entity.offset + blk_entity.length
+                        and blk_entity.collapsed
                         for blk_entity in entities
                         if blk_entity.type == MessageEntityType.BLOCKQUOTE
                     )
@@ -248,7 +262,10 @@ class Markdown:
                         close_delimiter = delimiter
                     insert_at.append((s, i, open_delimiter))
                     insert_at.append((e, -i, close_delimiter))
-                elif entity.type != MessageEntityType.BLOCKQUOTE and entity.type != MessageEntityType.EXPANDABLE_BLOCKQUOTE:
+                elif (
+                    entity.type != MessageEntityType.BLOCKQUOTE
+                    and entity.type != MessageEntityType.EXPANDABLE_BLOCKQUOTE
+                ):
                     open_delimiter = delimiter
                     close_delimiter = delimiter
                     insert_at.append((s, i, open_delimiter))
@@ -260,7 +277,9 @@ class Markdown:
                     for line_num, line in enumerate(lines):
                         line_start = s + sum(len(l) + 1 for l in lines[:line_num])
                         if entity.collapsed:
-                            insert_at.append((line_start, i, BLOCKQUOTE_EXPANDABLE_DELIM))
+                            insert_at.append(
+                                (line_start, i, BLOCKQUOTE_EXPANDABLE_DELIM)
+                            )
                         else:
                             insert_at.append((line_start, i, BLOCKQUOTE_DELIM))
                     # No closing delimiter for blockquotes
@@ -270,16 +289,16 @@ class Markdown:
                 if entity.type == MessageEntityType.TEXT_LINK:
                     url = entity.url
                 elif entity.type == MessageEntityType.TEXT_MENTION:
-                    url = f'tg://user?id={entity.user.id}'
+                    url = f"tg://user?id={entity.user.id}"
                 elif entity.type == MessageEntityType.CUSTOM_EMOJI:
                     url = f"tg://emoji?id={entity.custom_emoji_id}"
                     is_emoji = True
                 if url:
                     if is_emoji:
-                        insert_at.append((s, i, '!['))
+                        insert_at.append((s, i, "!["))
                     else:
-                        insert_at.append((s, i, '['))
-                    insert_at.append((e, -i, f']({url})'))
+                        insert_at.append((s, i, "["))
+                    insert_at.append((e, -i, f"]({url})"))
 
         insert_at.sort(key=lambda t: (t[0], t[1]))
         while insert_at:
