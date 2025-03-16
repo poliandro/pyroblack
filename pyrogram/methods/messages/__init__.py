@@ -135,7 +135,6 @@ class Messages(
     SearchGlobal,
     SearchGlobalHashtagMessages,
     CopyMessage,
-    DeleteChatHistory,
     CopyMediaGroup,
     SearchMessagesCount,
     SearchPosts,
