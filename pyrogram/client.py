@@ -246,13 +246,13 @@ class Client(Methods):
     INVITE_LINK_RE = re.compile(
         r"^(?:https?://)?(?:www\.)?(?:t(?:elegram)?\.(?:org|me|dog)/(?:joinchat/|\+))([\w-]+)$"
     )
-    WORKERS = min(32, (os.cpu_count() or 0) + 4)  # os.cpu_count() can be None
+    WORKERS = min(32, (os.cpu_count() or 0) + 8)  # os.cpu_count() can be None
     WORKDIR = PARENT_DIR
 
     # Interval of seconds in which the updates watchdog will kick in
     UPDATES_WATCHDOG_INTERVAL = 10 * 60
 
-    MAX_CONCURRENT_TRANSMISSIONS = 500
+    MAX_CONCURRENT_TRANSMISSIONS = 4
     MAX_MESSAGE_CACHE_SIZE = 10000
 
     mimetypes = MimeTypes()
