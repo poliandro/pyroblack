@@ -61,7 +61,7 @@ docs = [
     "sphinx==8.0.2",
     "sphinx-immaterial==0.12.5",
     "sphinx_copybutton==0.5.2",
-    "sphinx-autobuild==2024.9.19",
+    "sphinx-autobuild==2024.10.3",
     "tornado==6.4.2"
 ]
 
