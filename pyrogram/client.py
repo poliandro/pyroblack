@@ -97,7 +97,7 @@ class Client(Methods):
     # Interval of seconds in which the updates watchdog will kick in
     UPDATES_WATCHDOG_INTERVAL = 15 * 60
 
-    MAX_CONCURRENT_TRANSMISSIONS = 4 # Increased default for potential parallelism
+    MAX_CONCURRENT_TRANSMISSIONS = 1 # Increased default for potential parallelism
     MAX_CACHE_SIZE = 10000
 
     mimetypes = MimeTypes()
